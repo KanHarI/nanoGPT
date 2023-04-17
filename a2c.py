@@ -442,52 +442,6 @@ class A2CGPTEncoderModel(nn.Module):
         )
         return critic_merger_input
 
-    # def create_advantage_merger_input_and_action(
-    #     self,
-    #     x,
-    #     num_items_ahead,
-    #     policy_shift,
-    #     policy_token_mean,
-    #     policy_token_var,
-    #     sampled_random,
-    # ):
-    #     advantage_merger_input = torch.unsqueeze(
-    #         torch.cat(
-    #             [
-    #                 x[0],
-    #                 torch.zeros(
-    #                     num_items_ahead * 4,
-    #                     self.config.actor_latent_dim
-    #                     + self.config.actor_exponent_dim
-    #                     * self.config.actor_exponent_dim
-    #                     + 1,
-    #                 ),
-    #             ],
-    #             dim=1,
-    #         ),
-    #         dim=0,
-    #     )
-    #     if sampled_random < policy_shift:
-    #         action = A2CGPTEncoderAction(shift=True, sampled_action=None)
-    #         advantage_merger_input[0][num_items_ahead * 3][-1] = 1
-    #     else:
-    #         sampler = torch.normal(0.0, 1.0, size=(self.config.actor_latent_dim,))
-    #         action = A2CGPTEncoderAction(
-    #             shift=False,
-    #             sampled_action=policy_token_mean + sampler * policy_token_var,
-    #         )
-    #         advantage_merger_input[0][num_items_ahead * 3][
-    #             -self.config.actor_latent_dim
-    #             - self.config.actor_exponent_dim * self.config.actor_exponent_dim
-    #             - 1 : -self.config.actor_exponent_dim * self.config.actor_exponent_dim
-    #             - 1
-    #         ] = action.sampled_action
-    #         advantage_merger_input[0][num_items_ahead * 3][
-    #             -self.config.actor_exponent_dim * self.config.actor_exponent_dim
-    #             - 1 : -1
-    #         ] = so_to_SO(self.config.actor_exponent_dim, action.sampled_action)
-    #     return advantage_merger_input, action
-
     def create_advantage_merger_input(
         self,
         x,
