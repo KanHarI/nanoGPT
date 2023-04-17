@@ -145,6 +145,18 @@ class A2CGPTEncoderModel(nn.Module):
                     config.n_embd,
                 ),
                 encoder_advantage_head=nn.Linear(config.n_embd, 2),  # mean and logvar
+                # 2 Outputs for pre-actor critic, mean, logvar, and shift bit at the end
+                decoder_actor_head=nn.Linear(
+                    config.n_embd, 2 + config.input_vocab_size + 1
+                ),
+                decoder_critic_merger=nn.Linear(
+                    config.n_embd + config.input_vocab_size + 1, config.n_embd
+                ),
+                decoder_critic_head=nn.Linear(config.n_embd, 2),  # mean and logvar
+                decoder_advantage_merger=nn.Linear(
+                    config.n_embd + config.input_vocab_size + 1, config.n_embd
+                ),
+                decoder_advantage_head=nn.Linear(config.n_embd, 2),  # mean and logvar
             )
         )
         self.apply(self._init_weights)
@@ -220,7 +232,9 @@ class A2CGPTEncoderModel(nn.Module):
             x = network_input
             for i in range(self.config.n_common_layers):
                 x = self.transformer.h[i](x)
-            actor_policy = self.transformer.encoder_actor_head(x)[0][num_items_ahead * 3]
+            actor_policy = self.transformer.encoder_actor_head(x)[0][
+                num_items_ahead * 3
+            ]
             pre_actor_value = actor_policy[0]
             pre_actor_value_var = torch.exp(actor_policy[1])
             policy_token_mean = actor_policy[2 : 2 + self.config.actor_latent_dim]
@@ -252,7 +266,9 @@ class A2CGPTEncoderModel(nn.Module):
                 x = x + self.transformer.encoder_critic_merger(critic_merger_input)
                 for i in range(self.config.n_critic_layers):
                     x = self.transformer.h[self.config.n_common_layers + i](x)
-                critic_result = self.transformer.encoder_critic_head(x)[0][num_items_ahead * 3]
+                critic_result = self.transformer.encoder_critic_head(x)[0][
+                    num_items_ahead * 3
+                ]
                 critic_mean = critic_result[0]
                 critic_var = torch.exp(critic_result[1])
                 advantage_merger_input = self.create_advantage_merger_input(
@@ -263,7 +279,9 @@ class A2CGPTEncoderModel(nn.Module):
                     policy_token_var,
                     action,
                 )
-                x = x + self.transformer.encoder_advantage_merger(advantage_merger_input)
+                x = x + self.transformer.encoder_advantage_merger(
+                    advantage_merger_input
+                )
                 for i in range(self.config.n_advantage_layers):
                     x = self.transformer.h[
                         self.config.n_common_layers + self.config.n_critic_layers + i
