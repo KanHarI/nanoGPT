@@ -31,6 +31,8 @@ class A2CGPTEncoderConfig:
     dropout: float = 0.1
     # Log2 of maximum block size
     log2_max_block_size: int = 5
+    # Biases
+    bias: bool = True
 
 
 @dataclass
@@ -64,7 +66,9 @@ def frequencies_block(log2_size: int):
         for freq in frequencies:
             block[-1].append(math.sin(freq * i))
             block[-1].append(math.cos(freq * i))
-    return torch.Tensor(block, requires_grad=False)
+    result = torch.Tensor(block)
+    result.requires_grad = False
+    return result
 
 
 class A2CGPTEncoderModel(nn.Module):
@@ -153,17 +157,29 @@ class A2CGPTEncoderModel(nn.Module):
         n_params = sum(p.numel() for p in self.parameters())
         return n_params
 
-    def _init_weights(self):
-        torch.nn.init.normal_(
-            self.weight,
-            mean=0.0,
-            std=0.02
-            / math.sqrt(
-                self.config.n_common_layers
-                + self.config.n_critic_layers
-                + self.config.n_advantage_layers
-            ),
-        )
+    def _init_weights(self, module):
+        if hasattr(module, "weight"):
+            torch.nn.init.normal_(
+                module.weight,
+                mean=0.0,
+                std=0.02
+                / math.sqrt(
+                    self.config.n_common_layers
+                    + self.config.n_critic_layers
+                    + self.config.n_advantage_layers
+                ),
+            )
+        if hasattr(module, "bias"):
+            torch.nn.init.normal_(
+                module.bias,
+                mean=0.0,
+                std=0.02
+                / math.sqrt(
+                    self.config.n_common_layers
+                    + self.config.n_critic_layers
+                    + self.config.n_advantage_layers
+                ),
+            )
 
     @torch.no_grad()
     def sample_nograd(
@@ -172,12 +188,14 @@ class A2CGPTEncoderModel(nn.Module):
         target_len_ratio: float,
         target_len_importance: float,
         temperature: float,
-        max_actions: Optional[int] = None,
+        max_actions: Optional[float] = math.inf,
     ) -> tuple[list[A2CGPTEncoderAction], list[A2CGPTEncoderLossProjection]]:
         input_bytes = input.encode("utf-8")
         shifts_to_end = len(input_bytes)
         shifted_bytes = 0
-        input_embeddings = self.transformer.wte(torch.LongTensor(input_bytes))
+        input_embeddings = self.transformer.wte(
+            torch.tensor(np.frombuffer(input_bytes, dtype=np.uint8), dtype=torch.int64)
+        )
         output_actions: list[A2CGPTEncoderAction] = []
         outpus_losses: list[A2CGPTEncoderLossProjection] = []
         num_items_ahead = 2 ** (self.config.log2_max_block_size - 1)
@@ -205,24 +223,26 @@ class A2CGPTEncoderModel(nn.Module):
                     ),
                 ]
             )
+            processed_vector = torch.cat(
+                [torch.ones(num_items_ahead), torch.zeros(num_items_ahead)]
+            )
             # Add position embedding
-            full_input_context = torch.stack(
+            vacancy_vector = torch.cat(
+                [
+                    torch.zeros(num_items_ahead - processed_visible_bytes),
+                    torch.ones(processed_visible_bytes),
+                    torch.ones(input_processed.shape[0]),
+                    torch.zeros(num_items_ahead - input_context.shape[0]),
+                ]
+            )
+            full_input_context = torch.cat(
                 [
                     full_input_context,
                     self.frequencies_block,
                     # Already processed - by position
-                    torch.cat(
-                        [torch.ones(num_items_ahead), torch.zeros(num_items_ahead)]
-                    ),
+                    processed_vector,
                     # Vacancy bit
-                    torch.cat(
-                        [
-                            torch.zeros(num_items_ahead - processed_visible_bytes),
-                            torch.ones(processed_visible_bytes),
-                            torch.ones(input_processed.shape[0]),
-                            torch.zeros(num_items_ahead - input_context.shape[0]),
-                        ]
-                    ),
+                    vacancy_vector,
                     # Target length ratio
                     torch.ones(num_items_ahead * 2) * target_len_ratio,
                     # Target length importance
