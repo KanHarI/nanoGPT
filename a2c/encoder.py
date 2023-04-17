@@ -13,10 +13,9 @@ from model import Block
 
 @dataclass
 class A2CGPTEncoderConfig:
-    # We use points on SO(5) as the latent space
-    # 10 points - the lie dimension of SO(5) is 10
-    actor_latent_dim: int = 10
-    actor_exponent_dim: int = 5
+    # We use points on SO(n) as the latent space
+    actor_latent_dim: int = 21
+    actor_exponent_dim: int = 7
     # UTF-8
     input_vocab_size: int = 256
     # Number of layers in the encoder
@@ -112,7 +111,7 @@ class A2CGPTEncoderModel(nn.Module):
                 output_translation=nn.Linear(
                     # Source action
                     config.actor_latent_dim
-                    # Exponented action in SO(5)
+                    # Exponented action in SO(n)
                     + config.actor_exponent_dim * config.actor_exponent_dim
                     # + position (8 * log2_size)
                     + config.log2_max_block_size * 4
@@ -131,21 +130,21 @@ class A2CGPTEncoderModel(nn.Module):
                         )
                     ]
                 ),
-                actor_head=nn.Linear(
+                encoder_actor_head=nn.Linear(
                     config.n_embd, 2 + config.actor_latent_dim * 2 + 1
                 ),  # 2 Outputs for pre-actor critic, mean, logvar, and shift bit
-                critic_merger=nn.Linear(
+                encoder_critic_merger=nn.Linear(
                     config.n_embd + config.actor_latent_dim * 2 + 1, config.n_embd
                 ),
-                critic_head=nn.Linear(config.n_embd, 2),  # mean and logvar
-                advantage_merger=nn.Linear(
+                encoder_critic_head=nn.Linear(config.n_embd, 2),  # mean and logvar
+                encoder_advantage_merger=nn.Linear(
                     config.n_embd
                     + config.actor_latent_dim
                     + config.actor_exponent_dim * config.actor_exponent_dim
                     + 1,  # +1 for shift operation
                     config.n_embd,
                 ),
-                advantage_head=nn.Linear(config.n_embd, 2),  # mean and logvar
+                encoder_advantage_head=nn.Linear(config.n_embd, 2),  # mean and logvar
             )
         )
         self.apply(self._init_weights)
@@ -221,7 +220,7 @@ class A2CGPTEncoderModel(nn.Module):
             x = network_input
             for i in range(self.config.n_common_layers):
                 x = self.transformer.h[i](x)
-            actor_policy = self.transformer.actor_head(x)[0][num_items_ahead * 3]
+            actor_policy = self.transformer.encoder_actor_head(x)[0][num_items_ahead * 3]
             pre_actor_value = actor_policy[0]
             pre_actor_value_var = torch.exp(actor_policy[1])
             policy_token_mean = actor_policy[2 : 2 + self.config.actor_latent_dim]
@@ -250,10 +249,10 @@ class A2CGPTEncoderModel(nn.Module):
                     policy_token_var,
                     policy_shift,
                 )
-                x = x + self.transformer.critic_merger(critic_merger_input)
+                x = x + self.transformer.encoder_critic_merger(critic_merger_input)
                 for i in range(self.config.n_critic_layers):
                     x = self.transformer.h[self.config.n_common_layers + i](x)
-                critic_result = self.transformer.critic_head(x)[0][num_items_ahead * 3]
+                critic_result = self.transformer.encoder_critic_head(x)[0][num_items_ahead * 3]
                 critic_mean = critic_result[0]
                 critic_var = torch.exp(critic_result[1])
                 advantage_merger_input = self.create_advantage_merger_input(
@@ -264,12 +263,12 @@ class A2CGPTEncoderModel(nn.Module):
                     policy_token_var,
                     action,
                 )
-                x = x + self.transformer.advantage_merger(advantage_merger_input)
+                x = x + self.transformer.encoder_advantage_merger(advantage_merger_input)
                 for i in range(self.config.n_advantage_layers):
                     x = self.transformer.h[
                         self.config.n_common_layers + self.config.n_critic_layers + i
                     ](x)
-                advantage_result = self.transformer.advantage_head(x)[0][
+                advantage_result = self.transformer.encoder_advantage_head(x)[0][
                     num_items_ahead * 3
                 ]
                 advantage_mean = advantage_result[0]
