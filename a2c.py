@@ -173,7 +173,7 @@ class A2CGPTEncoderModel(nn.Module):
             torch.nn.init.normal_(
                 module.bias,
                 mean=0.0,
-                std=0.02
+                std=1e-3
                 / math.sqrt(
                     self.config.n_common_layers
                     + self.config.n_critic_layers
@@ -229,9 +229,9 @@ class A2CGPTEncoderModel(nn.Module):
             # Add position embedding
             vacancy_vector = torch.cat(
                 [
-                    torch.zeros(num_items_ahead - processed_visible_bytes),
-                    torch.ones(processed_visible_bytes),
+                    torch.zeros(num_items_ahead - input_processed.shape[0]),
                     torch.ones(input_processed.shape[0]),
+                    torch.ones(input_context.shape[0]),
                     torch.zeros(num_items_ahead - input_context.shape[0]),
                 ]
             )
@@ -240,15 +240,19 @@ class A2CGPTEncoderModel(nn.Module):
                     full_input_context,
                     self.frequencies_block,
                     # Already processed - by position
-                    processed_vector,
+                    torch.unsqueeze(processed_vector, dim=1),
                     # Vacancy bit
-                    vacancy_vector,
+                    torch.unsqueeze(vacancy_vector, dim=1),
                     # Target length ratio
-                    torch.ones(num_items_ahead * 2) * target_len_ratio,
+                    torch.unsqueeze(
+                        torch.ones(num_items_ahead * 2) * target_len_ratio, dim=1
+                    ),
                     # Target length importance
-                    torch.ones(num_items_ahead * 2) * target_len_importance,
+                    torch.unsqueeze(
+                        torch.ones(num_items_ahead * 2) * target_len_importance, dim=1
+                    ),
                     # Inputs indicator
-                    torch.zeros(num_items_ahead * 2),
+                    torch.unsqueeze(torch.zeros(num_items_ahead * 2), dim=1),
                 ],
                 dim=1,
             )
