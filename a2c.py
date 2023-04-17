@@ -200,138 +200,23 @@ class A2CGPTEncoderModel(nn.Module):
         outpus_losses: list[A2CGPTEncoderLossProjection] = []
         num_items_ahead = 2 ** (self.config.log2_max_block_size - 1)
         while shifted_bytes < shifts_to_end and len(output_actions) < max_actions:
-            # Create input embeddings
-            processed_visible_bytes = min(shifted_bytes, num_items_ahead)
-            input_processed = input_embeddings[
-                shifted_bytes - processed_visible_bytes : shifted_bytes
-            ]
-            input_context = input_embeddings[
-                shifted_bytes : shifted_bytes + num_items_ahead
-            ]
-            # Pad to num_items_ahead with zeros
-            full_input_context = torch.cat(
-                [
-                    torch.zeros(
-                        num_items_ahead - processed_visible_bytes,
-                        input_context.shape[1],
-                    ),
-                    input_processed,
-                    input_context,
-                    torch.zeros(
-                        num_items_ahead - input_context.shape[0],
-                        input_context.shape[1],
-                    ),
-                ]
+            (
+                full_input_context,
+                processed_vector,
+                vacancy_vector,
+            ) = self.create_input_embeddings(
+                input_embeddings,
+                shifted_bytes,
+                num_items_ahead,
+                target_len_ratio,
+                target_len_importance,
             )
-            processed_vector = torch.cat(
-                [torch.ones(num_items_ahead), torch.zeros(num_items_ahead)]
-            )
-            # Add position embedding
-            vacancy_vector = torch.cat(
-                [
-                    torch.zeros(num_items_ahead - input_processed.shape[0]),
-                    torch.ones(input_processed.shape[0]),
-                    torch.ones(input_context.shape[0]),
-                    torch.zeros(num_items_ahead - input_context.shape[0]),
-                ]
-            )
-            full_input_context = torch.cat(
-                [
-                    full_input_context,
-                    self.frequencies_block,
-                    # Already processed - by position
-                    torch.unsqueeze(processed_vector, dim=1),
-                    # Vacancy bit
-                    torch.unsqueeze(vacancy_vector, dim=1),
-                    # Target length ratio
-                    torch.unsqueeze(
-                        torch.ones(num_items_ahead * 2) * target_len_ratio, dim=1
-                    ),
-                    # Target length importance
-                    torch.unsqueeze(
-                        torch.ones(num_items_ahead * 2) * target_len_importance, dim=1
-                    ),
-                    # Inputs indicator
-                    torch.unsqueeze(torch.zeros(num_items_ahead * 2), dim=1),
-                ],
-                dim=1,
-            )
-            # Create output embeddings
-            relevant_actions = output_actions[-num_items_ahead:]
-            output = torch.zeros(
-                num_items_ahead * 2,
-                self.config.actor_latent_dim
-                + self.config.actor_exponent_dim * self.config.actor_exponent_dim,
-            )
-            processed_vector = torch.cat(
-                [torch.ones(num_items_ahead), torch.zeros(num_items_ahead)]
-            )
-            vacancy_vector = torch.cat(
-                [
-                    torch.zeros(num_items_ahead - len(relevant_actions)),
-                    torch.ones(len(relevant_actions)),
-                    torch.zeros(num_items_ahead),
-                ]
-            )
-            output = torch.cat(
-                [
-                    output,
-                    self.frequencies_block,
-                    # processed bit
-                    torch.unsqueeze(processed_vector, dim=1),
-                    # Vacancy bit
-                    torch.unsqueeze(vacancy_vector, dim=1),
-                    # Shift bit
-                    torch.unsqueeze(torch.zeros(num_items_ahead * 2), dim=1),
-                    # Output indicator
-                    torch.unsqueeze(torch.ones(num_items_ahead * 2), dim=1),
-                ],
-                dim=1,
-            )
-            ptr = max(len(relevant_actions) - num_items_ahead, 0)
-            while ptr < len(relevant_actions):
-                action = relevant_actions[ptr]
-                if action.shift:
-                    output[len(relevant_actions) - ptr - 1, -2] = 1
-                else:
-                    exponentiated_action = so_to_SO(
-                        self.config.actor_exponent_dim, action.sampled_action
-                    )
-                    output[
-                        len(relevant_actions) - ptr, : self.config.actor_latent_dim
-                    ] = action.sampled_action
-                    output[
-                        len(relevant_actions) - ptr - 1,
-                        self.config.actor_latent_dim : self.config.actor_latent_dim
-                        + self.config.actor_exponent_dim
-                        * self.config.actor_exponent_dim,
-                    ] = exponentiated_action
-                ptr += 1
-            output_embeddings = self.transformer.output_translation(output)
-            output_embeddings = torch.cat(
-                [
-                    output_embeddings,
-                    self.frequencies_block,
-                    torch.unsqueeze(
-                        torch.cat(
-                            [torch.ones(num_items_ahead), torch.zeros(num_items_ahead)]
-                        ),
-                        dim=1,
-                    ),
-                    # Vacancy bit
-                    torch.unsqueeze(vacancy_vector, dim=1),
-                    # Shift bit
-                    torch.unsqueeze(torch.zeros(num_items_ahead * 2), dim=1),
-                    # Output indicator
-                    torch.unsqueeze(torch.ones(num_items_ahead * 2), dim=1),
-                ],
-                dim=1,
+            output_embeddings = self.create_output_embeddings(
+                output_actions, num_items_ahead
             )
             network_input = torch.unsqueeze(
                 torch.cat([output_embeddings, full_input_context], dim=0), dim=0
             )
-            # No drop in sampling
-            # x = self.transformer.drop(network_input)
             x = network_input
             for i in range(self.config.n_common_layers):
                 x = self.transformer.h[i](x)
@@ -344,28 +229,8 @@ class A2CGPTEncoderModel(nn.Module):
             ]
             policy_token_var = torch.exp(policy_logvar * temperature)
             policy_shift = torch.sigmoid(actor_policy[-1] * temperature)
-            critic_merger_input = torch.unsqueeze(
-                torch.cat(
-                    [
-                        x[0],
-                        torch.zeros(
-                            num_items_ahead * 4,
-                            self.config.actor_latent_dim * 2 + 1,
-                        ),
-                    ],
-                    dim=1,
-                ),
-                dim=0,
-            )
-            critic_merger_input[0][num_items_ahead * 3][
-                self.config.n_embd :
-            ] = torch.cat(
-                [
-                    policy_token_mean,
-                    policy_token_var,
-                    torch.unsqueeze(policy_shift, dim=0),
-                ],
-                dim=0,
+            critic_merger_input = self.create_critic_merger_input(
+                x, num_items_ahead, policy_token_mean, policy_token_var, policy_shift
             )
             x = x + self.transformer.critic_merger(critic_merger_input)
             for i in range(self.config.n_critic_layers):
@@ -374,43 +239,20 @@ class A2CGPTEncoderModel(nn.Module):
             critic_mean = critic_result[0]
             critic_var = torch.exp(critic_result[1])
             sampled_random = random.random()
-            advantage_merger_input = torch.unsqueeze(
-                torch.cat(
-                    [
-                        x[0],
-                        torch.zeros(
-                            num_items_ahead * 4,
-                            self.config.actor_latent_dim
-                            + self.config.actor_exponent_dim
-                            * self.config.actor_exponent_dim
-                            + 1,
-                        ),
-                    ],
-                    dim=1,
-                ),
-                dim=0,
+            (
+                advantage_merger_input,
+                action,
+            ) = self.create_advantage_merger_input_and_action(
+                x,
+                num_items_ahead,
+                policy_shift,
+                policy_token_mean,
+                policy_token_var,
+                sampled_random,
             )
-            if sampled_random < policy_shift:
-                action = A2CGPTEncoderAction(shift=True, sampled_action=None)
+            if action.shift:
                 shifted_bytes = shifted_bytes + 1
-                advantage_merger_input[0][num_items_ahead * 3][-1] = 1
-            else:
-                sampler = torch.normal(0.0, 1.0, size=(self.config.actor_latent_dim,))
-                action = A2CGPTEncoderAction(
-                    shift=False,
-                    sampled_action=policy_token_mean + sampler * policy_token_var,
-                )
-                advantage_merger_input[0][num_items_ahead * 3][
-                    -self.config.actor_latent_dim
-                    - self.config.actor_exponent_dim * self.config.actor_exponent_dim
-                    - 1 : -self.config.actor_exponent_dim
-                    * self.config.actor_exponent_dim
-                    - 1
-                ] = action.sampled_action
-                advantage_merger_input[0][num_items_ahead * 3][
-                    -self.config.actor_exponent_dim * self.config.actor_exponent_dim
-                    - 1 : -1
-                ] = so_to_SO(self.config.actor_exponent_dim, action.sampled_action)
+            output_actions.append(action)
             x = x + self.transformer.advantage_merger(advantage_merger_input)
             for i in range(self.config.n_advantage_layers):
                 x = self.transformer.h[
@@ -421,7 +263,6 @@ class A2CGPTEncoderModel(nn.Module):
             ]
             advantage_mean = advantage_result[0]
             advantage_var = torch.exp(advantage_result[1])
-            output_actions.append(action)
             outpus_losses.append(
                 A2CGPTEncoderLossProjection(
                     actor_entropy_loss=torch.sum(policy_logvar**2),
@@ -437,3 +278,198 @@ class A2CGPTEncoderModel(nn.Module):
                 )
             )
         return output_actions, outpus_losses
+
+    def create_input_embeddings(
+        self,
+        input_embeddings,
+        shifted_bytes,
+        num_items_ahead,
+        target_len_ratio,
+        target_len_importance,
+    ):
+        processed_visible_bytes = min(shifted_bytes, num_items_ahead)
+        input_processed = input_embeddings[
+            shifted_bytes - processed_visible_bytes : shifted_bytes
+        ]
+        input_context = input_embeddings[
+            shifted_bytes : shifted_bytes + num_items_ahead
+        ]
+        full_input_context = torch.cat(
+            [
+                torch.zeros(
+                    num_items_ahead - processed_visible_bytes,
+                    input_context.shape[1],
+                ),
+                input_processed,
+                input_context,
+                torch.zeros(
+                    num_items_ahead - input_context.shape[0],
+                    input_context.shape[1],
+                ),
+            ]
+        )
+        processed_vector = torch.cat(
+            [torch.ones(num_items_ahead), torch.zeros(num_items_ahead)]
+        )
+        vacancy_vector = torch.cat(
+            [
+                torch.zeros(num_items_ahead - input_processed.shape[0]),
+                torch.ones(input_processed.shape[0]),
+                torch.ones(input_context.shape[0]),
+                torch.zeros(num_items_ahead - input_context.shape[0]),
+            ]
+        )
+        full_input_context = torch.cat(
+            [
+                full_input_context,
+                self.frequencies_block,
+                torch.unsqueeze(processed_vector, dim=1),
+                torch.unsqueeze(vacancy_vector, dim=1),
+                torch.unsqueeze(
+                    torch.ones(num_items_ahead * 2) * target_len_ratio, dim=1
+                ),
+                torch.unsqueeze(
+                    torch.ones(num_items_ahead * 2) * target_len_importance, dim=1
+                ),
+                torch.unsqueeze(torch.zeros(num_items_ahead * 2), dim=1),
+            ],
+            dim=1,
+        )
+        return full_input_context, processed_vector, vacancy_vector
+
+    def create_output_embeddings(self, output_actions, num_items_ahead):
+        relevant_actions = output_actions[-num_items_ahead:]
+        output = torch.zeros(
+            num_items_ahead * 2,
+            self.config.actor_latent_dim
+            + self.config.actor_exponent_dim * self.config.actor_exponent_dim,
+        )
+        processed_vector = torch.cat(
+            [torch.ones(num_items_ahead), torch.zeros(num_items_ahead)]
+        )
+        vacancy_vector = torch.cat(
+            [
+                torch.zeros(num_items_ahead - len(relevant_actions)),
+                torch.ones(len(relevant_actions)),
+                torch.zeros(num_items_ahead),
+            ]
+        )
+        output = torch.cat(
+            [
+                output,
+                self.frequencies_block,
+                torch.unsqueeze(processed_vector, dim=1),
+                torch.unsqueeze(vacancy_vector, dim=1),
+                torch.unsqueeze(torch.zeros(num_items_ahead * 2), dim=1),
+                torch.unsqueeze(torch.ones(num_items_ahead * 2), dim=1),
+            ],
+            dim=1,
+        )
+        ptr = max(len(relevant_actions) - num_items_ahead, 0)
+        while ptr < len(relevant_actions):
+            action = relevant_actions[ptr]
+            if action.shift:
+                output[len(relevant_actions) - ptr - 1, -2] = 1
+            else:
+                exponentiated_action = so_to_SO(
+                    self.config.actor_exponent_dim, action.sampled_action
+                )
+                output[
+                    len(relevant_actions) - ptr, : self.config.actor_latent_dim
+                ] = action.sampled_action
+                output[
+                    len(relevant_actions) - ptr - 1,
+                    self.config.actor_latent_dim : self.config.actor_latent_dim
+                    + self.config.actor_exponent_dim * self.config.actor_exponent_dim,
+                ] = exponentiated_action
+            ptr += 1
+        output_embeddings = self.transformer.output_translation(output)
+        output_embeddings = torch.cat(
+            [
+                output_embeddings,
+                self.frequencies_block,
+                torch.unsqueeze(
+                    torch.cat(
+                        [torch.ones(num_items_ahead), torch.zeros(num_items_ahead)]
+                    ),
+                    dim=1,
+                ),
+                torch.unsqueeze(vacancy_vector, dim=1),
+                torch.unsqueeze(torch.zeros(num_items_ahead * 2), dim=1),
+                torch.unsqueeze(torch.ones(num_items_ahead * 2), dim=1),
+            ],
+            dim=1,
+        )
+        return output_embeddings
+
+    def create_critic_merger_input(
+        self, x, num_items_ahead, policy_token_mean, policy_token_var, policy_shift
+    ):
+        critic_merger_input = torch.unsqueeze(
+            torch.cat(
+                [
+                    x[0],
+                    torch.zeros(
+                        num_items_ahead * 4,
+                        self.config.actor_latent_dim * 2 + 1,
+                    ),
+                ],
+                dim=1,
+            ),
+            dim=0,
+        )
+        critic_merger_input[0][num_items_ahead * 3][self.config.n_embd :] = torch.cat(
+            [
+                policy_token_mean,
+                policy_token_var,
+                torch.unsqueeze(policy_shift, dim=0),
+            ],
+            dim=0,
+        )
+        return critic_merger_input
+
+    def create_advantage_merger_input_and_action(
+        self,
+        x,
+        num_items_ahead,
+        policy_shift,
+        policy_token_mean,
+        policy_token_var,
+        sampled_random,
+    ):
+        advantage_merger_input = torch.unsqueeze(
+            torch.cat(
+                [
+                    x[0],
+                    torch.zeros(
+                        num_items_ahead * 4,
+                        self.config.actor_latent_dim
+                        + self.config.actor_exponent_dim
+                        * self.config.actor_exponent_dim
+                        + 1,
+                    ),
+                ],
+                dim=1,
+            ),
+            dim=0,
+        )
+        if sampled_random < policy_shift:
+            action = A2CGPTEncoderAction(shift=True, sampled_action=None)
+            advantage_merger_input[0][num_items_ahead * 3][-1] = 1
+        else:
+            sampler = torch.normal(0.0, 1.0, size=(self.config.actor_latent_dim,))
+            action = A2CGPTEncoderAction(
+                shift=False,
+                sampled_action=policy_token_mean + sampler * policy_token_var,
+            )
+            advantage_merger_input[0][num_items_ahead * 3][
+                -self.config.actor_latent_dim
+                - self.config.actor_exponent_dim * self.config.actor_exponent_dim
+                - 1 : -self.config.actor_exponent_dim * self.config.actor_exponent_dim
+                - 1
+            ] = action.sampled_action
+            advantage_merger_input[0][num_items_ahead * 3][
+                -self.config.actor_exponent_dim * self.config.actor_exponent_dim
+                - 1 : -1
+            ] = so_to_SO(self.config.actor_exponent_dim, action.sampled_action)
+        return advantage_merger_input, action
