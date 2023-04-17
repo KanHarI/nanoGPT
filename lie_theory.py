@@ -24,11 +24,9 @@ def so_to_SO(n, algebra_vector):
     matrix_1 = skew_symmetric_matrix(n, algebra_vector)
 
     # Compute the matrix exponential of matrix_1
-    print(matrix_1)
     matrix_2 = torch.matrix_exp(matrix_1)
-    print(matrix_2)
 
-    # Serialize the result into a vector
-    result = matrix_2.view(-1).tolist()
+    # Serialize the result into a 1d-tensor
+    result = matrix_2.view(-1)
 
     return result
