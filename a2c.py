@@ -1,10 +1,12 @@
 import math
 from dataclasses import dataclass
+from typing import Optional
 
 import numpy as np
 import torch
 import torch.nn as nn
 
+from lie_theory import so_to_SO
 from model import Block
 
 
@@ -64,7 +66,10 @@ class A2CGPTEncoderModel(nn.Module):
             dict(
                 wte=nn.Embedding(
                     config.input_vocab_size,
-                    config.n_embd - (config.log2_max_block_size * 4 + 5),
+                    # +2:
+                    # +1 for already_processed
+                    # +1 for vacancy
+                    config.n_embd - (config.log2_max_block_size * 4 + 2),
                 ),
                 output_embedding=nn.Linear(
                     # Source action
@@ -73,7 +78,7 @@ class A2CGPTEncoderModel(nn.Module):
                     + config.actor_exponent_dim * config.actor_exponent_dim
                     # + position (8 * log2_size)
                     + config.log2_max_block_size * 4
-                    # + already_encoded, vacancy, replay_bit
+                    # + already_encoded, vacancy, shift
                     + 3,
                     config.input_vocab_size,
                 ),
@@ -129,13 +134,16 @@ class A2CGPTEncoderModel(nn.Module):
     def sample_nograd(
         self,
         input: str,
+        max_actions: Optional[int] = None,
     ) -> list[A2CGPTEncoderAction]:
         input_bytes = input.encode("utf-8")
         shifts_to_end = len(input_bytes)
         shifted_bytes = 0
         input_embeddings = self.transformer.wte(torch.LongTensor(input_bytes))
+        output_actions: list[A2CGPTEncoderAction] = []
         num_items_ahead = 2 ** (self.config.log2_max_block_size - 1)
-        while shifted_bytes < shifts_to_end:
+        while shifted_bytes < shifts_to_end and len(output_actions) < max_actions:
+            # Create input embeddings
             processed_visible_bytes = min(shifted_bytes, num_items_ahead)
             input_processed = input_embeddings[
                 shifted_bytes - processed_visible_bytes : shifted_bytes
@@ -159,13 +167,69 @@ class A2CGPTEncoderModel(nn.Module):
                 ]
             )
             # Add position embedding
-            input_context = torch.stack(
+            full_input_context = torch.stack(
                 [
                     full_input_context,
                     self.frequencies_block,
+                    # Already processed - by position
                     torch.cat(
                         [torch.zeros(num_items_ahead), torch.ones(num_items_ahead)]
+                    ),
+                    # Vacancy bit
+                    torch.cat(
+                        [
+                            torch.zeros(num_items_ahead - processed_visible_bytes),
+                            torch.ones(processed_visible_bytes),
+                            torch.ones(input_processed.shape[0]),
+                            torch.zeros(num_items_ahead - input_context.shape[0]),
+                        ]
                     ),
                 ],
                 dim=1,
             )
+            # Create output embeddings
+            vacant_pre_outputs_count = max(num_items_ahead - len(output_actions), 0)
+            relevant_actions = output_actions[-num_items_ahead:]
+            output = torch.zeros(
+                num_items_ahead * 2,
+                self.config.actor_latent_dim
+                + self.config.actor_exponent_dim * self.config.actor_exponent_dim,
+            )
+            output = torch.stack(
+                [
+                    output,
+                    self.frequencies_block,
+                    # processed bit
+                    torch.cat(
+                        [torch.zeros(num_items_ahead), torch.ones(num_items_ahead)]
+                    ),
+                    # Vacancy bit
+                    torch.cat(
+                        [
+                            torch.zeros(num_items_ahead - processed_visible_bytes),
+                            torch.ones(processed_visible_bytes),
+                            torch.ones(input_processed.shape[0]),
+                            torch.zeros(num_items_ahead - input_context.shape[0]),
+                        ]
+                    ),
+                    # Shift bit
+                    torch.zeros(num_items_ahead * 2),
+                ],
+                dim=1,
+            )
+            ptr = num_items_ahead - len(relevant_actions)
+            while ptr < num_items_ahead:
+                action = relevant_actions[ptr]
+                if action.shift:
+                    output[ptr, -1] = 1
+                else:
+                    exponentiated_action = so_to_SO(action.sampled_action)
+                    output[ptr, : self.config.actor_latent_dim] = action.sampled_action
+                    output[
+                        ptr,
+                        ptr
+                        + self.config.actor_latent_dim : ptr
+                        + self.config.actor_latent_dim
+                        + self.config.actor_exponent_dim
+                        * self.config.actor_exponent_dim,
+                    ] = exponentiated_action
