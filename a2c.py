@@ -11,6 +11,7 @@ from model import Block
 @dataclass
 class A2CGPTEncoderConfig:
     # We use points on SO(5) as the latent space
+    # 10 points - the lie dimension of SO(5) is 10
     actor_latent_dim: int = 10
     actor_exponent_dim: int = 5
     # UTF-8
@@ -35,6 +36,20 @@ class A2CGPTEncoderAction:
     sampled_action: torch.Tensor
 
 
+def frequencies_block(log2_size: int):
+    frequencies = []
+    for i in range(log2_size):
+        frequencies.append(2 * math.pi / 2**log2_size * (2 ** (i - 0.5)))
+        frequencies.append(2 * math.pi / 2**log2_size * (2**i))
+    block = []
+    for i in range(2**log2_size):
+        block.append([])
+        for freq in frequencies:
+            block[-1].append(math.sin(freq * i))
+            block[-1].append(math.cos(freq * i))
+    return torch.Tensor(block, requires_grad=False)
+
+
 class A2CGPTEncoderModel(nn.Module):
     def __init__(self, config: A2CGPTEncoderConfig):
         super().__init__()
@@ -47,16 +62,15 @@ class A2CGPTEncoderModel(nn.Module):
 
         self.transformer = nn.ModuleDict(
             dict(
-                input_embedding=nn.Embedding(
-                    # + position (4 * log2_size), already_encoded, vacancy, length_target, length_importance, replay_bit
-                    config.input_vocab_size + config.log2_max_block_size * 4 + 5,
-                    config.n_embd,
+                wte=nn.Embedding(
+                    config.input_vocab_size,
+                    config.n_embd - (config.log2_max_block_size * 4 + 5),
                 ),
                 output_embedding=nn.Linear(
                     # Source action
                     config.actor_latent_dim
                     # Exponented action in SO(5)
-                    + self.config.actor_exponent_dim * self.config.actor_exponent_dim
+                    + config.actor_exponent_dim * config.actor_exponent_dim
                     # + position (8 * log2_size)
                     + config.log2_max_block_size * 4
                     # + already_encoded, vacancy, replay_bit
@@ -92,6 +106,7 @@ class A2CGPTEncoderModel(nn.Module):
             )
         )
         self.apply(self._init_weights)
+        self.frequencies_block = frequencies_block(config.log2_max_block_size)
         print("number of parameters: %.2fM" % (self.get_num_params() / 1e6,))
 
     def get_num_params(self):
@@ -110,10 +125,47 @@ class A2CGPTEncoderModel(nn.Module):
             ),
         )
 
-    def sample_action(
+    @torch.no_grad()
+    def sample_nograd(
         self,
-        inputs: torch.Tensor,  # Tensor of ints
-        outputs_shifts: torch.Tensor,  # Tensor of bools
-        output_actions: torch.Tensor,  # Tensor of sampled actions, or zeros on shifts
-    ):
-        pass
+        input: str,
+    ) -> list[A2CGPTEncoderAction]:
+        input_bytes = input.encode("utf-8")
+        shifts_to_end = len(input_bytes)
+        shifted_bytes = 0
+        input_embeddings = self.transformer.wte(torch.LongTensor(input_bytes))
+        num_items_ahead = 2 ** (self.config.log2_max_block_size - 1)
+        while shifted_bytes < shifts_to_end:
+            processed_visible_bytes = min(shifted_bytes, num_items_ahead)
+            input_processed = input_embeddings[
+                shifted_bytes - processed_visible_bytes : shifted_bytes
+            ]
+            input_context = input_embeddings[
+                shifted_bytes : shifted_bytes + num_items_ahead
+            ]
+            # Pad to num_items_ahead with zeros
+            full_input_context = torch.cat(
+                [
+                    torch.zeros(
+                        num_items_ahead - processed_visible_bytes,
+                        input_context.shape[1],
+                    ),
+                    input_processed,
+                    input_context,
+                    torch.zeros(
+                        num_items_ahead - input_context.shape[0],
+                        input_context.shape[1],
+                    ),
+                ]
+            )
+            # Add position embedding
+            input_context = torch.stack(
+                [
+                    full_input_context,
+                    self.frequencies_block,
+                    torch.cat(
+                        [torch.zeros(num_items_ahead), torch.ones(num_items_ahead)]
+                    ),
+                ],
+                dim=1,
+            )
