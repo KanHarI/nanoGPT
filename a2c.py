@@ -189,6 +189,7 @@ class A2CGPTEncoderModel(nn.Module):
         target_len_importance: float,
         temperature: float,
         max_actions: Optional[float] = math.inf,
+        sample_losses: bool = False,
     ) -> tuple[list[A2CGPTEncoderAction], list[A2CGPTEncoderLossProjection]]:
         input_bytes = input.encode("utf-8")
         shifts_to_end = len(input_bytes)
@@ -229,22 +230,8 @@ class A2CGPTEncoderModel(nn.Module):
             ]
             policy_token_var = torch.exp(policy_logvar * temperature)
             policy_shift = torch.sigmoid(actor_policy[-1] * temperature)
-            critic_merger_input = self.create_critic_merger_input(
-                x, num_items_ahead, policy_token_mean, policy_token_var, policy_shift
-            )
-            x = x + self.transformer.critic_merger(critic_merger_input)
-            for i in range(self.config.n_critic_layers):
-                x = self.transformer.h[self.config.n_common_layers + i](x)
-            critic_result = self.transformer.critic_head(x)[0][num_items_ahead * 3]
-            critic_mean = critic_result[0]
-            critic_var = torch.exp(critic_result[1])
             sampled_random = random.random()
-            (
-                advantage_merger_input,
-                action,
-            ) = self.create_advantage_merger_input_and_action(
-                x,
-                num_items_ahead,
+            action = self.sample_action(
                 policy_shift,
                 policy_token_mean,
                 policy_token_var,
@@ -252,17 +239,42 @@ class A2CGPTEncoderModel(nn.Module):
             )
             if action.shift:
                 shifted_bytes = shifted_bytes + 1
+
             output_actions.append(action)
-            x = x + self.transformer.advantage_merger(advantage_merger_input)
-            for i in range(self.config.n_advantage_layers):
-                x = self.transformer.h[
-                    self.config.n_common_layers + self.config.n_critic_layers + i
-                ](x)
-            advantage_result = self.transformer.advantage_head(x)[0][
-                num_items_ahead * 3
-            ]
-            advantage_mean = advantage_result[0]
-            advantage_var = torch.exp(advantage_result[1])
+
+            if sample_losses:
+                critic_merger_input = self.create_critic_merger_input(
+                    x,
+                    num_items_ahead,
+                    policy_token_mean,
+                    policy_token_var,
+                    policy_shift,
+                )
+                x = x + self.transformer.critic_merger(critic_merger_input)
+                for i in range(self.config.n_critic_layers):
+                    x = self.transformer.h[self.config.n_common_layers + i](x)
+                critic_result = self.transformer.critic_head(x)[0][num_items_ahead * 3]
+                critic_mean = critic_result[0]
+                critic_var = torch.exp(critic_result[1])
+                advantage_merger_input = self.create_advantage_merger_input(
+                    x,
+                    num_items_ahead,
+                    policy_shift,
+                    policy_token_mean,
+                    policy_token_var,
+                    action,
+                )
+                x = x + self.transformer.advantage_merger(advantage_merger_input)
+                for i in range(self.config.n_advantage_layers):
+                    x = self.transformer.h[
+                        self.config.n_common_layers + self.config.n_critic_layers + i
+                    ](x)
+                advantage_result = self.transformer.advantage_head(x)[0][
+                    num_items_ahead * 3
+                ]
+                advantage_mean = advantage_result[0]
+                advantage_var = torch.exp(advantage_result[1])
+
             outpus_losses.append(
                 A2CGPTEncoderLossProjection(
                     actor_entropy_loss=torch.sum(policy_logvar**2),
@@ -270,10 +282,12 @@ class A2CGPTEncoderModel(nn.Module):
                         mean=pre_actor_value, var=pre_actor_value_var
                     ),
                     critic_value_post_actor=ExpectedMeanVar(
-                        mean=critic_mean, var=critic_var
+                        mean=0 if not sample_losses else critic_mean,
+                        var=0 if not sample_losses else critic_var,
                     ),
                     advantage_value=ExpectedMeanVar(
-                        mean=advantage_mean, var=advantage_var
+                        mean=0 if not sample_losses else advantage_mean,
+                        var=0 if not sample_losses else advantage_var,
                     ),
                 )
             )
@@ -428,14 +442,60 @@ class A2CGPTEncoderModel(nn.Module):
         )
         return critic_merger_input
 
-    def create_advantage_merger_input_and_action(
+    # def create_advantage_merger_input_and_action(
+    #     self,
+    #     x,
+    #     num_items_ahead,
+    #     policy_shift,
+    #     policy_token_mean,
+    #     policy_token_var,
+    #     sampled_random,
+    # ):
+    #     advantage_merger_input = torch.unsqueeze(
+    #         torch.cat(
+    #             [
+    #                 x[0],
+    #                 torch.zeros(
+    #                     num_items_ahead * 4,
+    #                     self.config.actor_latent_dim
+    #                     + self.config.actor_exponent_dim
+    #                     * self.config.actor_exponent_dim
+    #                     + 1,
+    #                 ),
+    #             ],
+    #             dim=1,
+    #         ),
+    #         dim=0,
+    #     )
+    #     if sampled_random < policy_shift:
+    #         action = A2CGPTEncoderAction(shift=True, sampled_action=None)
+    #         advantage_merger_input[0][num_items_ahead * 3][-1] = 1
+    #     else:
+    #         sampler = torch.normal(0.0, 1.0, size=(self.config.actor_latent_dim,))
+    #         action = A2CGPTEncoderAction(
+    #             shift=False,
+    #             sampled_action=policy_token_mean + sampler * policy_token_var,
+    #         )
+    #         advantage_merger_input[0][num_items_ahead * 3][
+    #             -self.config.actor_latent_dim
+    #             - self.config.actor_exponent_dim * self.config.actor_exponent_dim
+    #             - 1 : -self.config.actor_exponent_dim * self.config.actor_exponent_dim
+    #             - 1
+    #         ] = action.sampled_action
+    #         advantage_merger_input[0][num_items_ahead * 3][
+    #             -self.config.actor_exponent_dim * self.config.actor_exponent_dim
+    #             - 1 : -1
+    #         ] = so_to_SO(self.config.actor_exponent_dim, action.sampled_action)
+    #     return advantage_merger_input, action
+
+    def create_advantage_merger_input(
         self,
         x,
         num_items_ahead,
         policy_shift,
         policy_token_mean,
         policy_token_var,
-        sampled_random,
+        action,
     ):
         advantage_merger_input = torch.unsqueeze(
             torch.cat(
@@ -453,15 +513,9 @@ class A2CGPTEncoderModel(nn.Module):
             ),
             dim=0,
         )
-        if sampled_random < policy_shift:
-            action = A2CGPTEncoderAction(shift=True, sampled_action=None)
+        if action.shift:
             advantage_merger_input[0][num_items_ahead * 3][-1] = 1
         else:
-            sampler = torch.normal(0.0, 1.0, size=(self.config.actor_latent_dim,))
-            action = A2CGPTEncoderAction(
-                shift=False,
-                sampled_action=policy_token_mean + sampler * policy_token_var,
-            )
             advantage_merger_input[0][num_items_ahead * 3][
                 -self.config.actor_latent_dim
                 - self.config.actor_exponent_dim * self.config.actor_exponent_dim
@@ -472,4 +526,21 @@ class A2CGPTEncoderModel(nn.Module):
                 -self.config.actor_exponent_dim * self.config.actor_exponent_dim
                 - 1 : -1
             ] = so_to_SO(self.config.actor_exponent_dim, action.sampled_action)
-        return advantage_merger_input, action
+        return advantage_merger_input
+
+    def sample_action(
+        self,
+        policy_shift,
+        policy_token_mean,
+        policy_token_var,
+        sampled_random,
+    ):
+        if sampled_random < policy_shift:
+            action = A2CGPTEncoderAction(shift=True, sampled_action=None)
+        else:
+            sampler = torch.normal(0.0, 1.0, size=(self.config.actor_latent_dim,))
+            action = A2CGPTEncoderAction(
+                shift=False,
+                sampled_action=policy_token_mean + sampler * policy_token_var,
+            )
+        return action
