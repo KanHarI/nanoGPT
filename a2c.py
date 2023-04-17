@@ -66,10 +66,13 @@ class A2CGPTEncoderModel(nn.Module):
             dict(
                 wte=nn.Embedding(
                     config.input_vocab_size,
-                    # +2:
+                    # +4:
                     # +1 for already_processed
                     # +1 for vacancy
-                    config.n_embd - (config.log2_max_block_size * 4 + 2),
+                    # +1 target len ratio
+                    # +1 for target len importance
+                    # +1 for marking inputs
+                    config.n_embd - (config.log2_max_block_size * 4 + 5),
                 ),
                 output_embedding=nn.Linear(
                     # Source action
@@ -78,8 +81,8 @@ class A2CGPTEncoderModel(nn.Module):
                     + config.actor_exponent_dim * config.actor_exponent_dim
                     # + position (8 * log2_size)
                     + config.log2_max_block_size * 4
-                    # + already_encoded, vacancy, shift
-                    + 3,
+                    # + already_encoded, vacancy, shift, output indicator
+                    + 4,
                     config.input_vocab_size,
                 ),
                 drop=nn.Dropout(config.dropout),
@@ -112,6 +115,9 @@ class A2CGPTEncoderModel(nn.Module):
         )
         self.apply(self._init_weights)
         self.frequencies_block = frequencies_block(config.log2_max_block_size)
+        self.standard_attn_mask = torch.ones(
+            config.log2_max_block_size * 2, config.log2_max_block_size * 2
+        )
         print("number of parameters: %.2fM" % (self.get_num_params() / 1e6,))
 
     def get_num_params(self):
@@ -134,6 +140,8 @@ class A2CGPTEncoderModel(nn.Module):
     def sample_nograd(
         self,
         input: str,
+        target_len_ratio: float,
+        target_len_importance: float,
         max_actions: Optional[int] = None,
     ) -> list[A2CGPTEncoderAction]:
         input_bytes = input.encode("utf-8")
@@ -173,7 +181,7 @@ class A2CGPTEncoderModel(nn.Module):
                     self.frequencies_block,
                     # Already processed - by position
                     torch.cat(
-                        [torch.zeros(num_items_ahead), torch.ones(num_items_ahead)]
+                        [torch.ones(num_items_ahead), torch.zeros(num_items_ahead)]
                     ),
                     # Vacancy bit
                     torch.cat(
@@ -184,6 +192,12 @@ class A2CGPTEncoderModel(nn.Module):
                             torch.zeros(num_items_ahead - input_context.shape[0]),
                         ]
                     ),
+                    # Target length ratio
+                    torch.ones(num_items_ahead * 2) * target_len_ratio,
+                    # Target length importance
+                    torch.ones(num_items_ahead * 2) * target_len_importance,
+                    # Inputs indicator
+                    torch.zeros(num_items_ahead * 2),
                 ],
                 dim=1,
             )
@@ -201,7 +215,7 @@ class A2CGPTEncoderModel(nn.Module):
                     self.frequencies_block,
                     # processed bit
                     torch.cat(
-                        [torch.zeros(num_items_ahead), torch.ones(num_items_ahead)]
+                        [torch.ones(num_items_ahead), torch.zeros(num_items_ahead)]
                     ),
                     # Vacancy bit
                     torch.cat(
@@ -214,6 +228,8 @@ class A2CGPTEncoderModel(nn.Module):
                     ),
                     # Shift bit
                     torch.zeros(num_items_ahead * 2),
+                    # Output indicator
+                    torch.ones(num_items_ahead * 2),
                 ],
                 dim=1,
             )
@@ -221,14 +237,13 @@ class A2CGPTEncoderModel(nn.Module):
             while ptr < num_items_ahead:
                 action = relevant_actions[ptr]
                 if action.shift:
-                    output[ptr, -1] = 1
+                    output[ptr, -2] = 1
                 else:
                     exponentiated_action = so_to_SO(action.sampled_action)
                     output[ptr, : self.config.actor_latent_dim] = action.sampled_action
                     output[
                         ptr,
-                        ptr
-                        + self.config.actor_latent_dim : ptr
+                        self.config.actor_latent_dim : ptr
                         + self.config.actor_latent_dim
                         + self.config.actor_exponent_dim
                         * self.config.actor_exponent_dim,
