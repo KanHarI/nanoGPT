@@ -209,28 +209,31 @@ class GPTAutoTokenizer(nn.Module):
         ):
             if vocab_actions[i].shift:
                 reserved_input_dims[i - num_processed_items][-1] = 1
-        input_vocab_embeddings = torch.stack(
-            [
-                torch.zeros(self.config.n_embd * 4 - self.reserved_inputs_dim)
-                if action.shift
-                else self.transformer.vocab_embedding_1(
-                    torch.tensor(action.vocab, dtype=torch.int64)
-                )
-                for action in vocab_actions
-            ],
-            dim=0,
-        )
-        padding_before = torch.zeros(
-            self.look_ahead - num_relevant_vocab_actions_before,
-            self.config.n_embd * 4 - self.reserved_inputs_dim,
-        )
-        padding_after = torch.zeros(
-            self.look_ahead - num_relevant_vocab_actions_after,
-            self.config.n_embd * 4 - self.reserved_inputs_dim,
-        )
-        input_vocab_embeddings = torch.cat(
-            [padding_before, input_vocab_embeddings, padding_after], dim=0
-        )
+        if len(vocab_actions) == 0:
+            input_vocab_embeddings = torch.zeros(self.look_ahead * 2, self.config.n_embd * 4 - self.reserved_inputs_dim)
+        else:
+            input_vocab_embeddings = torch.stack(
+                [
+                    torch.zeros(self.config.n_embd * 4 - self.reserved_inputs_dim)
+                    if action.shift
+                    else self.transformer.vocab_embedding_1(
+                        torch.tensor(action.vocab, dtype=torch.int64)
+                    )
+                    for action in vocab_actions
+                ],
+                dim=0,
+            )
+            padding_before = torch.zeros(
+                self.look_ahead - num_relevant_vocab_actions_before,
+                self.config.n_embd * 4 - self.reserved_inputs_dim,
+            )
+            padding_after = torch.zeros(
+                self.look_ahead - num_relevant_vocab_actions_after,
+                self.config.n_embd * 4 - self.reserved_inputs_dim,
+            )
+            input_vocab_embeddings = torch.cat(
+                [padding_before, input_vocab_embeddings, padding_after], dim=0
+            )
         input_vocab_embeddings = torch.cat(
             [input_vocab_embeddings, reserved_input_dims], dim=1
         )
@@ -316,7 +319,7 @@ class GPTAutoTokenizer(nn.Module):
     def sample_vocab_to_latent(
         self,
         vocab: list[int],
-        target_length_ration: float,
+        target_length_ratio: float,
         target_length_importance: float,
         temperature: float = 1.0,
     ):
@@ -328,13 +331,13 @@ class GPTAutoTokenizer(nn.Module):
             input_embeddings = self.create_vocab_embedding(
                 vocab_actions,
                 processed_items,
-                target_length_ration,
+                target_length_ratio,
                 target_length_importance,
             )
             output_embeddings = self.create_latent_embedding(
                 output_actions,
                 len(output_actions),  # All actions are "passed"
-                target_length_ration,
+                target_length_ratio,
                 target_length_importance,
             )
             x = torch.cat([input_embeddings, output_embeddings], dim=0).unsqueeze(0)
@@ -364,5 +367,49 @@ class GPTAutoTokenizer(nn.Module):
                     latent_so_means + sampler * latent_so_vars,
                 )
                 new_action = VocabToLatentAction(latent=latent_exponentiated)
+            output_actions.append(new_action)
+        return output_actions
+
+    @torch.no_grad()
+    def sample_latent_to_vocab(
+        self,
+        latents: list[torch.Tensor],
+        target_length_ratio: float,
+        target_length_importance: float,
+        temperature: float = 1.0,
+    ):
+        total_items = len(latents)
+        latent_actions = [VocabToLatentAction(latent=i) for i in latents]
+        output_actions: list[LatentToVocabAction] = []
+        processed_items = 0
+        while processed_items < total_items:
+            input_embeddings = self.create_latent_embedding(
+                latent_actions,
+                processed_items,
+                target_length_ratio,
+                target_length_importance,
+            )
+            output_embeddings = self.create_vocab_embedding(
+                output_actions,
+                len(output_actions),  # All actions are "passed"
+                target_length_ratio,
+                target_length_importance,
+            )
+            x = torch.cat([input_embeddings, output_embeddings], dim=0).unsqueeze(0)
+            for i in range(self.config.n_common_layers):
+                x = self.transformer.h[i](x)
+            actor_policy = self.transformer.latent_to_vocab_actor(x)[0][
+                self.look_ahead * 3
+            ]
+            shift_sampler = torch.rand(1)[0]
+            vocab_pre_softmax = actor_policy[2 : 2 + self.config.input_vocab_size] / temperature
+            shift = torch.sigmoid(actor_policy[-1] / temperature)
+            if shift_sampler < shift:
+                new_action = LatentToVocabAction(shift=True)
+                processed_items += 1
+            else:
+                softmax_vocab = torch.distributions.categorical.Categorical(torch.softmax(vocab_pre_softmax, dim=0))
+                sampled = softmax_vocab.sample()
+                new_action = LatentToVocabAction(vocab=sampled)
             output_actions.append(new_action)
         return output_actions
