@@ -1,3 +1,4 @@
+import copy
 import math
 from dataclasses import dataclass
 from typing import Callable, Optional
@@ -98,47 +99,48 @@ class GPTAutoTokenizer(nn.Module):
         self.block_size = 2**config.log2_max_block_size
         self.look_ahead = self.block_size // 2
 
-        self.transformer = nn.ModuleDict(
-            dict(
-                vocab_embedding_1=nn.Embedding(
-                    config.input_vocab_size,
-                    4 * config.n_embd - self.reserved_inputs_dim,
-                ),
-                vocab_embedding_2=nn.Linear(
-                    4 * config.n_embd, config.n_embd - self.reserved_inputs_dim
-                ),
-                latent_embedding_1=nn.Linear(
-                    config.actor_exponent_dim**2,
-                    config.n_embd * config.actor_exponent_dim
-                    - self.reserved_inputs_dim,
-                ),
-                latent_embedding_2=nn.Linear(
-                    config.n_embd * config.actor_exponent_dim,
-                    config.n_embd - self.reserved_inputs_dim,
-                ),
-                drop=nn.Dropout(config.dropout),
-                h=nn.ModuleList(
-                    [
-                        Block(config, custom_attn_mask=self.standard_attn_mask)
-                        for _ in range(self.total_transformer_layers)
-                    ]
-                ),
-                # +2 - expected reward value and variance, *2 - mean and variance, +1 - shift
-                vocab_to_latent_actor=nn.Linear(
-                    config.n_embd, 2 + self.latent_actor_dim * 2 + 1
-                ),
-                # +2 - expected reward value and variance, +1 - shift
-                latent_to_vocab_actor=nn.Linear(
-                    config.n_embd, 2 + config.input_vocab_size + 1
-                ),
-                # First use the vocab_embedding / latent_embedding to get to config.n_embd
-                advantage_merger=nn.Linear(config.n_embd, config.n_embd),
-                # Mean and variance of the advantage
-                vocab_to_latent_advantage=nn.Linear(config.n_embd, 2),
-                # Mean and variance of the advantage
-                latent_to_vocab_advantage=nn.Linear(config.n_embd, 2),
-            )
+        transformer_dict = dict(
+            vocab_embedding_1=nn.Embedding(
+                config.input_vocab_size,
+                4 * config.n_embd - self.reserved_inputs_dim,
+            ),
+            vocab_embedding_2=nn.Linear(
+                4 * config.n_embd, config.n_embd - self.reserved_inputs_dim
+            ),
+            latent_embedding_1=nn.Linear(
+                config.actor_exponent_dim**2,
+                config.n_embd * config.actor_exponent_dim - self.reserved_inputs_dim,
+            ),
+            latent_embedding_2=nn.Linear(
+                config.n_embd * config.actor_exponent_dim,
+                config.n_embd - self.reserved_inputs_dim,
+            ),
+            drop=nn.Dropout(config.dropout),
+            h=nn.ModuleList(
+                [
+                    Block(config, custom_attn_mask=self.standard_attn_mask)
+                    for _ in range(self.total_transformer_layers)
+                ]
+            ),
+            # +2 - expected reward value and variance, *2 - mean and variance, +1 - shift
+            vocab_to_latent_actor=nn.Linear(
+                config.n_embd, 2 + self.latent_actor_dim * 2 + 1
+            ),
+            # +2 - expected reward value and variance, +1 - shift
+            latent_to_vocab_actor=nn.Linear(
+                config.n_embd, 2 + config.input_vocab_size + 1
+            ),
+            # First use the vocab_embedding / latent_embedding to get to config.n_embd
+            advantage_merger=nn.Linear(config.n_embd, config.n_embd),
+            # Mean and variance of the advantage
+            vocab_to_latent_advantage=nn.Linear(config.n_embd, 2),
+            # Mean and variance of the advantage
+            latent_to_vocab_advantage=nn.Linear(config.n_embd, 2),
         )
+
+        self.transformer = nn.ModuleDict(transformer_dict)
+        self.old_transformer = nn.ModuleDict(copy.deepcopy(transformer_dict))
+        self.update_old_policy()
         self.frequencies_block = frequencies_block(config.log2_max_block_size)
 
     def create_reserved_input_dims_no_shifts(
@@ -210,7 +212,9 @@ class GPTAutoTokenizer(nn.Module):
             if vocab_actions[i].shift:
                 reserved_input_dims[i - num_processed_items][-1] = 1
         if len(vocab_actions) == 0:
-            input_vocab_embeddings = torch.zeros(self.look_ahead * 2, self.config.n_embd * 4 - self.reserved_inputs_dim)
+            input_vocab_embeddings = torch.zeros(
+                self.look_ahead * 2, self.config.n_embd * 4 - self.reserved_inputs_dim
+            )
         else:
             input_vocab_embeddings = torch.stack(
                 [
@@ -402,14 +406,65 @@ class GPTAutoTokenizer(nn.Module):
                 self.look_ahead * 3
             ]
             shift_sampler = torch.rand(1)[0]
-            vocab_pre_softmax = actor_policy[2 : 2 + self.config.input_vocab_size] / temperature
+            vocab_pre_softmax = (
+                actor_policy[2 : 2 + self.config.input_vocab_size] / temperature
+            )
             shift = torch.sigmoid(actor_policy[-1] / temperature)
             if shift_sampler < shift:
                 new_action = LatentToVocabAction(shift=True)
                 processed_items += 1
             else:
-                softmax_vocab = torch.distributions.categorical.Categorical(torch.softmax(vocab_pre_softmax, dim=0))
+                softmax_vocab = torch.distributions.categorical.Categorical(
+                    torch.softmax(vocab_pre_softmax, dim=0)
+                )
                 sampled = softmax_vocab.sample()
                 new_action = LatentToVocabAction(vocab=sampled)
             output_actions.append(new_action)
         return output_actions
+
+    def update_old_policy(self):
+        self.old_transformer.load_state_dict(
+            copy.deepcopy(self.transformer.state_dict())
+        )
+
+    def latent_kl_divergence(self, old_policy_tensor, new_policy_tensor):
+        old_mean = old_policy_tensor[:, 2 : 2 + self.latent_actor_dim]
+        old_var = torch.exp(
+            old_policy_tensor[
+                :, 2 + self.latent_actor_dim : 2 + 2 * self.latent_actor_dim
+            ]
+        )
+        old_shift = torch.sigmoid(old_policy_tensor[:, -1])
+        new_mean = new_policy_tensor[:, 2 : 2 + self.latent_actor_dim]
+        new_var = torch.exp(
+            new_policy_tensor[
+                :, 2 + self.latent_actor_dim : 2 + 2 * self.latent_actor_dim
+            ]
+        )
+        new_shift = torch.sigmoid(new_policy_tensor[:, -1])
+        continuous_kl = 0.5 * (
+            torch.log(new_var.norm() / old_var.norm())
+            # Ignore dimension constant
+            + ((new_mean - old_mean) / new_var).dot(new_mean - old_mean)
+            + (old_var / new_var).sum(dim=0)
+        )
+        shift_kl = old_shift * torch.log(old_shift / new_shift)
+        kl = shift_kl + (1 - old_shift) * (
+            continuous_kl + torch.log((1 - old_shift) / (1 - new_shift))
+        )
+        return kl
+
+    def vocab_kl_divergence(self, old_policy_tensor, new_policy_tensor):
+        old_shift = torch.sigmoid(old_policy_tensor[:, -1])
+        new_shift = torch.sigmoid(new_policy_tensor[:, -1])
+        shift_kl = old_shift * torch.log(old_shift / new_shift)
+        softmax_old = torch.softmax(
+            old_policy_tensor[:, 2 : 2 + self.config.input_vocab_size], dim=1
+        )
+        softmax_new = torch.softmax(
+            new_policy_tensor[:, 2 : 2 + self.config.input_vocab_size], dim=1
+        )
+        softmax_kl = torch.sum(softmax_old * torch.log(softmax_old / softmax_new))
+        return shift_kl + (1 - old_shift) * (
+            softmax_kl + torch.log((1 - old_shift) / (1 - new_shift))
+        )
