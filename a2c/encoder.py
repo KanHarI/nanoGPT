@@ -7,7 +7,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from lie_theory import so_to_SO
+from a2c.lie_theory import so_to_SO
 from model import Block
 
 
@@ -532,69 +532,6 @@ class A2CGPTEncoderModel(nn.Module):
         max_actions: Optional[float] = math.inf,
         sample_losses: bool = False,
     ) -> tuple[bytes, list[A2CGPTCodecLossProjection]]:
-        # self.transformer = nn.ModuleDict(
-        #             dict(
-        #                 wte=nn.Embedding(
-        #                     config.input_vocab_size,
-        #                     # +4:
-        #                     # +1 for already_processed
-        #                     # +1 for vacancy
-        #                     # +1 target len ratio
-        #                     # +1 for target len importance
-        #                     # +1 for marking inputs
-        #                     config.n_embd - (config.log2_max_block_size * 4 + 5),
-        #                 ),
-        #                 output_translation=nn.Linear(
-        #                     # Source action
-        #                     config.actor_latent_dim
-        #                     # Exponented action in SO(n)
-        #                     + config.actor_exponent_dim * config.actor_exponent_dim
-        #                     # + position (8 * log2_size)
-        #                     + config.log2_max_block_size * 4
-        #                     # + already_encoded, vacancy, shift, output indicator
-        #                     + 4,
-        #                     config.n_embd - (config.log2_max_block_size * 4 + 4),
-        #                 ),
-        #                 drop=nn.Dropout(config.dropout),
-        #                 h=nn.ModuleList(
-        #                     [
-        #                         Block(config, custom_attn_mask=self.standard_attn_mask)
-        #                         for _ in range(
-        #                             config.n_common_layers
-        #                             + config.n_critic_layers
-        #                             + config.n_advantage_layers
-        #                         )
-        #                     ]
-        #                 ),
-        #                 encoder_actor_head=nn.Linear(
-        #                     config.n_embd, 2 + config.actor_latent_dim * 2 + 1
-        #                 ),  # 2 Outputs for pre-actor critic, mean, logvar, and shift bit
-        #                 encoder_critic_merger=nn.Linear(
-        #                     config.n_embd + config.actor_latent_dim * 2 + 1, config.n_embd
-        #                 ),
-        #                 encoder_critic_head=nn.Linear(config.n_embd, 2),  # mean and logvar
-        #                 encoder_advantage_merger=nn.Linear(
-        #                     config.n_embd
-        #                     + config.actor_latent_dim
-        #                     + config.actor_exponent_dim * config.actor_exponent_dim
-        #                     + 1,  # +1 for shift operation
-        #                     config.n_embd,
-        #                 ),
-        #                 encoder_advantage_head=nn.Linear(config.n_embd, 2),  # mean and logvar
-        #                 # 2 Outputs for pre-actor critic, mean, logvar, and shift bit at the end
-        #                 decoder_actor_head=nn.Linear(
-        #                     config.n_embd, 2 + config.input_vocab_size + 1
-        #                 ),
-        #                 decoder_critic_merger=nn.Linear(
-        #                     config.n_embd + config.input_vocab_size + 1, config.n_embd
-        #                 ),
-        #                 decoder_critic_head=nn.Linear(config.n_embd, 2),  # mean and logvar
-        #                 decoder_advantage_merger=nn.Linear(
-        #                     config.n_embd + config.input_vocab_size + 1, config.n_embd
-        #                 ),
-        #                 decoder_advantage_head=nn.Linear(config.n_embd, 2),  # mean and logvar
-        #             )
-        #         )
         in_actions = list(filter(lambda x: not x.shift, in_actions))
         shifts_to_end = len(in_actions)
         shifted_inputs = 0
@@ -649,7 +586,8 @@ class A2CGPTEncoderModel(nn.Module):
         output_exp = torch.cat(
             [
                 torch.zeros(
-                    num_items_ahead - num_previous_actions, self.config.actor_exponent_dim * self.config.actor_exponent_dim
+                    num_items_ahead - num_previous_actions,
+                    self.config.actor_exponent_dim * self.config.actor_exponent_dim,
                 ),
                 torch.stack(
                     [
@@ -663,7 +601,8 @@ class A2CGPTEncoderModel(nn.Module):
                     dim=0,
                 ),
                 torch.zeros(
-                    num_items_ahead - actions_ahead, self.config.actor_exponent_dim * self.config.actor_exponent_dim
+                    num_items_ahead - actions_ahead,
+                    self.config.actor_exponent_dim * self.config.actor_exponent_dim,
                 ),
             ],
             dim=0,
@@ -702,7 +641,7 @@ class A2CGPTEncoderModel(nn.Module):
                 torch.unsqueeze(vacancy_vector, dim=1),
                 torch.unsqueeze(shift_vector, dim=1),
                 torch.unsqueeze(output_indicator, dim=1),
-                ],
+            ],
             dim=1,
         )
         return final_embeddings, processed_vector, vacancy_vector
