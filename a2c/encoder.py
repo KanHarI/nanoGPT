@@ -39,6 +39,11 @@ class A2CGPTEncoderAction:
     shift: bool
     sampled_action: Optional[torch.Tensor]
 
+@dataclass
+class A2CGPTDecoderAction:
+    shift: bool
+    sampled_output: int
+
 
 @dataclass
 class ExpectedMeanVar:
@@ -515,3 +520,181 @@ class A2CGPTEncoderModel(nn.Module):
                 sampled_action=policy_token_mean + sampler * policy_token_var,
             )
         return action
+
+    @torch.no_grad()
+    def decode_nograd(
+            self,
+            in_actions: list[A2CGPTEncoderAction],
+            target_len_ratio: float,
+            target_len_importance: float,
+            temperature: float,
+            max_actions: Optional[float] = math.inf,
+            sample_losses: bool = False,
+    ) -> tuple[bytes, list[A2CGPTEncoderLossProjection]]:
+        # self.transformer = nn.ModuleDict(
+        #             dict(
+        #                 wte=nn.Embedding(
+        #                     config.input_vocab_size,
+        #                     # +4:
+        #                     # +1 for already_processed
+        #                     # +1 for vacancy
+        #                     # +1 target len ratio
+        #                     # +1 for target len importance
+        #                     # +1 for marking inputs
+        #                     config.n_embd - (config.log2_max_block_size * 4 + 5),
+        #                 ),
+        #                 output_translation=nn.Linear(
+        #                     # Source action
+        #                     config.actor_latent_dim
+        #                     # Exponented action in SO(n)
+        #                     + config.actor_exponent_dim * config.actor_exponent_dim
+        #                     # + position (8 * log2_size)
+        #                     + config.log2_max_block_size * 4
+        #                     # + already_encoded, vacancy, shift, output indicator
+        #                     + 4,
+        #                     config.n_embd - (config.log2_max_block_size * 4 + 4),
+        #                 ),
+        #                 drop=nn.Dropout(config.dropout),
+        #                 h=nn.ModuleList(
+        #                     [
+        #                         Block(config, custom_attn_mask=self.standard_attn_mask)
+        #                         for _ in range(
+        #                             config.n_common_layers
+        #                             + config.n_critic_layers
+        #                             + config.n_advantage_layers
+        #                         )
+        #                     ]
+        #                 ),
+        #                 encoder_actor_head=nn.Linear(
+        #                     config.n_embd, 2 + config.actor_latent_dim * 2 + 1
+        #                 ),  # 2 Outputs for pre-actor critic, mean, logvar, and shift bit
+        #                 encoder_critic_merger=nn.Linear(
+        #                     config.n_embd + config.actor_latent_dim * 2 + 1, config.n_embd
+        #                 ),
+        #                 encoder_critic_head=nn.Linear(config.n_embd, 2),  # mean and logvar
+        #                 encoder_advantage_merger=nn.Linear(
+        #                     config.n_embd
+        #                     + config.actor_latent_dim
+        #                     + config.actor_exponent_dim * config.actor_exponent_dim
+        #                     + 1,  # +1 for shift operation
+        #                     config.n_embd,
+        #                 ),
+        #                 encoder_advantage_head=nn.Linear(config.n_embd, 2),  # mean and logvar
+        #                 # 2 Outputs for pre-actor critic, mean, logvar, and shift bit at the end
+        #                 decoder_actor_head=nn.Linear(
+        #                     config.n_embd, 2 + config.input_vocab_size + 1
+        #                 ),
+        #                 decoder_critic_merger=nn.Linear(
+        #                     config.n_embd + config.input_vocab_size + 1, config.n_embd
+        #                 ),
+        #                 decoder_critic_head=nn.Linear(config.n_embd, 2),  # mean and logvar
+        #                 decoder_advantage_merger=nn.Linear(
+        #                     config.n_embd + config.input_vocab_size + 1, config.n_embd
+        #                 ),
+        #                 decoder_advantage_head=nn.Linear(config.n_embd, 2),  # mean and logvar
+        #             )
+        #         )
+        in_actions = list(filter(lambda x: not x.shift, in_actions))
+        shifts_to_end = len(in_actions)
+        shifted_inputs = 0
+        output_actions: list[A2CGPTEncoderAction] = []
+        outpus_losses: list[A2CGPTEncoderLossProjection] = []
+        num_items_ahead = 2 ** (self.config.log2_max_block_size - 1)
+        while shifted_inputs < shifts_to_end and len(output_actions) < max_actions:
+            (
+                full_input_context,
+                processed_vector,
+                vacancy_vector,
+            ) = self.create_input_embeddings(
+                input_embeddings,
+                shifted_inputs,
+                num_items_ahead,
+                target_len_ratio,
+                target_len_importance,
+            )
+            output_embeddings = self.create_output_embeddings(
+                output_actions, num_items_ahead
+            )
+            network_input = torch.unsqueeze(
+                torch.cat([output_embeddings, full_input_context], dim=0), dim=0
+            )
+            x = network_input
+            for i in range(self.config.n_common_layers):
+                x = self.transformer.h[i](x)
+            actor_policy = self.transformer.encoder_actor_head(x)[0][
+                num_items_ahead * 3
+                ]
+            pre_actor_value = actor_policy[0]
+            pre_actor_value_var = torch.exp(actor_policy[1])
+            policy_token_mean = actor_policy[2: 2 + self.config.actor_latent_dim]
+            policy_logvar = actor_policy[
+                            2 + self.config.actor_latent_dim: 2 + 2 * self.config.actor_latent_dim
+                            ]
+            policy_token_var = torch.exp(policy_logvar * temperature)
+            policy_shift = torch.sigmoid(actor_policy[-1] * temperature)
+            sampled_random = random.random()
+            action = self.sample_action(
+                policy_shift,
+                policy_token_mean,
+                policy_token_var,
+                sampled_random,
+            )
+            if action.shift:
+                shifted_inputs = shifted_inputs + 1
+
+            output_actions.append(action)
+
+            if sample_losses:
+                critic_merger_input = self.create_critic_merger_input(
+                    x,
+                    num_items_ahead,
+                    policy_token_mean,
+                    policy_token_var,
+                    policy_shift,
+                )
+                x = x + self.transformer.encoder_critic_merger(critic_merger_input)
+                for i in range(self.config.n_critic_layers):
+                    x = self.transformer.h[self.config.n_common_layers + i](x)
+                critic_result = self.transformer.encoder_critic_head(x)[0][
+                    num_items_ahead * 3
+                    ]
+                critic_mean = critic_result[0]
+                critic_var = torch.exp(critic_result[1])
+                advantage_merger_input = self.create_advantage_merger_input(
+                    x,
+                    num_items_ahead,
+                    policy_shift,
+                    policy_token_mean,
+                    policy_token_var,
+                    action,
+                )
+                x = x + self.transformer.encoder_advantage_merger(
+                    advantage_merger_input
+                )
+                for i in range(self.config.n_advantage_layers):
+                    x = self.transformer.h[
+                        self.config.n_common_layers + self.config.n_critic_layers + i
+                        ](x)
+                advantage_result = self.transformer.encoder_advantage_head(x)[0][
+                    num_items_ahead * 3
+                    ]
+                advantage_mean = advantage_result[0]
+                advantage_var = torch.exp(advantage_result[1])
+
+            outpus_losses.append(
+                A2CGPTEncoderLossProjection(
+                    actor_entropy_loss=torch.sum(policy_logvar ** 2),
+                    critic_value_pre_actor=ExpectedMeanVar(
+                        mean=pre_actor_value, var=pre_actor_value_var
+                    ),
+                    critic_value_post_actor=ExpectedMeanVar(
+                        mean=0 if not sample_losses else critic_mean,
+                        var=0 if not sample_losses else critic_var,
+                    ),
+                    advantage_value=ExpectedMeanVar(
+                        mean=0 if not sample_losses else advantage_mean,
+                        var=0 if not sample_losses else advantage_var,
+                    ),
+                )
+            )
+        return output_actions, outpus_losses
