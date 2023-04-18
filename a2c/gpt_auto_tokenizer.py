@@ -108,11 +108,12 @@ class GPTAutoTokenizer(nn.Module):
                     4 * config.n_embd, config.n_embd - self.reserved_inputs_dim
                 ),
                 latent_embedding_1=nn.Linear(
-                    config.actor_exponent_dim**2 + self.reserved_inputs_dim,
-                    config.n_embd * config.actor_exponent_dim,
+                    config.actor_exponent_dim**2,
+                    config.n_embd * config.actor_exponent_dim
+                    - self.reserved_inputs_dim,
                 ),
                 latent_embedding_2=nn.Linear(
-                    config.n_embd * 4,
+                    config.n_embd * config.actor_exponent_dim,
                     config.n_embd - self.reserved_inputs_dim,
                 ),
                 drop=nn.Dropout(config.dropout),
@@ -267,24 +268,47 @@ class GPTAutoTokenizer(nn.Module):
         ):
             if latent_actions[i].shift:
                 reserved_input_dims[i - num_processed_items][-1] = 1
-        input_latent_embeddings = torch.stack(
-            [
-                torch.zeros(self.config.n_embd * 4 - self.reserved_inputs_dim)
-                if action.shift
-                else self.transformer.latent_embedding_1(action.latent)
-                for action in latent_actions
-            ],
-            dim=1,
-        )
+        if len(latent_actions) == 0:
+            input_latent_embeddings = torch.zeros(
+                self.look_ahead * 2,
+                self.config.n_embd * self.config.actor_exponent_dim
+                - self.reserved_inputs_dim,
+            )
+        else:
+            input_latent_embeddings = torch.cat(
+                [
+                    torch.zeros(
+                        self.config.n_embd * self.config.actor_exponent_dim
+                        - self.reserved_inputs_dim
+                    ).unsqueeze(0)
+                    if action.shift
+                    else self.transformer.latent_embedding_1(action.latent).unsqueeze(0)
+                    for action in latent_actions
+                ],
+                dim=0,
+            )
+            padding_before = torch.zeros(
+                self.look_ahead - num_relevant_latent_actions_before,
+                self.config.n_embd * self.config.actor_exponent_dim
+                - self.reserved_inputs_dim,
+            )
+            padding_after = torch.zeros(
+                self.look_ahead - num_relevant_latent_actions_after,
+                self.config.n_embd * self.config.actor_exponent_dim
+                - self.reserved_inputs_dim,
+            )
+            input_latent_embeddings = torch.cat(
+                [padding_before, input_latent_embeddings, padding_after], dim=0
+            )
         input_latent_embeddings = torch.cat(
-            [input_latent_embeddings, reserved_input_dims], dim=0
+            [input_latent_embeddings, reserved_input_dims], dim=1
         )
         input_latent_embeddings = torch.cat(
             [
                 self.transformer.latent_embedding_2(input_latent_embeddings),
                 reserved_input_dims,
             ],
-            dim=0,
+            dim=1,
         )
         return input_latent_embeddings
 
@@ -315,7 +339,7 @@ class GPTAutoTokenizer(nn.Module):
             )
             x = torch.cat([input_embeddings, output_embeddings], dim=0).unsqueeze(0)
             for i in range(self.config.n_common_layers):
-                x = self.transformer.common_layers[i](x)
+                x = self.transformer.h[i](x)
             actor_policy = self.transformer.vocab_to_latent_actor(x)[0][
                 self.look_ahead * 3
             ]
