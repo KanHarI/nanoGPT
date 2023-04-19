@@ -8,8 +8,7 @@ import torch.nn as nn
 
 from a2c.lie_theory import so_to_SO
 from a2c.replays_data_loader import GPTAutoTokenizerRecorderSession
-from a2c.types import (GPTAutoTokenizerConfig, LatentToVocabAction,
-                       VocabToLatentAction)
+from a2c.types import GPTAutoTokenizerConfig, LatentToVocabAction, VocabToLatentAction
 from model import Block
 
 

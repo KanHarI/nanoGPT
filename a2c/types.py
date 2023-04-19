@@ -85,6 +85,9 @@ class LatentToVocabAction:
 
 @dataclass
 class GPTAutoTokenizerRecorderSession:
+    input_length: int
+    latent_length: int
+    reconstructed_length: int
     # L_v
     input_vocab: torch.Tensor
     # (L_v + L_l)
