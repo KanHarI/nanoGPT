@@ -163,7 +163,7 @@ class GPTAutoTokenizer(nn.Module):
         num_processed_items: int,
         target_length_ratio: float,
         target_length_accuracy_cost: float,
-    ):
+    ) -> torch.Tensor:
         num_relevant_vocab_actions_before = min(num_processed_items, self.look_ahead)
         num_relevant_vocab_actions_after = min(
             len(vocab_actions) - num_processed_items, self.look_ahead
@@ -227,7 +227,7 @@ class GPTAutoTokenizer(nn.Module):
         num_processed_items: int,
         target_length_ratio: float,
         target_length_accuracy_cost: float,
-    ):
+    ) -> torch.Tensor:
         num_relevant_latent_actions_before = min(num_processed_items, self.look_ahead)
         num_relevant_latent_actions_after = min(
             len(latent_actions) - num_processed_items, self.look_ahead

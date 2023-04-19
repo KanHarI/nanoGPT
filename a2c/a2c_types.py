@@ -31,11 +31,12 @@ class GPTAutoTokenizerConfig:
     text_loss: Callable[[Iterable, Iterable], float] = similar
     # Learning rate for the PPO A2C process
     learning_rate: float = 1e-4
+    # Learning rate warmup grad steps in the PPO loop
+    learning_rate_warmup_steps: int = 500
     # Auxilary loss - reinforce patterns that resulted in good total reward,
     # even if missed by critic. Important early on, when critic is not
     # accurate.
-    learning_rate_warmup_steps: int = 500
-    stability_relative_weight_to_reward_std: float = 0.1
+    stability_relative_weight_to_reward_std: float = 1e-2
     # Decay rate of stability reward between PPO iterations
     stability_decay_rate: float = 0.85
     # Reinforce the top half of the reward distribution, with bigger rewards
