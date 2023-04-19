@@ -1,8 +1,10 @@
 import copy
 import math
+import random
 from dataclasses import dataclass
-from typing import Callable, Optional
+from typing import Callable, Iterable, Optional
 
+import numpy as np
 import torch
 import torch.nn as nn
 
@@ -19,6 +21,7 @@ class GPTAutoTokenizerConfig:
     input_vocab_size: int = 256
     # Number of layers in the encoder
     n_common_layers: int = 6
+    # Number of layers to use for the advantage function calculation
     n_advantage_layers: int = 2
     # Number of heads in the encoder
     n_head: int = 8
@@ -30,7 +33,30 @@ class GPTAutoTokenizerConfig:
     log2_max_block_size: int = 5
     # Biases
     bias: bool = True
-    text_loss: Callable[[str, str], float] = similar
+    # Loss for comparing the vocab reconstruction result
+    text_loss: Callable[[Iterable, Iterable], float] = similar
+    # Learning rate for the PPO A2C process
+    a2c_learning_rate: float = 1e-4
+    # Auxilary loss - reinforce patterns that resulted in good total reward,
+    # even if missed by critic. Important early on, when critic is not
+    # accurate.
+    stability_relative_weight_to_reward_std: float = 5e-2
+    # Reinforce the top half of the reward distribution, with bigger rewards
+    # by percentiles (linearly from the min_percentile_stability_reward to 1)
+    min_percentile_stability_reward: float = 0.5
+    # Factor by which the KL divergence must be less than the target, otherwise
+    # stop PPO training early
+    early_stop_kl_divergence_target_factor: float = 2.0
+    # Update the current approximated KL after ~20 batches
+    kl_moving_average_iterations_constant: float = 0.9
+    # Discount factor for the reward
+    discount_factor: float = 0.9
+    # Validation split percentile
+    val_split_percentile: float = 0.2
+    # Allowed critic overfit
+    # If validation set loss is less than the best observed validation loss
+    # multiplied by this factor, then stop PPO training early
+    critic_overfit_allowed: float = 1.1
 
 
 @dataclass
@@ -43,6 +69,23 @@ class VocabToLatentAction:
 class LatentToVocabAction:
     shift: bool = False
     vocab: Optional[int] = None
+
+
+@dataclass
+class GPTAutoTokenizerRecorderSession:
+    # L * V
+    input_vocab: torch.Tensor
+    # L
+    encoder_extra_reward: torch.Tensor
+    # L * (E * (E - 1) / 2)
+    latent_representation: torch.Tensor
+    # L * (E ** 2)
+    exponent_representation: torch.Tensor
+    # L
+    decoder_reward: torch.Tensor
+    # (1)
+    total_reward: float
+    total_reward_over_length: float
 
 
 def frequencies_block(log2_size: int):
@@ -468,3 +511,48 @@ class GPTAutoTokenizer(nn.Module):
         return shift_kl + (1 - old_shift) * (
             softmax_kl + torch.log((1 - old_shift) / (1 - new_shift))
         )
+
+    def ppo_train(
+        self,
+        recorded_playthroughs: list[GPTAutoTokenizerRecorderSession],
+        beta: float,
+        target_kl_divergence: float,
+        num_dataset_iterations: int,
+        max_grad_steps: int,
+    ) -> float:
+        """
+        Return value: current kl divergence from previous policy
+        """
+        random.shuffle(recorded_playthroughs)
+        split_idx = int(len(recorded_playthroughs) * self.config.val_split_percentile)
+        val_playthroughs = recorded_playthroughs[:split_idx]
+        train_playthroughs = recorded_playthroughs[split_idx:]
+        total_rewards_over_length = [
+            rp.total_reward_over_length for rp in recorded_playthroughs
+        ]
+        total_rewards_over_length_with_indices = enumerate(total_rewards_over_length)
+        # Reinforce good existing behavior
+        total_rewards_over_length_with_start_indices = dict(
+            sorted(
+                total_rewards_over_length_with_indices,
+                key=lambda x: x[1],
+            )
+        )
+        total_rewards_over_length_with_end_indices = dict(
+            sorted(
+                total_rewards_over_length_with_indices[::-1],
+                key=lambda x: x[1],
+            )
+        )
+        total_reward_std = np.std(total_rewards_over_length)
+        self.update_old_policy()
+        optimizer = torch.optim.Adam(
+            self.transformer.parameters(), lr=self.config.a2c_learning_rate
+        )
+        kl_divergence = 0
+        while (
+            kl_divergence / target_kl_divergence
+            < self.config.early_stop_kl_divergence_target_factor
+        ):
+            pass
+        return 0.1
