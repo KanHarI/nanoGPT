@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import torch
 from torch.utils.data import Dataset
 
-from a2c.types import GPTAutoTokenizerRecorderSession
+from a2c.a2c_types import GPTAutoTokenizerRecorderSession
 
 
 class GPTAutoTokenizerEncoderReplayDataset(Dataset):

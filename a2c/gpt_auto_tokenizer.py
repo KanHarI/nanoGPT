@@ -6,9 +6,13 @@ import numpy as np
 import torch
 import torch.nn as nn
 
+from a2c.a2c_types import (
+    GPTAutoTokenizerConfig,
+    LatentToVocabAction,
+    VocabToLatentAction,
+)
 from a2c.lie_theory import so_to_SO
 from a2c.replays_data_loader import GPTAutoTokenizerRecorderSession
-from a2c.types import GPTAutoTokenizerConfig, LatentToVocabAction, VocabToLatentAction
 from model import Block
 
 
