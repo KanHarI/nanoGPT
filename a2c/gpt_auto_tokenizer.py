@@ -260,7 +260,9 @@ class GPTAutoTokenizer(nn.Module):
                         - self.reserved_inputs_dim
                     ).unsqueeze(0)
                     if action.shift
-                    else self.transformer.latent_embedding_1(action.latent).unsqueeze(0)
+                    else self.transformer.latent_embedding_1(
+                        action.latent_exp
+                    ).unsqueeze(0)
                     for action in latent_actions
                 ],
                 dim=0,
@@ -337,24 +339,27 @@ class GPTAutoTokenizer(nn.Module):
                 new_action = VocabToLatentAction(shift=True)
                 processed_items += 1
             else:
+                latent = latent_so_means + sampler * latent_so_vars
                 latent_exponentiated = so_to_SO(
                     self.config.actor_exponent_dim,
-                    latent_so_means + sampler * latent_so_vars,
+                    latent,
                 )
-                new_action = VocabToLatentAction(latent=latent_exponentiated)
+                new_action = VocabToLatentAction(
+                    latent_src=latent, latent_exp=latent_exponentiated
+                )
             output_actions.append(new_action)
         return output_actions
 
     @torch.no_grad()
     def sample_latent_to_vocab(
         self,
-        latents: list[torch.Tensor],
+        latents_exps: list[torch.Tensor],
         target_length_ratio: float,
         target_length_importance: float,
         temperature: float = 1.0,
     ):
-        total_items = len(latents)
-        latent_actions = [VocabToLatentAction(latent=i) for i in latents]
+        total_items = len(latents_exps)
+        latent_actions = [VocabToLatentAction(latent_exp=i) for i in latents_exps]
         output_actions: list[LatentToVocabAction] = []
         processed_items = 0
         while processed_items < total_items:

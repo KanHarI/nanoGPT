@@ -75,7 +75,8 @@ class PPOStopingReason(Enum):
 @dataclass
 class VocabToLatentAction:
     shift: bool = False
-    latent: Optional[torch.Tensor] = None
+    latent_src: Optional[torch.Tensor] = None
+    latent_exp: Optional[torch.Tensor] = None
 
 
 @dataclass
