@@ -7,8 +7,8 @@ https://github.com/openai/gpt-2/blob/master/src/model.py
 https://github.com/huggingface/transformers/blob/main/src/transformers/models/gpt2/modeling_gpt2.py
 """
 
-import math
 import inspect
+import math
 from dataclasses import dataclass
 
 import torch
@@ -45,7 +45,7 @@ class LayerNorm(nn.Module):
 
 
 class CausalSelfAttention(nn.Module):
-    def __init__(self, config):
+    def __init__(self, config, custom_attn_mask=None):
         super().__init__()
         assert config.n_embd % config.n_head == 0
         # key, query, value projections for all heads, but in a batch
@@ -58,6 +58,7 @@ class CausalSelfAttention(nn.Module):
         self.n_head = config.n_head
         self.n_embd = config.n_embd
         self.dropout = config.dropout
+        self.custom_attn_mask = custom_attn_mask
         # flash attention make GPU go brrrrr but support is only in PyTorch >= 2.0
         self.flash = hasattr(torch.nn.functional, "scaled_dot_product_attention")
         if not self.flash:
@@ -94,15 +95,25 @@ class CausalSelfAttention(nn.Module):
         # causal self-attention; Self-attend: (B, nh, T, hs) x (B, nh, hs, T) -> (B, nh, T, T)
         if self.flash:
             # efficient attention using Flash Attention CUDA kernels
-            y = torch.nn.functional.scaled_dot_product_attention(
-                q,
-                k,
-                v,
-                attn_mask=None,
-                dropout_p=self.dropout if self.training else 0,
-                is_causal=True,
-            )
+            if self.custom_attn_mask is not None:
+                y = torch.nn.functional.scaled_dot_product_attention(
+                    q,
+                    k,
+                    v,
+                    attn_mask=self.custom_attn_mask,
+                    dropout_p=self.dropout if self.training else 0,
+                )
+            else:
+                y = torch.nn.functional.scaled_dot_product_attention(
+                    q,
+                    k,
+                    v,
+                    attn_mask=None,
+                    dropout_p=self.dropout if self.training else 0,
+                    is_causal=True,
+                )
         else:
+            raise NotImplementedError("Slow attention is not implemented")
             # manual implementation of attention
             att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))
             att = att.masked_fill(self.bias[:, :, :T, :T] == 0, float("-inf"))
@@ -134,10 +145,10 @@ class MLP(nn.Module):
 
 
 class Block(nn.Module):
-    def __init__(self, config):
+    def __init__(self, config, custom_attn_mask=None):
         super().__init__()
         self.ln_1 = LayerNorm(config.n_embd, bias=config.bias)
-        self.attn = CausalSelfAttention(config)
+        self.attn = CausalSelfAttention(config, custom_attn_mask=custom_attn_mask)
         self.ln_2 = LayerNorm(config.n_embd, bias=config.bias)
         self.mlp = MLP(config)
 

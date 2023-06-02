@@ -6,8 +6,9 @@ encoder and decoder and some other related info.
 """
 import os
 import pickle
-import requests
+
 import numpy as np
+import requests
 
 # download the tiny shakespeare dataset
 input_file_path = os.path.join(os.path.dirname(__file__), "input.txt")
