@@ -152,18 +152,15 @@ class ComplexCasualSelfAttention(nn.Module):
         att_pre_split_im = self.c_attn_re(x_im) + self.c_attn_im(x_re)
         q_re, k_re, v_re = [l.view(B, T, self.n_head, C // 2 // self.n_head).transpose(1, 2) for l in att_pre_split_re.split(self.n_embd, dim=2)]
         q_im, k_im, v_im = [l.view(B, T, self.n_head, C // 2 // self.n_head).transpose(1, 2) for l in att_pre_split_im.split(self.n_embd, dim=2)]
-        att_re = (q_re @ k_re.transpose(-2, -1) - q_im @ k_im.transpose(-2, -1)) / math.sqrt(k_re.size(-1))
-        att_im = (q_re @ k_im.transpose(-2, -1) + q_im @ k_re.transpose(-2, -1)) / math.sqrt(k_re.size(-1))
-        att_re = att_re.masked_fill(self.bias[:, :, :T, :T] == 0, float('-inf'))
-        att_re = F.softmax(att_re, dim=-1)
-        att_re = self.attn_dropout(att_re)
-        pre_phase_y_re = att_re @ v_re
-        pre_phase_y_im = att_re @ v_im
-        phase = att_re @ v_im + att_im @ v_re
-        att_cos_phase = torch.cos(phase)
-        att_sin_phase = torch.sin(phase)
-        y_re = pre_phase_y_re * att_cos_phase - pre_phase_y_im * att_sin_phase
-        y_im = pre_phase_y_re * att_sin_phase + pre_phase_y_im * att_cos_phase
+        att_abs = (q_re @ k_re.transpose(-2, -1) - q_im @ k_im.transpose(-2, -1)) / math.sqrt(k_re.size(-1))
+        att_phase = (q_re @ k_im.transpose(-2, -1) + q_im @ k_re.transpose(-2, -1)) / math.sqrt(k_re.size(-1))
+        att_abs = att_abs.masked_fill(self.bias[:, :, :T, :T] == 0, float('-inf'))
+        att_abs = F.softmax(att_abs, dim=-1)
+        att_abs = self.attn_dropout(att_abs)
+        att_cos_phase = torch.cos(att_phase)
+        att_sin_phase = torch.sin(att_phase)
+        y_re = torch.einsum("ijkl,ijkl,ijlm->ijkm", att_abs, att_cos_phase, v_re) - torch.einsum("ijkl,ijkl,ijlm->ijkm", att_abs, att_sin_phase, v_im)
+        y_im = torch.einsum("ijkl,ijkl,ijlm->ijkm", att_abs, att_sin_phase, v_re) + torch.einsum("ijkl,ijkl,ijlm->ijkm", att_abs, att_cos_phase, v_im)
         y_re = y_re.transpose(1, 2).contiguous().view(B, T, C // 2)
         y_im = y_im.transpose(1, 2).contiguous().view(B, T, C // 2)
         y_re, y_im = self.c_proj_re(y_re) - self.c_proj_im(y_im), self.c_proj_re(y_im) + self.c_proj_im(y_re)
@@ -175,22 +172,25 @@ class ComplexMLP(nn.Module):
 
     def __init__(self, config):
         super().__init__()
-        # self.c_fc_re = nn.Linear(config.n_embd, 4 * config.n_embd, bias=config.bias)
-        # self.c_fc_im = nn.Linear(config.n_embd, 4 * config.n_embd, bias=config.bias)
-        # self.c_proj_re = nn.Linear(4 * config.n_embd, config.n_embd, bias=config.bias)
-        # self.c_proj_im = nn.Linear(4 * config.n_embd, config.n_embd, bias=config.bias)
-        self.fc_re = nn.Linear(config.n_embd, config.n_embd, bias=config.bias)
-        self.fc_im = nn.Linear(config.n_embd, config.n_embd, bias=config.bias)
+        self.c_fc_re = nn.Linear(config.n_embd, 4 * config.n_embd, bias=config.bias)
+        self.c_fc_im = nn.Linear(config.n_embd, 4 * config.n_embd, bias=config.bias)
+        self.c_proj_re = nn.Linear(4 * config.n_embd, config.n_embd, bias=config.bias)
+        self.c_proj_im = nn.Linear(4 * config.n_embd, config.n_embd, bias=config.bias)
+        # self.fc_re = nn.Linear(config.n_embd, config.n_embd, bias=config.bias)
+        # self.fc_im = nn.Linear(config.n_embd, config.n_embd, bias=config.bias)
         self.n_embd = config.n_embd
         self.dropout = nn.Dropout(config.dropout)
 
     def forward(self, x):
         x_re, x_im = x.split(self.n_embd, dim=2)  # split real and imaginary parts
-        # x_re, x_im = self.c_fc_re(x_re) - self.c_fc_im(x_im), self.c_fc_re(x_im) + self.c_fc_im(x_re)
-        # x_re, x_im = complex_relu(x_re, x_im)
-        # x_re, x_im = complex_expm1(x_re, x_im)
-        # x_re, x_im = self.c_proj_re(x_re) - self.c_proj_im(x_im), self.c_proj_re(x_im) + self.c_proj_im(x_re)
-        x_re, x_im = self.fc_re(x_re) - self.fc_im(x_im), self.fc_re(x_im) + self.fc_im(x_re)
+
+        # No activation
+        # x_re, x_im = self.fc_re(x_re) - self.fc_im(x_im), self.fc_re(x_im) + self.fc_im(x_re)
+
+        x_re, x_im = self.c_fc_re(x_re) - self.c_fc_im(x_im), self.c_fc_re(x_im) + self.c_fc_im(x_re)
+        x_re, x_im = complex_relu(x_re, x_im)  # Relu on real part
+        # x_re, x_im = complex_expm1(x_re, x_im)  # exp(z) - 1
+        x_re, x_im = self.c_proj_re(x_re) - self.c_proj_im(x_im), self.c_proj_re(x_im) + self.c_proj_im(x_re)
         x = self.dropout(torch.cat([x_re, x_im], dim=-1))
         return x
 
@@ -201,14 +201,14 @@ class ComplexBlock(nn.Module):
         super().__init__()
         self.ln_1 = LayerNorm(config.n_embd * 2, bias=config.bias)
         self.attn = ComplexCasualSelfAttention(config)
-        # self.ln_2 = LayerNorm(config.n_embd * 2, bias=config.bias)
+        self.ln_2 = LayerNorm(config.n_embd * 2, bias=config.bias)
         self.mlp = ComplexMLP(config)
 
     def forward(self, x):
         x = x + self.attn(self.ln_1(x))
-        # x = x + self.mlp(self.ln_2(x))
+        x = x + self.mlp(self.ln_2(x))
         # x = x + self.attn(x)
-        x = x + self.mlp(x)
+        # x = x + self.mlp(x)
 
 
         return x
@@ -268,7 +268,7 @@ class GPT(nn.Module):
         # apply special scaled init to the residual projections, per GPT-2 paper
         for pn, p in self.named_parameters():
             if pn.endswith('c_proj.weight'):
-                torch.nn.init.normal_(p, mean=0.0, std=0.002/math.sqrt(2 * config.n_layer))
+                torch.nn.init.normal_(p, mean=0.0, std=0.005/math.sqrt(2 * config.n_layer))
 
         # report number of parameters
         print("number of parameters: %.2fM" % (self.get_num_params()/1e6,))
@@ -287,11 +287,11 @@ class GPT(nn.Module):
 
     def _init_weights(self, module):
         if isinstance(module, nn.Linear):
-            torch.nn.init.normal_(module.weight, mean=0.0, std=0.002)
+            torch.nn.init.normal_(module.weight, mean=0.0, std=0.005)
             if module.bias is not None:
                 torch.nn.init.zeros_(module.bias)
         elif isinstance(module, nn.Embedding):
-            torch.nn.init.normal_(module.weight, mean=0.0, std=0.002)
+            torch.nn.init.normal_(module.weight, mean=0.0, std=0.005)
 
     def forward(self, idx, targets=None):
         device = idx.device
