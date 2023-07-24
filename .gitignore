@@ -2,3 +2,9 @@
 .ipynb_checkpoints/
 __pycache__/
 *.pyc
+.idea/
+venv/
+wandb/
+data/shakespeare_char/*.txt
+data/shakespeare_char/*.pkl
+data/shakespeare_char/*.bin
