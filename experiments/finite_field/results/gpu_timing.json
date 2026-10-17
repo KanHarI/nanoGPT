@@ -1,0 +1,51 @@
+{
+  "event": "summary",
+  "start_step": 4288,
+  "end_step": 5360,
+  "observed_seconds": 148.02674869499992,
+  "training_seconds": 120.53655072600236,
+  "evaluation_and_adjacent_logging_seconds": 0.8198736780004765,
+  "checkpoint_and_tracking_seconds": 26.4995109460001,
+  "residual_seconds": 0.17081334499698642,
+  "training_percent": 81.4288983502303,
+  "evaluation_percent": 0.553868598228673,
+  "checkpoint_percent": 17.90183948483576,
+  "method": "External observation of JSONL writes and atomic checkpoint replacements, 5ms polling. Training seconds are reported by the trainer; eval/checkpoint estimates include adjacent logging.",
+  "evaluations": [
+    {
+      "observed": 1073.218063112,
+      "step": 4288,
+      "train_seconds": 388.58818972499546,
+      "eval_and_logging_seconds": 0.4195062359995063
+    },
+    {
+      "observed": 1146.328130455,
+      "step": 4824,
+      "train_seconds": 447.89050722499644,
+      "eval_and_logging_seconds": 0.4143023490005362
+    },
+    {
+      "observed": 1221.244811807,
+      "step": 5360,
+      "train_seconds": 509.1247404509978,
+      "eval_and_logging_seconds": 0.4055713289999403
+    }
+  ],
+  "checkpoints": [
+    {
+      "step": 4288,
+      "observed": 1086.523299504,
+      "checkpoint_and_tracking_seconds": 13.305236392000097
+    },
+    {
+      "step": 4824,
+      "observed": 1159.522405009,
+      "checkpoint_and_tracking_seconds": 13.194274554000003
+    }
+  ],
+  "run": "curriculum-seed0",
+  "run_url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/5c9ddae9",
+  "date_utc": "2026-10-16",
+  "includes_startup": false,
+  "training_includes_generation_and_packing": true
+}

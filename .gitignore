@@ -10,3 +10,8 @@ __pycache__/
 input.txt
 env/
 venv/
+.venv/
+out/
+wandb/
+.env
+.env.*

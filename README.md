@@ -3,6 +3,9 @@
 
 ![nanoGPT](assets/nanogpt.jpg)
 
+[Finite-field curriculum experiment](experiments/finite_field/README.md): procedural
+character-level arithmetic, answer-only loss, and documented CPU/GPU comparisons.
+
 
 ---
 

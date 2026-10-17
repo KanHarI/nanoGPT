@@ -1,0 +1,28 @@
+{
+  "device": "cpu",
+  "include_power": false,
+  "include_division": false,
+  "steps": 1000,
+  "batch_size": 32,
+  "n_layer": 2,
+  "n_head": 4,
+  "n_embd": 128,
+  "block_size": 72,
+  "max_operators": 32,
+  "gamma_low": 1.0,
+  "gamma_high": 16.0,
+  "ramp_fraction": 0.4,
+  "warmup_steps": 20,
+  "eval_interval": 200,
+  "eval_per_field": 64,
+  "final_per_field": 256,
+  "baseline_per_field": 512,
+  "eval_gammas": [
+    0,
+    1,
+    4,
+    16
+  ],
+  "threads": 4,
+  "lr_schedule": "cosine"
+}

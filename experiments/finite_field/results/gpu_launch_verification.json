@@ -1,0 +1,13 @@
+{
+  "run_url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/5c9ddae9",
+  "state": "running",
+  "group": "gpu-64layer-gamma12",
+  "verified_loss_series": 192,
+  "optimizer_step": 1072,
+  "other_user_summary_keys": [],
+  "lr_schedule": "constant",
+  "learning_rate": 0.0003,
+  "warmup_steps": 482,
+  "batch_size": 1024,
+  "block_size": 256
+}
