@@ -1,0 +1,11 @@
+[Unit]
+Description=Check finite-field training progress and completion
+
+[Service]
+Type=oneshot
+User=kanhar
+WorkingDirectory=/home/kanhar/nanoGPT
+ExecStart=/home/kanhar/nanoGPT/.venv/bin/python -u -m experiments.finite_field.watchdog --apply
+TimeoutStartSec=180
+StandardOutput=append:/home/kanhar/nanoGPT/watchdog.log
+StandardError=append:/home/kanhar/nanoGPT/watchdog.log

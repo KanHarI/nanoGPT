@@ -1,0 +1,11 @@
+[Unit]
+Description=Check finite-field GPU training every 15 minutes
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=15min
+AccuracySec=1s
+Unit=finite-field-watch.service
+
+[Install]
+WantedBy=timers.target

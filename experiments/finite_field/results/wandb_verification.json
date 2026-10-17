@@ -1,0 +1,194 @@
+{
+  "verified_at": "2026-10-16T17:21:54.678523+00:00",
+  "project_url": "https://wandb.ai/kanhar/finite-field-curriculum",
+  "sdk_version": "0.30.0",
+  "imported_runs": [
+    {
+      "directory": "out/finite-field/pilot/curriculum-seed0",
+      "id": "901c0e25",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/901c0e25",
+      "group": "cpu-pilot",
+      "completed_updates": 300,
+      "training_status": "complete",
+      "committed_records": 19
+    },
+    {
+      "directory": "out/finite-field/pilot/hard-seed0",
+      "id": "7a9d821c",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/7a9d821c",
+      "group": "cpu-pilot",
+      "completed_updates": 300,
+      "training_status": "complete",
+      "committed_records": 19
+    },
+    {
+      "directory": "out/finite-field/pilot/mixture-seed0",
+      "id": "256975d1",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/256975d1",
+      "group": "cpu-pilot",
+      "completed_updates": 300,
+      "training_status": "complete",
+      "committed_records": 19
+    },
+    {
+      "directory": "out/finite-field/cpu/curriculum-seed0",
+      "id": "2f7ffa39",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/2f7ffa39",
+      "group": "cpu-baseline",
+      "completed_updates": 1000,
+      "training_status": "complete",
+      "committed_records": 56
+    },
+    {
+      "directory": "out/finite-field/cpu/curriculum-seed1",
+      "id": "3d14e65e",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/3d14e65e",
+      "group": "cpu-baseline",
+      "completed_updates": 1000,
+      "training_status": "complete",
+      "committed_records": 56
+    },
+    {
+      "directory": "out/finite-field/cpu/curriculum-seed2",
+      "id": "8753793f",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/8753793f",
+      "group": "cpu-baseline",
+      "completed_updates": 1000,
+      "training_status": "complete",
+      "committed_records": 56
+    },
+    {
+      "directory": "out/finite-field/cpu/curriculum-seed3",
+      "id": "30392134",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/30392134",
+      "group": "cpu-baseline",
+      "completed_updates": 1000,
+      "training_status": "complete",
+      "committed_records": 56
+    },
+    {
+      "directory": "out/finite-field/cpu/curriculum-seed4",
+      "id": "2f15cdde",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/2f15cdde",
+      "group": "cpu-baseline",
+      "completed_updates": 1000,
+      "training_status": "complete",
+      "committed_records": 56
+    },
+    {
+      "directory": "out/finite-field/cpu/hard-seed0",
+      "id": "098a06f7",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/098a06f7",
+      "group": "cpu-baseline",
+      "completed_updates": 1000,
+      "training_status": "complete",
+      "committed_records": 56
+    },
+    {
+      "directory": "out/finite-field/cpu/hard-seed1",
+      "id": "48cdd14c",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/48cdd14c",
+      "group": "cpu-baseline",
+      "completed_updates": 1000,
+      "training_status": "complete",
+      "committed_records": 56
+    },
+    {
+      "directory": "out/finite-field/cpu/hard-seed2",
+      "id": "3ffa40cf",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/3ffa40cf",
+      "group": "cpu-baseline",
+      "completed_updates": 1000,
+      "training_status": "complete",
+      "committed_records": 56
+    },
+    {
+      "directory": "out/finite-field/cpu/hard-seed3",
+      "id": "10a95add",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/10a95add",
+      "group": "cpu-baseline",
+      "completed_updates": 1000,
+      "training_status": "complete",
+      "committed_records": 56
+    },
+    {
+      "directory": "out/finite-field/cpu/hard-seed4",
+      "id": "f3af53c7",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/f3af53c7",
+      "group": "cpu-baseline",
+      "completed_updates": 1000,
+      "training_status": "complete",
+      "committed_records": 56
+    },
+    {
+      "directory": "out/finite-field/cpu/mixture-seed0",
+      "id": "4d1da85d",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/4d1da85d",
+      "group": "cpu-baseline",
+      "completed_updates": 1000,
+      "training_status": "complete",
+      "committed_records": 56
+    },
+    {
+      "directory": "out/finite-field/cpu/mixture-seed1",
+      "id": "fa521181",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/fa521181",
+      "group": "cpu-baseline",
+      "completed_updates": 1000,
+      "training_status": "complete",
+      "committed_records": 56
+    },
+    {
+      "directory": "out/finite-field/cpu/mixture-seed2",
+      "id": "825613e1",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/825613e1",
+      "group": "cpu-baseline",
+      "completed_updates": 1000,
+      "training_status": "complete",
+      "committed_records": 56
+    },
+    {
+      "directory": "out/finite-field/cpu/mixture-seed3",
+      "id": "49d53dab",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/49d53dab",
+      "group": "cpu-baseline",
+      "completed_updates": 1000,
+      "training_status": "complete",
+      "committed_records": 56
+    },
+    {
+      "directory": "out/finite-field/cpu/mixture-seed4",
+      "id": "b615f876",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/b615f876",
+      "group": "cpu-baseline",
+      "completed_updates": 1000,
+      "training_status": "complete",
+      "committed_records": 56
+    },
+    {
+      "directory": "out/finite-field/cpu-large/curriculum-seed0",
+      "id": "1c020b14",
+      "url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/1c020b14",
+      "group": "cpu-large-stopped",
+      "completed_updates": 14000,
+      "training_status": "checkpointed",
+      "committed_records": 156
+    }
+  ],
+  "validation": {
+    "unit_tests_passed": 12,
+    "online_resume_exact_cpu_weights": true,
+    "online_resume_run_url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/1edcdd33",
+    "optimizer_step_history": [
+      0,
+      2,
+      3,
+      3,
+      4,
+      6,
+      6,
+      6
+    ],
+    "offline_metrics_and_checkpoint_artifacts": true
+  }
+}

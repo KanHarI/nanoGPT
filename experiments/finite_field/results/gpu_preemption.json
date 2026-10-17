@@ -1,0 +1,18 @@
+{
+  "event": "spot_preemption",
+  "timestamp_utc": "2026-10-16T20:52:44.160737Z",
+  "detected_utc": "2026-10-16T21:12:23Z",
+  "vm": "finite-field-h100",
+  "project": "finite-field-curriculum-kanhar",
+  "zone": "us-central1-a",
+  "audit_method": "compute.instances.preempted",
+  "actor": "system@google.com",
+  "last_wandb_step": 46632,
+  "gamma12_test_loss": 0.03549431684621851,
+  "restart_requested": true,
+  "restart_utc": "2026-10-16T21:14:09.508Z",
+  "recovery_launched_utc": "2026-10-16T21:15:06Z",
+  "recovery_attempts_used": 1,
+  "wandb_run_id": "5c9ddae9",
+  "gpu_verified_active": true
+}

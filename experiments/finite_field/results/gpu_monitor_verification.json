@@ -1,0 +1,20 @@
+{
+  "vm": "finite-field-h100",
+  "zone": "us-central1-a",
+  "project": "finite-field-curriculum-kanhar",
+  "timer": "finite-field-watch.timer",
+  "interval_seconds": 900,
+  "enabled": true,
+  "first_check_utc": "2026-10-16T20:32:23.690674+00:00",
+  "next_check_utc": "2026-10-16T20:47:23+00:00",
+  "first_action": "monitor",
+  "training_service_active": true,
+  "training_main_pid": 3754,
+  "observed_curriculum_step": 42300,
+  "max_retries": 2,
+  "stale_after_seconds": 1800,
+  "shutdown_after_completion": true,
+  "immediate_exit_hook": true,
+  "local_tests_passed": 6,
+  "remote_tests_passed": 6
+}

@@ -1,0 +1,102 @@
+{
+  "config": {
+    "include_power": false,
+    "gamma_low": 1.0,
+    "gamma_high": 16.0,
+    "ramp_fraction": 0.4,
+    "max_operators": 32,
+    "steps": 300,
+    "batch_size": 16,
+    "block_size": 72,
+    "n_layer": 2,
+    "n_head": 4,
+    "n_embd": 64,
+    "dropout": 0.0,
+    "learning_rate": 0.0006,
+    "min_lr_ratio": 0.1,
+    "warmup_steps": 10,
+    "weight_decay": 0.1,
+    "grad_clip": 1.0,
+    "eval_interval": 100,
+    "eval_per_field": 32,
+    "final_per_field": 128,
+    "baseline_per_field": 256,
+    "eval_seed": 20261016,
+    "eval_gammas": [
+      0,
+      1,
+      4,
+      16
+    ],
+    "log_interval": 20,
+    "threads": 4,
+    "device": "cpu"
+  },
+  "seeds": [
+    0
+  ],
+  "conditions": {
+    "curriculum": {
+      "mean_loss": 2.237191865744535,
+      "mean_accuracy": 0.2373046875,
+      "per_seed": {
+        "0": {
+          "loss": 2.237191865744535,
+          "accuracy": 0.2373046875,
+          "frequency_baseline_loss": 2.010990813711477,
+          "frequency_baseline_accuracy": 0.2431640625
+        }
+      }
+    },
+    "hard": {
+      "mean_loss": 2.2393710610922426,
+      "mean_accuracy": 0.248046875,
+      "per_seed": {
+        "0": {
+          "loss": 2.2393710610922426,
+          "accuracy": 0.248046875,
+          "frequency_baseline_loss": 2.010990813711477,
+          "frequency_baseline_accuracy": 0.2431640625
+        }
+      }
+    },
+    "mixture": {
+      "mean_loss": 2.240968981233891,
+      "mean_accuracy": 0.23046875,
+      "per_seed": {
+        "0": {
+          "loss": 2.240968981233891,
+          "accuracy": 0.23046875,
+          "frequency_baseline_loss": 2.010990813711477,
+          "frequency_baseline_accuracy": 0.2431640625
+        }
+      }
+    }
+  },
+  "paired_loss_differences": {
+    "curriculum_minus_hard": {
+      "mean": -0.0021791953477077186,
+      "per_seed": [
+        -0.0021791953477077186
+      ],
+      "ci95_bootstrap": null,
+      "seeds": 1
+    },
+    "curriculum_minus_mixture": {
+      "mean": -0.0037771154893562198,
+      "per_seed": [
+        -0.0037771154893562198
+      ],
+      "ci95_bootstrap": null,
+      "seeds": 1
+    },
+    "mixture_minus_hard": {
+      "mean": 0.0015979201416485012,
+      "per_seed": [
+        0.0015979201416485012
+      ],
+      "ci95_bootstrap": null,
+      "seeds": 1
+    }
+  }
+}

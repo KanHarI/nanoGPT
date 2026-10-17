@@ -1,0 +1,19 @@
+{
+  "url": "https://wandb.ai/kanhar/finite-field-curriculum?nw=7qw55xp483s",
+  "entity": "kanhar",
+  "project": "finite-field-curriculum",
+  "group": "gpu-64layer-gamma12",
+  "sections": 12,
+  "fields": [
+    2,
+    3,
+    5,
+    7,
+    11,
+    13,
+    17,
+    19
+  ],
+  "plots": 96,
+  "automatic_panels": false
+}

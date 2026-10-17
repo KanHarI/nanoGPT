@@ -1,0 +1,25 @@
+{
+  "conditions": [
+    "curriculum",
+    "mixture"
+  ],
+  "seeds": [
+    0
+  ],
+  "reason": "User stopped hard-only early; finish shuffled and compare the two completed arms",
+  "excluded_runs": {
+    "hard-seed0": {
+      "status": "early_stopped",
+      "reason": "User requested stopping hard-only and proceeding to shuffled",
+      "timestamp_utc": "2026-10-16T22:40:20.689577+00:00",
+      "condition": "hard",
+      "seed": 0,
+      "checkpoint_step": 17688,
+      "observed_step": 18180,
+      "planned_steps": 48210,
+      "gamma12_test_loss": 1.8164915766655554,
+      "checkpoint_path": "/home/kanhar/nanoGPT/out/gpu-64layer-gamma12/hard-seed0/checkpoint.pt",
+      "eligible_for_full_budget_comparison": false
+    }
+  }
+}

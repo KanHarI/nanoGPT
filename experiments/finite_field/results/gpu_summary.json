@@ -1,0 +1,57 @@
+{
+  "conditions": {
+    "curriculum": {
+      "status": "complete",
+      "updates": 48210,
+      "run_url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/5c9ddae9",
+      "artifact": "kanhar/finite-field-curriculum/run-5c9ddae9-report:latest",
+      "final_report": "gpu_curriculum_final.json",
+      "sha256": "92b3a09b18ffcd491d148b52fc50cd311ba9a253f7975701fcfb8048fc23331e",
+      "gamma12_train_loss": 0.08611898992373879,
+      "gamma12_test_loss": 0.11311844168740509
+    },
+    "mixture": {
+      "status": "complete",
+      "updates": 48210,
+      "run_url": "https://wandb.ai/kanhar/finite-field-curriculum/runs/889b6983",
+      "artifact": "kanhar/finite-field-curriculum/run-889b6983-report:latest",
+      "final_report": "gpu_mixture_final.json",
+      "sha256": "d420dc57739f1e39866c7092bb0582ad73a92199e2fd6548e8ac40eabe4fbf08",
+      "gamma12_train_loss": 0.47815022494842363,
+      "gamma12_test_loss": 0.4567141905870038
+    }
+  },
+  "seed": 0,
+  "planned_updates": 48210,
+  "primary_gamma": 12,
+  "metric": "answer cross-entropy in nats",
+  "final_items_per_field_per_gamma_per_split": 128,
+  "vm": {
+    "status": "TERMINATED",
+    "last_stop_utc": "2026-10-17T01:40:00.715Z",
+    "verified_on": "2026-10-17"
+  },
+  "excluded_runs": {
+    "hard-seed0": {
+      "status": "early_stopped",
+      "reason": "User requested stopping hard-only and proceeding to shuffled",
+      "timestamp_utc": "2026-10-16T22:40:20.689577+00:00",
+      "condition": "hard",
+      "seed": 0,
+      "checkpoint_step": 17688,
+      "observed_step": 18180,
+      "planned_steps": 48210,
+      "gamma12_test_loss": 1.8164915766655554,
+      "checkpoint_path": "/home/kanhar/nanoGPT/out/gpu-64layer-gamma12/hard-seed0/checkpoint.pt",
+      "eligible_for_full_budget_comparison": false
+    }
+  },
+  "curriculum_minus_mixture_test_loss": -0.3435957488995987,
+  "relative_test_loss_reduction": 0.7523211583550389,
+  "limitations": [
+    "One seed; no across-seed uncertainty estimate.",
+    "Hard-only stopped early and excluded from full-budget comparison.",
+    "Matched scheduled gamma exposure, not identical realized ASTs or dense compute.",
+    "Train/test are independent procedural evaluation banks; neither bank trains the model."
+  ]
+}
