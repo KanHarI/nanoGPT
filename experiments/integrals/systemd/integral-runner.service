@@ -1,0 +1,19 @@
+[Unit]
+Description=Numerical-integral curriculum comparison
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=3600
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=integral
+WorkingDirectory=/opt/nanoGPT
+EnvironmentFile=/etc/integral-experiment.env
+ExecStart=/bin/bash /opt/nanoGPT/experiments/integrals/remote_run.sh
+Restart=on-failure
+RestartSec=60
+TimeoutStopSec=120
+
+[Install]
+WantedBy=multi-user.target

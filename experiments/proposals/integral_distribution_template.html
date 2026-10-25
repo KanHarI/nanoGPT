@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+__AUTO_REFRESH__
+<title>Numerical integral distributions</title>
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#152d39;background:#f4f7f9;font-size:15px}
+body{max-width:1440px;margin:0 auto;padding:32px}h1{font-size:32px;letter-spacing:-1px;margin:0 0 8px}h2{font-size:20px;margin:0 0 14px}p{line-height:1.6}.muted{color:#5c7080}.card{background:#fff;border:1px solid #dce5eb;border-radius:12px;padding:22px;margin:18px 0}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.stat{padding:15px;background:#eaf2f5;border-radius:9px}.stat strong{display:block;font-size:24px;margin-bottom:5px}.stat span{font-size:12px;color:#516a78}.controls{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin:14px 0}select,button{font:inherit;padding:7px 10px;border:1px solid #b9cbd5;border-radius:6px;background:white;color:#152d39}button{cursor:pointer}label{display:flex;gap:7px;align-items:center;font-size:13px}input[type=range]{width:120px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.mini{border:1px solid #dce5eb;border-radius:8px;padding:12px;cursor:pointer}.mini strong{display:block;font-size:14px}.mini .muted{font-size:12px}svg{display:block;width:100%;height:auto;overflow:visible}svg text{font-family:system-ui,sans-serif;fill:#516a78}.chart-note{font-size:12px;color:#5c7080}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:right;padding:9px;border-bottom:1px solid #e5edf1}th:first-child,td:first-child{text-align:left}th{color:#536f7d;font-weight:600;white-space:nowrap}td code{font-size:11px;white-space:normal;overflow-wrap:anywhere}.scroll{overflow-x:auto}#examples td:last-child{text-align:left;width:75%}a{color:#167487}footer{font-size:12px;color:#5c7080;margin-top:24px}.pill{display:inline-block;border:1px solid #a5cbd1;color:#276a74;background:#e6f5f6;padding:4px 9px;border-radius:30px;font-size:12px;margin-left:10px}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(3,1fr)}}@media(max-width:600px){body{padding:15px}.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}h1{font-size:26px}}
+</style></head><body>
+<h1>Numerical integral distributions <span class="pill" id="state"></span></h1>
+<p class="muted">Random ASTs at gamma 1–20. The measured value is the definite integral, before rounding into the proposed answer format.</p>
+<p class="muted" id="boundsNote"></p>
+<div class="stats" id="stats"></div>
+<section class="card">
+<h2>Inspect a distribution</h2>
+<div class="controls">
+<label>Gamma <select id="gamma"></select></label>
+<label>Value scale <select id="scale"><option value="signedlog">Signed logarithmic</option><option value="linear">Linear</option></select></label>
+<label>Bins <input id="bins" type="range" min="21" max="201" step="10" value="101"><span id="binLabel">101</span></label>
+<label><input id="shared" type="checkbox" checked>Shared range across gamma</label>
+<label><input id="logCount" type="checkbox">Logarithmic counts</label>
+<label><input id="hideZero" type="checkbox">Hide |value| ≤ 10⁻⁸</label>
+</div>
+<div id="mainChart"></div><p id="chartNote" class="chart-note"></p>
+<p class="chart-note">Hover over a bar for its numeric interval and count; click it to inspect expressions in that bin. Signed logarithmic spacing uses sign(y) × log₁₀(1 + |y|). Heights are counts, not probability densities.</p>
+<div class="scroll"><table id="examples"><thead><tr><th>Gamma / sample</th><th>Integral value</th><th>RPN input</th></tr></thead><tbody></tbody></table></div>
+</section>
+<section class="card"><h2>All gamma levels</h2><p class="chart-note">Identical bin edges and count scales in every panel. Click a panel to inspect it above.</p><div class="grid" id="smallMultiples"></div></section>
+<section class="card"><h2>Numerical summary</h2><div class="controls"><button id="download">Download values as CSV</button><a href="summary.csv">Summary CSV</a><a href="histograms.png">Histogram PNG</a><a href="histograms.pdf">Histogram PDF</a><a href="heatmap.png">Overview heatmap</a></div><div class="scroll"><table id="summary"><thead><tr><th>Gamma</th><th>Evaluated</th><th>Accepted</th><th id="rejectionHeading">Unresolved</th><th>Near zero</th><th>Median</th><th>Mean</th><th>Minimum</th><th>Maximum</th><th>|value| &gt; 32640</th></tr></thead><tbody></tbody></table></div></section>
+<footer><p><span id="samplingPolicy"></span> No clipping to the answer range; all accepted tails are shown. Near zero is a numerical category (|integral| ≤ 10⁻⁸), not a claim of symbolic equality to zero. Quadrature agreement and error estimates are diagnostics, not rigorous integration bounds. Generator preview retains its per-node magnitude cap of 10⁶.</p><p id="updated"></p></footer>
+<script>
+const DATA=__SURVEY_DATA__;
+const groups=DATA.groups, all=Object.entries(groups).flatMap(([gamma,g])=>g.samples.map(s=>({...s,gamma:Number(gamma)}))), good=all.filter(s=>s.status==='ok');
+const $=id=>document.getElementById(id), fmt=n=>n==null?'—':Number(n).toLocaleString(undefined,{maximumSignificantDigits:6});
+const total=DATA.summary.config.count*DATA.summary.config.gammas.length;
+const resampled=Boolean(DATA.summary.config.resample_failed_evaluations);
+$('boundsNote').textContent=DATA.summary.config.bounds_grid?'Bounds grid: '+DATA.summary.config.bounds_grid.map(t=>({'HALF':'½','NEG_HALF':'−½'}[t]??t)).join(', ')+'. Includes floor, ceiling, and fractional part.':'';
+$('samplingPolicy').textContent=resampled?'Failed candidates are excluded and replaced at the same sampled K and bounds. Rejections are stored separately from the accepted dataset.':'Fixed draws: failed numerical evaluations are retained as unresolved and excluded from histograms, without replacement.';
+if(resampled)$('rejectionHeading').textContent='Rejected';
+$('state').textContent=DATA.summary.state;
+const cards=[[resampled?'Accepted target':'Evaluated',`${fmt(all.length)} / ${fmt(total)}`],[resampled?'Evaluated candidates':'Accepted values',fmt(resampled?DATA.summary.candidate_evaluations:good.length)],[resampled?'Rejected candidates':'Unresolved',fmt(resampled?DATA.summary.rejected_evaluations:DATA.summary.unresolved)],['Near zero',`${fmt(100*good.filter(s=>Math.abs(s.value)<=1e-8).length/(good.length||1))}%`],['Outside answer range',fmt(good.filter(s=>Math.abs(s.value)>32640).length)]];
+for(const [label,value] of cards){const d=document.createElement('div');d.className='stat';const b=document.createElement('strong');b.textContent=value;const t=document.createElement('span');t.textContent=label;d.append(b,t);$('stats').append(d)}
+$('updated').textContent=`Updated ${DATA.summary.generated_at}. Seed ${DATA.summary.config.seed}. ${DATA.summary.state==='running'?'This file refreshes every 30 seconds while the job runs.':''}`;
+$('gamma').innerHTML='<option value="all">All pooled</option>'+Object.keys(groups).map(g=>`<option value="${g}">${g}</option>`).join('');
+$('gamma').value=groups[location.hash.slice(1)]?location.hash.slice(1):'1';
+function transform(v){return $('scale').value==='linear'?v:Math.sign(v)*Math.log10(1+Math.abs(v))}
+function inverse(v){return $('scale').value==='linear'?v:Math.sign(v)*(10**Math.abs(v)-1)}
+function hist(rows,extent,n){const bins=Array.from({length:n},()=>[]);for(const row of rows){const i=Math.max(0,Math.min(n-1,Math.floor((transform(row.value)+extent)/(2*extent)*n)));bins[i].push(row)}return bins}
+function eligible(rows){return $('hideZero').checked?rows.filter(s=>Math.abs(s.value)>1e-8):rows}
+function extentOf(rows){return Math.max($('scale').value==='linear'?1:0.31,...rows.map(s=>Math.abs(transform(s.value))))*1.001}
+function chart(rows,extent,n,ymax,small=false){
+ const W=small?330:1140,H=small?190:320,L=small?36:64,R=10,T=12,B=46,pw=W-L-R,ph=H-T-B,bins=hist(rows,extent,n);
+ const scaleY=v=>($('logCount').checked?Math.log1p(v)/Math.log1p(ymax):v/ymax)*ph;
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Histogram of integral values">`;
+ for(let i=0;i<=4;i++){let val=$('logCount').checked?Math.expm1(Math.log1p(ymax)*i/4):ymax*i/4;let y=T+ph-scaleY(val);s+=`<line x1="${L}" y1="${y}" x2="${W-R}" y2="${y}" stroke="#e6eef1"/><text x="${L-6}" y="${y+4}" text-anchor="end" font-size="${small?10:12}">${Math.round(val)}</text>`}
+ for(let i=0;i<n;i++){const h=scaleY(bins[i].length),x=L+i*pw/n,low=inverse(-extent+2*extent*i/n),high=inverse(-extent+2*extent*(i+1)/n);s+=`<rect data-bin="${i}" x="${x}" y="${T+ph-h}" width="${Math.max(.2,pw/n-.35)}" height="${h}" fill="#257c96"><title>${fmt(low)} to ${fmt(high)}: ${bins[i].length} expressions</title></rect>`}
+ for(let i=0;i<=4;i++){const v=-extent+2*extent*i/4,x=L+pw*i/4;s+=`<text x="${x}" y="${T+ph+22}" text-anchor="middle" font-size="${small?10:12}">${fmt(inverse(v))}</text>`}
+ s+=`<line x1="${L+pw/2}" y1="${T}" x2="${L+pw/2}" y2="${T+ph}" stroke="#b8cdd5" stroke-dasharray="3 4"/></svg>`;return {html:s,bins};
+}
+function showExamples(rows){const body=$('examples').querySelector('tbody');body.innerHTML='';for(const row of [...rows].sort((a,b)=>Math.abs(b.value)-Math.abs(a.value)).slice(0,12)){const tr=document.createElement('tr');for(const value of [`${row.gamma} / ${row.index}`,row.value.toPrecision(12),row.rpn]){const td=document.createElement('td');if(value===row.rpn){const code=document.createElement('code');code.textContent=value;td.append(code)}else td.textContent=value;tr.append(td)}body.append(tr)}}
+function render(){
+ const n=Number($('bins').value);$('binLabel').textContent=n;
+ const filtered=eligible(good), selected=eligible($('gamma').value==='all'?good:good.filter(s=>s.gamma===Number($('gamma').value)));
+ const extent=extentOf($('shared').checked?filtered:selected),result=hist(selected,extent,n),ymax=Math.max(1,...result.map(b=>b.length));
+ const main=chart(selected,extent,n,ymax);$('mainChart').innerHTML=main.html;
+ $('chartNote').textContent=`${fmt(selected.length)} values shown. ${$('hideZero').checked?'Near-zero values are excluded by the selected filter.':'Near-zero values are included.'} ${$('shared').checked?'The x range is shared across all gamma levels.':'The x range follows this selection.'}`;
+ for(const el of $('mainChart').querySelectorAll('[data-bin]'))el.onclick=()=>showExamples(main.bins[Number(el.dataset.bin)]);
+ showExamples(selected);
+ const sharedExtent=extentOf(filtered), histograms=Object.entries(groups).map(([g])=>[g,eligible(good.filter(s=>s.gamma===Number(g)))]);
+ const sharedY=Math.max(1,...histograms.flatMap(([g,rows])=>hist(rows,sharedExtent,n).map(b=>b.length)));
+ $('smallMultiples').innerHTML='';
+ for(const [gamma,rows] of histograms){const d=document.createElement('div');d.className='mini';const summary=groups[gamma].stats;d.innerHTML=`<strong>Gamma ${gamma}</strong><span class="muted">${summary.accepted} accepted / ${resampled?summary.candidate_evaluations:summary.evaluated} evaluated</span>`+chart(rows,sharedExtent,n,sharedY,true).html;d.onclick=()=>{$('gamma').value=gamma;location.hash=gamma;render();$('mainChart').scrollIntoView({behavior:'smooth',block:'center'})};$('smallMultiples').append(d)}
+}
+for(const id of ['gamma','scale','bins','shared','logCount','hideZero'])$(id).addEventListener('change',()=>{location.hash=$('gamma').value;render()});
+for(const [gamma,g] of Object.entries(groups)){const s=g.stats,tr=document.createElement('tr');for(const value of [gamma,resampled?s.candidate_evaluations:s.evaluated,s.accepted,resampled?s.rejected_evaluations:s.unresolved,s.near_zero==null?'—':`${(100*s.near_zero/s.accepted).toFixed(1)}%`,fmt(s.median),fmt(s.mean),fmt(s.minimum),fmt(s.maximum),s.outside_answer_range??'—']){const td=document.createElement('td');td.textContent=value;tr.append(td)}$('summary').querySelector('tbody').append(tr)}
+$('download').onclick=()=>{const csv=['gamma,sample_index,K,status,value,rpn',...all.map(r=>[r.gamma,r.index,r.k,r.status,r.value??'',`"${r.rpn.replaceAll('"','""')}"`].join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='integral-values.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+render();
+</script></body></html>

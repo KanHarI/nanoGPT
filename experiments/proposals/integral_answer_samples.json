@@ -1,0 +1,257 @@
+{
+  "source": "integral_ast_samples.json",
+  "selected_examples_only": true,
+  "agreement_tolerance": "1e-30 * max(1, abs(answer))",
+  "note": "Numerical agreement checks, not formally certified integration bounds. Decimal displays are approximate. This is not a general dataset labeler.",
+  "samples": [
+    {
+      "gamma": "1",
+      "sample_index": 4,
+      "bounds": [
+        "HALF",
+        "1"
+      ],
+      "operators": 1,
+      "depth": 1,
+      "contains_x": true,
+      "whole_tree_retries": 0,
+      "parsed": "Integral[HALF, 1] asin(x) dx",
+      "rpn": "HALF 1 x ASIN INT_X =",
+      "range_display_approx": [
+        "0.5235987755983",
+        "1.5707963267949"
+      ],
+      "quadrature_checks": [
+        {
+          "digits": 40,
+          "subintervals": 4,
+          "value": "0.4429715352113085359290449056135233516108",
+          "estimated_error": "1.001e-51"
+        },
+        {
+          "digits": 70,
+          "subintervals": 8,
+          "value": "0.4429715352113085359290449056135233516107512895011037780449900904022903",
+          "estimated_error": "1.0e-99"
+        }
+      ],
+      "independent_check": {
+        "method": "analytic: 5*pi/12 - sqrt(3)/2",
+        "value": "0.4429715352113085359290449056135233516107512895011"
+      },
+      "precision_difference": "4.87105e-41",
+      "independent_difference": "3.77804e-51",
+      "answer_decimal": "0.4429715352113085359290449056135233516107512895011037780449900904022903",
+      "answer_display_approx": "0.442971535211",
+      "rpn_with_decimal_approx": "HALF 1 x ASIN INT_X = 0.442971535211",
+      "normal_encoding_preview": {
+        "sign": 0,
+        "exponent_bits": "01111",
+        "mantissa_bits": "11100011",
+        "compact_display": "0 | 01111 | 11100011",
+        "decoded_decimal": "0.443359375",
+        "absolute_rounding_error": "0.000387839788691464"
+      }
+    },
+    {
+      "gamma": "3",
+      "sample_index": 7,
+      "bounds": [
+        "-1",
+        "NEG_HALF"
+      ],
+      "operators": 4,
+      "depth": 4,
+      "contains_x": true,
+      "whole_tree_retries": 0,
+      "parsed": "Integral[-1, NEG_HALF] ln(((x * atan(x)) - x)) dx",
+      "rpn": "-1 NEG_HALF x x ATAN * x - LN INT_X =",
+      "range_display_approx": [
+        "-0.31221549822916",
+        "0.57964145108412"
+      ],
+      "quadrature_checks": [
+        {
+          "digits": 40,
+          "subintervals": 4,
+          "value": "0.09223886948311332514063023021458316675446",
+          "estimated_error": "1.201e-58"
+        },
+        {
+          "digits": 70,
+          "subintervals": 8,
+          "value": "0.09223886948311332514063023021458316675446055535242456932641990671321093",
+          "estimated_error": "1.0061e-120"
+        }
+      ],
+      "independent_check": {
+        "method": "independent formula, 50-digit Gauss-Legendre",
+        "value": "0.092238869483113325140630230214583166754460555352425",
+        "estimated_error": "1.0e-74"
+      },
+      "precision_difference": "5.55352e-43",
+      "independent_difference": "4.30674e-52",
+      "answer_decimal": "0.09223886948311332514063023021458316675446055535242456932641990671321093",
+      "answer_display_approx": "0.0922388694831",
+      "rpn_with_decimal_approx": "-1 NEG_HALF x x ATAN * x - LN INT_X = 0.0922388694831",
+      "normal_encoding_preview": {
+        "sign": 0,
+        "exponent_bits": "01101",
+        "mantissa_bits": "10111101",
+        "compact_display": "0 | 01101 | 10111101",
+        "decoded_decimal": "0.09228515625",
+        "absolute_rounding_error": "4.62867668866749e-5"
+      }
+    },
+    {
+      "gamma": "6",
+      "sample_index": 1,
+      "bounds": [
+        "HALF",
+        "1"
+      ],
+      "operators": 7,
+      "depth": 5,
+      "contains_x": true,
+      "whole_tree_retries": 0,
+      "parsed": "Integral[HALF, 1] (tan((sqrt(w0(e)) / (e - x))) / cos(x)) dx",
+      "rpn": "HALF 1 E W0 SQRT E x - / TAN x COS / INT_X =",
+      "range_display_approx": [
+        "0.55156213922174",
+        "1.2178317743291"
+      ],
+      "quadrature_checks": [
+        {
+          "digits": 40,
+          "subintervals": 4,
+          "value": "0.4002160498819746029165537595646761651722",
+          "estimated_error": "2.2e-56"
+        },
+        {
+          "digits": 70,
+          "subintervals": 8,
+          "value": "0.4002160498819746029165537595646761651722090068811787032068531071536293",
+          "estimated_error": "2.105e-119"
+        }
+      ],
+      "independent_check": {
+        "method": "independent formula, 50-digit Gauss-Legendre",
+        "value": "0.40021604988197460291655375956467616517220900688118",
+        "estimated_error": "1.0e-77"
+      },
+      "precision_difference": "9.00688e-42",
+      "independent_difference": "1.29679e-51",
+      "answer_decimal": "0.4002160498819746029165537595646761651722090068811787032068531071536293",
+      "answer_display_approx": "0.400216049882",
+      "rpn_with_decimal_approx": "HALF 1 E W0 SQRT E x - / TAN x COS / INT_X = 0.400216049882",
+      "normal_encoding_preview": {
+        "sign": 0,
+        "exponent_bits": "01111",
+        "mantissa_bits": "11001101",
+        "compact_display": "0 | 01111 | 11001101",
+        "decoded_decimal": "0.400390625",
+        "absolute_rounding_error": "0.000174575118025397"
+      }
+    },
+    {
+      "gamma": "12",
+      "sample_index": 5,
+      "bounds": [
+        "-1",
+        "NEG_HALF"
+      ],
+      "operators": 13,
+      "depth": 7,
+      "contains_x": true,
+      "whole_tree_retries": 0,
+      "parsed": "Integral[-1, NEG_HALF] (-(tan(sin(((x)^2 - 1))) + sin(sin(((e)^2 + ((x * (1/2)) - acos(x))))))) dx",
+      "rpn": "-1 NEG_HALF x SQUARE 1 - SIN TAN E SQUARE x HALF * x ACOS - + SIN SIN + NEG INT_X =",
+      "range_display_approx": [
+        "0.53919257751669",
+        "1.6528463586179"
+      ],
+      "quadrature_checks": [
+        {
+          "digits": 40,
+          "subintervals": 4,
+          "value": "0.6202715678427234826782250912591684009699",
+          "estimated_error": "1.0003e-51"
+        },
+        {
+          "digits": 70,
+          "subintervals": 8,
+          "value": "0.6202715678427234826782250912591684009699102725704952785563183030479833",
+          "estimated_error": "1.0e-99"
+        }
+      ],
+      "independent_check": {
+        "method": "independent formula, 50-digit Gauss-Legendre",
+        "value": "0.62027156784272348267822509125916840096991027257049",
+        "estimated_error": "1.0e-60"
+      },
+      "precision_difference": "1.02726e-41",
+      "independent_difference": "5.27856e-51",
+      "answer_decimal": "0.6202715678427234826782250912591684009699102725704952785563183030479833",
+      "answer_display_approx": "0.620271567843",
+      "rpn_with_decimal_approx": "-1 NEG_HALF x SQUARE 1 - SIN TAN E SQUARE x HALF * x ACOS - + SIN SIN + NEG INT_X = 0.620271567843",
+      "normal_encoding_preview": {
+        "sign": 0,
+        "exponent_bits": "10000",
+        "mantissa_bits": "10011111",
+        "compact_display": "0 | 10000 | 10011111",
+        "decoded_decimal": "0.62109375",
+        "absolute_rounding_error": "0.000822182157276517"
+      }
+    },
+    {
+      "gamma": "20",
+      "sample_index": 6,
+      "bounds": [
+        "0",
+        "HALF"
+      ],
+      "operators": 18,
+      "depth": 7,
+      "contains_x": true,
+      "whole_tree_retries": 0,
+      "parsed": "Integral[0, HALF] (atan(((3 / (3 - x)) + 2)) * (((x - (((3)^2 / pi))^2) + (atan(e) - x)) + exp(((x / w0(3)) + cos(3))))) dx",
+      "rpn": "0 HALF 3 3 x - / 2 + ATAN x 3 SQUARE PI / SQUARE - E ATAN x - + x 3 W0 / 3 COS + EXP + * INT_X =",
+      "range_display_approx": [
+        "-9.0239204624343",
+        "-7.3574934223455"
+      ],
+      "quadrature_checks": [
+        {
+          "digits": 40,
+          "subintervals": 4,
+          "value": "-4.096654362069466413535632874092755338851",
+          "estimated_error": "4.0e-59"
+        },
+        {
+          "digits": 70,
+          "subintervals": 8,
+          "value": "-4.096654362069466413535632874092755338850931473911252014846178339292091",
+          "estimated_error": "8.0e-125"
+        }
+      ],
+      "independent_check": {
+        "method": "independent formula, 50-digit Gauss-Legendre",
+        "value": "-4.0966543620694664135356328740927553388509314739112",
+        "estimated_error": "1.0e-73"
+      },
+      "precision_difference": "6.85261e-41",
+      "independent_difference": "5.20148e-50",
+      "answer_decimal": "-4.096654362069466413535632874092755338850931473911252014846178339292091",
+      "answer_display_approx": "-4.09665436207",
+      "rpn_with_decimal_approx": "0 HALF 3 3 x - / 2 + ATAN x 3 SQUARE PI / SQUARE - E ATAN x - + x 3 W0 / 3 COS + EXP + * INT_X = -4.09665436207",
+      "normal_encoding_preview": {
+        "sign": 1,
+        "exponent_bits": "10011",
+        "mantissa_bits": "10000011",
+        "compact_display": "1 | 10011 | 10000011",
+        "decoded_decimal": "-4.09375",
+        "absolute_rounding_error": "0.00290436206946641"
+      }
+    }
+  ]
+}
