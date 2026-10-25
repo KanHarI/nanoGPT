@@ -1,0 +1,117 @@
+{
+  "date": "2026-10-25",
+  "status": "passed",
+  "test_count": 38,
+  "command": ".venv/bin/python -m experiments.integrals.train --config experiments/integrals/configs/smoke.json --out-dir out/integrals-smoke-20261025-final --wandb offline",
+  "output_directory": "out/integrals-smoke-20261025-final",
+  "model": {
+    "layers": 2,
+    "embedding_width": 64,
+    "heads": 4,
+    "feedforward_width": 256,
+    "parameters": 109568,
+    "context_tokens": 128,
+    "vocabulary_size": 43
+  },
+  "updates": 8,
+  "examples_per_update": 4,
+  "training_examples": 32,
+  "supervised_tokens": 1457,
+  "evaluation": {
+    "gammas": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "splits": [
+      "train",
+      "test"
+    ],
+    "examples_per_split_gamma": 2,
+    "monitoring_updates": [
+      0,
+      4,
+      8
+    ],
+    "fresh_final_bank": true,
+    "free_generation_per_split_gamma": 2
+  },
+  "all_240_eval_loss_series_present_at_every_checkpoint": true,
+  "actual_offline_wandb_file_contains_all_240_eval_and_240_final_loss_keys": true,
+  "wandb_file": "out/integrals-smoke-20261025-final/wandb/offline-run-20261025_024241-1c483235/run-1c483235.wandb",
+  "checkpoint_reloaded_with_strict_parameter_matching": true,
+  "checkpoint_and_history_counters_match": true,
+  "source_hashes_match_final_code": true,
+  "all_8447_canonical_values_and_all_positive_midpoints_tested": true,
+  "uninterrupted_and_resumed_cpu_weights_bit_identical_in_regression_test": true,
+  "gamma20_fixed_test_bank": [
+    {
+      "step": 0,
+      "answer_nll": 3.634528262274606,
+      "full_nll": 3.750578210160539,
+      "valid_answer_rate": 0.0
+    },
+    {
+      "step": 4,
+      "answer_nll": 3.400136317525591,
+      "full_nll": 3.662329405277699,
+      "valid_answer_rate": 0.0
+    },
+    {
+      "step": 8,
+      "answer_nll": 3.2004813296454295,
+      "full_nll": 3.5557542727874205,
+      "valid_answer_rate": 0.0
+    }
+  ],
+  "gamma20_fresh_final_test": {
+    "answer_nll": 3.2764228071485246,
+    "full_nll": 3.560371093379641,
+    "non_answer_nll": 3.666378453572591,
+    "sign_nll": 3.3796684741973877,
+    "exponent_nll": 3.1794764518737795,
+    "mantissa_nll": 3.3241085708141327,
+    "exact_answer_accuracy": 0.0,
+    "valid_answer_rate": 0.0,
+    "decoded_mae": null,
+    "tolerance_accuracy": 0.0
+  },
+  "initial_label_generation": {
+    "generated": 192,
+    "rejected": 12,
+    "ValueError": 7,
+    "UncertainDiscontinuity": 5
+  },
+  "initial_timing_seconds": {
+    "training": 0.06419987400295213,
+    "evaluation": 1.6172786669922061,
+    "labeling": 20.527424251951743
+  },
+  "final_verification_cache_stats": {
+    "cache_hits": 192
+  },
+  "limitations": [
+    "Smoke validates the pipeline, not integration learning.",
+    "Two examples per evaluation cell are deliberately too few for scientific conclusions.",
+    "No valid free-generated answers yet; decoded MAE is omitted instead of reported as zero.",
+    "Quadrature agreement and error estimates are numerical checks, not rigorous integral enclosures.",
+    "Live labeling throughput has not been calibrated for a GPU."
+  ]
+}

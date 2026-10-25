@@ -1,0 +1,1004 @@
+{
+  "version": "integral-ast-preview-v1",
+  "seed": 20261024,
+  "constants": [
+    "-1",
+    "0",
+    "1",
+    "PI",
+    "E",
+    "2",
+    "3",
+    "HALF",
+    "THIRD"
+  ],
+  "bounds_grid": [
+    "-1",
+    "NEG_HALF",
+    "0",
+    "HALF",
+    "1"
+  ],
+  "max_operators": 32,
+  "binary_probability": 0.5,
+  "variable_leaf_probability": 0.5,
+  "preview_node_magnitude_limit": "1000000.0",
+  "interval_digits": 40,
+  "scalar_audit_digits": 80,
+  "answer_labels_generated": false,
+  "gammas": {
+    "1": {
+      "samples": [
+        {
+          "bounds": [
+            "-1",
+            "HALF"
+          ],
+          "operators": 1,
+          "depth": 1,
+          "contains_x": false,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, HALF] tan((1/3)) dx",
+          "rpn": "-1 HALF THIRD TAN INT_X =",
+          "range_display_approx": [
+            "0.34625354951058",
+            "0.34625354951058"
+          ]
+        },
+        {
+          "bounds": [
+            "NEG_HALF",
+            "0"
+          ],
+          "operators": 2,
+          "depth": 2,
+          "contains_x": false,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[NEG_HALF, 0] atan(ln(3)) dx",
+          "rpn": "NEG_HALF 0 3 LN ATAN INT_X =",
+          "range_display_approx": [
+            "0.8323529090608",
+            "0.8323529090608"
+          ]
+        },
+        {
+          "bounds": [
+            "-1",
+            "NEG_HALF"
+          ],
+          "operators": 0,
+          "depth": 0,
+          "contains_x": false,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, NEG_HALF] pi dx",
+          "rpn": "-1 NEG_HALF PI INT_X =",
+          "range_display_approx": [
+            "3.1415926535898",
+            "3.1415926535898"
+          ]
+        },
+        {
+          "bounds": [
+            "HALF",
+            "1"
+          ],
+          "operators": 1,
+          "depth": 1,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[HALF, 1] asin(x) dx",
+          "rpn": "HALF 1 x ASIN INT_X =",
+          "range_display_approx": [
+            "0.5235987755983",
+            "1.5707963267949"
+          ]
+        },
+        {
+          "bounds": [
+            "0",
+            "HALF"
+          ],
+          "operators": 0,
+          "depth": 0,
+          "contains_x": false,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[0, HALF] 3 dx",
+          "rpn": "0 HALF 3 INT_X =",
+          "range_display_approx": [
+            "3.0",
+            "3.0"
+          ]
+        },
+        {
+          "bounds": [
+            "0",
+            "HALF"
+          ],
+          "operators": 3,
+          "depth": 3,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[0, HALF] tan(sqrt((3 - x))) dx",
+          "rpn": "0 HALF 3 x - SQRT TAN INT_X =",
+          "range_display_approx": [
+            "-96.684943285394",
+            "-6.1475331602966"
+          ]
+        },
+        {
+          "bounds": [
+            "-1",
+            "HALF"
+          ],
+          "operators": 1,
+          "depth": 1,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, HALF] (x * x) dx",
+          "rpn": "-1 HALF x x * INT_X =",
+          "range_display_approx": [
+            "-0.5",
+            "1.0"
+          ]
+        },
+        {
+          "bounds": [
+            "NEG_HALF",
+            "1"
+          ],
+          "operators": 2,
+          "depth": 2,
+          "contains_x": false,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[NEG_HALF, 1] exp((0 + (-1))) dx",
+          "rpn": "NEG_HALF 1 0 -1 + EXP INT_X =",
+          "range_display_approx": [
+            "0.36787944117144",
+            "0.36787944117144"
+          ]
+        },
+        {
+          "bounds": [
+            "0",
+            "HALF"
+          ],
+          "operators": 3,
+          "depth": 3,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[0, HALF] (2 + atan((0 + x))) dx",
+          "rpn": "0 HALF 2 0 x + ATAN + INT_X =",
+          "range_display_approx": [
+            "2.0",
+            "2.4636476090008"
+          ]
+        },
+        {
+          "bounds": [
+            "HALF",
+            "1"
+          ],
+          "operators": 1,
+          "depth": 1,
+          "contains_x": false,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[HALF, 1] (0 / pi) dx",
+          "rpn": "HALF 1 0 PI / INT_X =",
+          "range_display_approx": [
+            "0.0",
+            "0.0"
+          ]
+        }
+      ],
+      "audited_trees": 200,
+      "mean_operators": 1.215,
+      "trees_with_x": 121,
+      "operator_counts": {
+        "TAN": 12,
+        "ATAN": 9,
+        "LN": 6,
+        "ASIN": 8,
+        "SQRT": 6,
+        "-": 29,
+        "*": 29,
+        "EXP": 12,
+        "+": 39,
+        "/": 20,
+        "SQUARE": 19,
+        "SIN": 9,
+        "W0": 7,
+        "COS": 12,
+        "NEG": 13,
+        "ACOS": 13
+      },
+      "ineligible_candidates": {
+        "ASIN: inverse trig input outside [-1,1]": 4,
+        "ACOS: inverse trig input outside [-1,1]": 2,
+        "/: denominator interval includes zero": 19,
+        "W0: W0 input not certified >= -1/e": 6,
+        "SQRT: sqrt input not certified nonnegative": 3,
+        "LN: log input not certified positive": 8
+      }
+    },
+    "3": {
+      "samples": [
+        {
+          "bounds": [
+            "-1",
+            "0"
+          ],
+          "operators": 7,
+          "depth": 6,
+          "contains_x": false,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, 0] exp(atan((-((asin(1) * pi) + sin(0))))) dx",
+          "rpn": "-1 0 1 ASIN PI * 0 SIN + NEG ATAN EXP INT_X =",
+          "range_display_approx": [
+            "0.25388818509616",
+            "0.25388818509616"
+          ]
+        },
+        {
+          "bounds": [
+            "-1",
+            "NEG_HALF"
+          ],
+          "operators": 2,
+          "depth": 2,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, NEG_HALF] tan((x * x)) dx",
+          "rpn": "-1 NEG_HALF x x * TAN INT_X =",
+          "range_display_approx": [
+            "0.25534192122104",
+            "1.5574077246549"
+          ]
+        },
+        {
+          "bounds": [
+            "HALF",
+            "1"
+          ],
+          "operators": 1,
+          "depth": 1,
+          "contains_x": false,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[HALF, 1] sin(1) dx",
+          "rpn": "HALF 1 1 SIN INT_X =",
+          "range_display_approx": [
+            "0.8414709848079",
+            "0.8414709848079"
+          ]
+        },
+        {
+          "bounds": [
+            "NEG_HALF",
+            "0"
+          ],
+          "operators": 4,
+          "depth": 4,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[NEG_HALF, 0] exp(tan((x + (x - x)))) dx",
+          "rpn": "NEG_HALF 0 x x x - + TAN EXP INT_X =",
+          "range_display_approx": [
+            "0.21068150841353",
+            "2.4286324527941"
+          ]
+        },
+        {
+          "bounds": [
+            "0",
+            "1"
+          ],
+          "operators": 1,
+          "depth": 1,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[0, 1] acos(x) dx",
+          "rpn": "0 1 x ACOS INT_X =",
+          "range_display_approx": [
+            "0.0",
+            "1.5707963267949"
+          ]
+        },
+        {
+          "bounds": [
+            "NEG_HALF",
+            "0"
+          ],
+          "operators": 4,
+          "depth": 4,
+          "contains_x": false,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[NEG_HALF, 0] (-((-exp((1/3))) + (1/3))) dx",
+          "rpn": "NEG_HALF 0 THIRD EXP NEG THIRD + NEG INT_X =",
+          "range_display_approx": [
+            "1.0622790917528",
+            "1.0622790917528"
+          ]
+        },
+        {
+          "bounds": [
+            "-1",
+            "NEG_HALF"
+          ],
+          "operators": 4,
+          "depth": 4,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, NEG_HALF] ln(((x * atan(x)) - x)) dx",
+          "rpn": "-1 NEG_HALF x x ATAN * x - LN INT_X =",
+          "range_display_approx": [
+            "-0.31221549822916",
+            "0.57964145108412"
+          ]
+        },
+        {
+          "bounds": [
+            "-1",
+            "1"
+          ],
+          "operators": 2,
+          "depth": 2,
+          "contains_x": false,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, 1] (-sqrt(0)) dx",
+          "rpn": "-1 1 0 SQRT NEG INT_X =",
+          "range_display_approx": [
+            "0.0",
+            "0.0"
+          ]
+        },
+        {
+          "bounds": [
+            "NEG_HALF",
+            "1"
+          ],
+          "operators": 5,
+          "depth": 4,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[NEG_HALF, 1] ((pi * x) / tan(cos((x - (1/2))))) dx",
+          "rpn": "NEG_HALF 1 PI x * x HALF - COS TAN / INT_X =",
+          "range_display_approx": [
+            "-2.6186894594422",
+            "5.2373789188844"
+          ]
+        },
+        {
+          "bounds": [
+            "-1",
+            "0"
+          ],
+          "operators": 7,
+          "depth": 4,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, 0] (tan(((x * 0) + x)) * ((2 * (1/2)) + (-x))) dx",
+          "rpn": "-1 0 x 0 * x + TAN 2 HALF * x NEG + * INT_X =",
+          "range_display_approx": [
+            "-3.1148154493098",
+            "0.0"
+          ]
+        }
+      ],
+      "audited_trees": 200,
+      "mean_operators": 3.105,
+      "trees_with_x": 147,
+      "operator_counts": {
+        "EXP": 34,
+        "ATAN": 30,
+        "NEG": 31,
+        "+": 89,
+        "*": 81,
+        "ASIN": 24,
+        "SIN": 37,
+        "TAN": 28,
+        "-": 80,
+        "ACOS": 19,
+        "LN": 11,
+        "SQRT": 22,
+        "/": 39,
+        "COS": 34,
+        "SQUARE": 42,
+        "W0": 20
+      },
+      "ineligible_candidates": {
+        "ASIN: inverse trig input outside [-1,1]": 14,
+        "/: denominator interval includes zero": 34,
+        "LN: log input not certified positive": 10,
+        "SQRT: sqrt input not certified nonnegative": 11,
+        "W0: W0 input not certified >= -1/e": 12,
+        "ACOS: inverse trig input outside [-1,1]": 16,
+        "TAN: tangent interval may contain a pole": 4
+      }
+    },
+    "6": {
+      "samples": [
+        {
+          "bounds": [
+            "HALF",
+            "1"
+          ],
+          "operators": 7,
+          "depth": 5,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[HALF, 1] (tan((sqrt(w0(e)) / (e - x))) / cos(x)) dx",
+          "rpn": "HALF 1 E W0 SQRT E x - / TAN x COS / INT_X =",
+          "range_display_approx": [
+            "0.55156213922174",
+            "1.2178317743291"
+          ]
+        },
+        {
+          "bounds": [
+            "0",
+            "1"
+          ],
+          "operators": 7,
+          "depth": 7,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[0, 1] exp((3 - exp((-((atan(x) + (1/2)))^2)))) dx",
+          "rpn": "0 1 3 x ATAN HALF + SQUARE NEG EXP - EXP INT_X =",
+          "range_display_approx": [
+            "9.2183790762002",
+            "16.583055461289"
+          ]
+        },
+        {
+          "bounds": [
+            "-1",
+            "1"
+          ],
+          "operators": 5,
+          "depth": 4,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, 1] (((2 - atan(x)) * (x * x)) + pi) dx",
+          "rpn": "-1 1 2 x ATAN - x x * * PI + INT_X =",
+          "range_display_approx": [
+            "0.35619449019234",
+            "5.9269908169872"
+          ]
+        },
+        {
+          "bounds": [
+            "-1",
+            "NEG_HALF"
+          ],
+          "operators": 7,
+          "depth": 5,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, NEG_HALF] w0(((((0 / x) / x) / x) + cos(tan(3)))) dx",
+          "rpn": "-1 NEG_HALF 0 x / x / x / 3 TAN COS + W0 INT_X =",
+          "range_display_approx": [
+            "0.5634616505928",
+            "0.5634616505928"
+          ]
+        },
+        {
+          "bounds": [
+            "-1",
+            "0"
+          ],
+          "operators": 7,
+          "depth": 5,
+          "contains_x": false,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, 0] (tan((3 / tan(exp((-1))))) / exp(ln(e))) dx",
+          "rpn": "-1 0 3 -1 EXP TAN / TAN E LN EXP / INT_X =",
+          "range_display_approx": [
+            "5.218553596524",
+            "5.218553596524"
+          ]
+        },
+        {
+          "bounds": [
+            "NEG_HALF",
+            "0"
+          ],
+          "operators": 9,
+          "depth": 4,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[NEG_HALF, 0] ((pi + (x * 1)) - ((2 - (-0)) * ((x * x) + sin(1)))) dx",
+          "rpn": "NEG_HALF 0 PI x 1 * + 2 0 NEG - x x * 1 SIN + * - INT_X =",
+          "range_display_approx": [
+            "0.458650683974",
+            "1.458650683974"
+          ]
+        },
+        {
+          "bounds": [
+            "-1",
+            "HALF"
+          ],
+          "operators": 9,
+          "depth": 7,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, HALF] ln((((exp((-1)) - (((0 + 3))^2 - x)) * 0) - tan((-1)))) dx",
+          "rpn": "-1 HALF -1 EXP 0 3 + SQUARE x - - 0 * -1 TAN - LN INT_X =",
+          "range_display_approx": [
+            "0.44302272411692",
+            "0.44302272411692"
+          ]
+        },
+        {
+          "bounds": [
+            "NEG_HALF",
+            "HALF"
+          ],
+          "operators": 9,
+          "depth": 6,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[NEG_HALF, HALF] ((sin((-pi)) * exp(atan((x - (2 * x))))) + ((-1) + (-1))) dx",
+          "rpn": "NEG_HALF HALF PI NEG SIN x 2 x * - ATAN EXP * -1 -1 + + INT_X =",
+          "range_display_approx": [
+            "-2.0",
+            "-2.0"
+          ]
+        },
+        {
+          "bounds": [
+            "NEG_HALF",
+            "HALF"
+          ],
+          "operators": 5,
+          "depth": 4,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[NEG_HALF, HALF] (((x - (0 / 1)) * sqrt((1/2))) + x) dx",
+          "rpn": "NEG_HALF HALF x 0 1 / - HALF SQRT * x + INT_X =",
+          "range_display_approx": [
+            "-0.85355339059327",
+            "0.85355339059327"
+          ]
+        },
+        {
+          "bounds": [
+            "-1",
+            "NEG_HALF"
+          ],
+          "operators": 4,
+          "depth": 3,
+          "contains_x": false,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, NEG_HALF] (sin((pi / 1)) / ln(e)) dx",
+          "rpn": "-1 NEG_HALF PI 1 / SIN E LN / INT_X =",
+          "range_display_approx": [
+            "-4.550434165703e-41",
+            "4.1340642196528e-43"
+          ]
+        }
+      ],
+      "audited_trees": 200,
+      "mean_operators": 6.235,
+      "trees_with_x": 180,
+      "operator_counts": {
+        "/": 99,
+        "TAN": 60,
+        "SQRT": 40,
+        "W0": 38,
+        "-": 189,
+        "COS": 65,
+        "EXP": 64,
+        "NEG": 63,
+        "SQUARE": 66,
+        "+": 178,
+        "ATAN": 59,
+        "*": 161,
+        "LN": 29,
+        "SIN": 69,
+        "ASIN": 36,
+        "ACOS": 31
+      },
+      "ineligible_candidates": {
+        "SQRT: sqrt input not certified nonnegative": 20,
+        "LN: log input not certified positive": 42,
+        "W0: W0 input not certified >= -1/e": 33,
+        "/: denominator interval includes zero": 56,
+        "ACOS: inverse trig input outside [-1,1]": 25,
+        "ASIN: inverse trig input outside [-1,1]": 28,
+        "TAN: tangent interval may contain a pole": 17,
+        "EXP: preview magnitude guard": 1
+      }
+    },
+    "12": {
+      "samples": [
+        {
+          "bounds": [
+            "-1",
+            "1"
+          ],
+          "operators": 12,
+          "depth": 7,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, 1] ((-(x - atan(x))) / ((pi / pi) * sin((-ln(((x + 3) * (3 + x))))))) dx",
+          "rpn": "-1 1 x x ATAN - NEG PI PI / x 3 + 3 x + * LN NEG SIN * / INT_X =",
+          "range_display_approx": [
+            "-4.9499987232295",
+            "4.9499987232295"
+          ]
+        },
+        {
+          "bounds": [
+            "-1",
+            "1"
+          ],
+          "operators": 10,
+          "depth": 7,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, 1] exp(cos(((e - cos((-e))) + (-(((x / (1/2)) * (1/2)) - 1))))) dx",
+          "rpn": "-1 1 E E NEG COS - x HALF / HALF * 1 - NEG + COS EXP INT_X =",
+          "range_display_approx": [
+            "0.41350986970505",
+            "2.2125852450116"
+          ]
+        },
+        {
+          "bounds": [
+            "-1",
+            "NEG_HALF"
+          ],
+          "operators": 12,
+          "depth": 8,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, NEG_HALF] acos(exp(((((1/3) * x) * (w0(((x - 2) + acos((-1)))) + ((-1) - 0))) / (x / 3)))) dx",
+          "rpn": "-1 NEG_HALF THIRD x * x 2 - -1 ACOS + W0 -1 0 - + * x 3 / / EXP ACOS INT_X =",
+          "range_display_approx": [
+            "0.72473764949339",
+            "1.3961497863395"
+          ]
+        },
+        {
+          "bounds": [
+            "0",
+            "HALF"
+          ],
+          "operators": 10,
+          "depth": 8,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[0, HALF] sin((sqrt(x) / ((tan((-sqrt((e / (1/3))))) + (x * x)))^2)) dx",
+          "rpn": "0 HALF x SQRT E THIRD / SQRT NEG TAN x x * + SQUARE / SIN INT_X =",
+          "range_display_approx": [
+            "-1.0",
+            "1.0"
+          ]
+        },
+        {
+          "bounds": [
+            "-1",
+            "NEG_HALF"
+          ],
+          "operators": 13,
+          "depth": 7,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, NEG_HALF] (-(tan(sin(((x)^2 - 1))) + sin(sin(((e)^2 + ((x * (1/2)) - acos(x))))))) dx",
+          "rpn": "-1 NEG_HALF x SQUARE 1 - SIN TAN E SQUARE x HALF * x ACOS - + SIN SIN + NEG INT_X =",
+          "range_display_approx": [
+            "0.53919257751669",
+            "1.6528463586179"
+          ]
+        },
+        {
+          "bounds": [
+            "HALF",
+            "1"
+          ],
+          "operators": 11,
+          "depth": 11,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[HALF, 1] asin((-exp((0 - asin(sin((x - sin(atan(w0(sin(3))))))))))) dx",
+          "rpn": "HALF 1 0 x 3 SIN W0 ATAN SIN - SIN ASIN - EXP NEG ASIN INT_X =",
+          "range_display_approx": [
+            "-0.75645915451424",
+            "-0.42936407252472"
+          ]
+        },
+        {
+          "bounds": [
+            "0",
+            "1"
+          ],
+          "operators": 10,
+          "depth": 9,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[0, 1] (asin((acos(cos(cos(exp(cos((x * 2)))))) + atan((-1)))) + e) dx",
+          "rpn": "0 1 x 2 * COS EXP COS COS ACOS -1 ATAN + ASIN E + INT_X =",
+          "range_display_approx": [
+            "1.8149427176925",
+            "2.8740334819832"
+          ]
+        },
+        {
+          "bounds": [
+            "NEG_HALF",
+            "0"
+          ],
+          "operators": 9,
+          "depth": 7,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[NEG_HALF, 0] w0((((cos((x * exp(pi))) + e) + sqrt((x * x))) + pi)) dx",
+          "rpn": "NEG_HALF 0 x PI EXP * COS E + x x * SQRT + PI + W0 INT_X =",
+          "range_display_approx": [
+            "1.3105589132675",
+            "1.5547366829543"
+          ]
+        },
+        {
+          "bounds": [
+            "NEG_HALF",
+            "0"
+          ],
+          "operators": 13,
+          "depth": 10,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[NEG_HALF, 0] ((sqrt((1/3)) - tan((sqrt(exp(atan(sin((x + (2 / 3)))))) + (x / ((1/2) * (1/2)))))) * (1/3)) dx",
+          "rpn": "NEG_HALF 0 THIRD SQRT x 2 3 / + SIN ATAN EXP SQRT x HALF HALF * / + TAN - THIRD * INT_X =",
+          "range_display_approx": [
+            "-1.1035212813716",
+            "1.252471089895"
+          ]
+        },
+        {
+          "bounds": [
+            "-1",
+            "NEG_HALF"
+          ],
+          "operators": 8,
+          "depth": 8,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, NEG_HALF] (sin(ln(sqrt((atan(((x)^2 / 1)))^2))))^2 dx",
+          "rpn": "-1 NEG_HALF x SQUARE 1 / ATAN SQUARE SQRT LN SIN SQUARE INT_X =",
+          "range_display_approx": [
+            "0.057227150523905",
+            "0.97327587681208"
+          ]
+        }
+      ],
+      "audited_trees": 200,
+      "mean_operators": 11.855,
+      "trees_with_x": 195,
+      "operator_counts": {
+        "/": 168,
+        "NEG": 147,
+        "-": 331,
+        "ATAN": 122,
+        "*": 318,
+        "SIN": 145,
+        "LN": 56,
+        "+": 332,
+        "EXP": 135,
+        "COS": 140,
+        "ACOS": 64,
+        "W0": 66,
+        "SQRT": 78,
+        "SQUARE": 125,
+        "TAN": 83,
+        "ASIN": 61
+      },
+      "ineligible_candidates": {
+        "TAN: tangent interval may contain a pole": 35,
+        "W0: W0 input not certified >= -1/e": 62,
+        "ACOS: inverse trig input outside [-1,1]": 80,
+        "LN: log input not certified positive": 72,
+        "SQRT: sqrt input not certified nonnegative": 74,
+        "/: denominator interval includes zero": 107,
+        "ASIN: inverse trig input outside [-1,1]": 67,
+        "EXP: preview magnitude guard": 1
+      }
+    },
+    "20": {
+      "samples": [
+        {
+          "bounds": [
+            "-1",
+            "0"
+          ],
+          "operators": 27,
+          "depth": 12,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, 0] cos(tan((x / ((((((x)^2 * (x * cos(atan(3)))) - (x)^2))^2 - ((1/2) / tan((((1/2) * 2) + tan((((0 * (1/2)) - 1) + 0)))))) / (exp(((x - (1/2)) + x)) + (w0(e) / 3)))))) dx",
+          "rpn": "-1 0 x x SQUARE x 3 ATAN COS * * x SQUARE - SQUARE HALF HALF 2 * 0 HALF * 1 - 0 + TAN + TAN / - x HALF - x + EXP E W0 3 / + / / TAN COS INT_X =",
+          "range_display_approx": [
+            "-0.71771395598533",
+            "1.0"
+          ]
+        },
+        {
+          "bounds": [
+            "HALF",
+            "1"
+          ],
+          "operators": 31,
+          "depth": 13,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[HALF, 1] (((ln(((atan(x) / exp(e)) / 2)) / x) * (x * x)) - (sin(((atan(x) - sin((((sin(cos((-tan(x)))) + (1/2)))^2 * sqrt(exp((x + (pi + (0 * (2)^2)))))))))^2) * (x + ((x + x) / x)))) dx",
+          "rpn": "HALF 1 x ATAN E EXP / 2 / LN x / x x * * x ATAN x TAN NEG COS SIN HALF + SQUARE x PI 0 2 SQUARE * + + EXP SQRT * SIN - SQUARE SIN x x x + x / + * - INT_X =",
+          "range_display_approx": [
+            "-13.360118975347",
+            "-0.68306002012916"
+          ]
+        },
+        {
+          "bounds": [
+            "-1",
+            "1"
+          ],
+          "operators": 23,
+          "depth": 13,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, 1] cos(atan(sin((-(atan((2 + exp((-((atan((x - x)) - (0 / (1/2))) + 0))))) - (((-((-1) + (w0(pi) * ((tan(x) / (1/3)) + x)))) * 3))^2))))) dx",
+          "rpn": "-1 1 2 x x - ATAN 0 HALF / - 0 + NEG EXP + ATAN -1 PI W0 x TAN THIRD / x + * + NEG 3 * SQUARE - NEG SIN ATAN COS INT_X =",
+          "range_display_approx": [
+            "0.70710678118655",
+            "1.0"
+          ]
+        },
+        {
+          "bounds": [
+            "HALF",
+            "1"
+          ],
+          "operators": 15,
+          "depth": 11,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[HALF, 1] ((x + 2) / tan((((cos(pi) * (x)^2) * (tan((atan((cos(acos((-1))) + (1/3))) / (-1))))^2))^2)) dx",
+          "rpn": "HALF 1 x 2 + PI COS x SQUARE * -1 ACOS COS THIRD + ATAN -1 / TAN SQUARE * SQUARE TAN / INT_X =",
+          "range_display_approx": [
+            "12.491211163188",
+            "242.98765419554"
+          ]
+        },
+        {
+          "bounds": [
+            "HALF",
+            "1"
+          ],
+          "operators": 21,
+          "depth": 13,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[HALF, 1] (x + ((sin((exp((cos(((e)^2 + x)) * 2)) + (exp(sqrt(sqrt((x * w0((acos((-1)) + sqrt(pi))))))) + (1 + x)))) - (e + 0)))^2) dx",
+          "rpn": "HALF 1 x E SQUARE x + COS 2 * EXP x -1 ACOS PI SQRT + W0 * SQRT SQRT EXP 1 x + + + SIN E 0 + - SQUARE + INT_X =",
+          "range_display_approx": [
+            "10.34022482194",
+            "14.825619755849"
+          ]
+        },
+        {
+          "bounds": [
+            "0",
+            "HALF"
+          ],
+          "operators": 18,
+          "depth": 7,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[0, HALF] (atan(((3 / (3 - x)) + 2)) * (((x - (((3)^2 / pi))^2) + (atan(e) - x)) + exp(((x / w0(3)) + cos(3))))) dx",
+          "rpn": "0 HALF 3 3 x - / 2 + ATAN x 3 SQUARE PI / SQUARE - E ATAN x - + x 3 W0 / 3 COS + EXP + * INT_X =",
+          "range_display_approx": [
+            "-9.0239204624343",
+            "-7.3574934223455"
+          ]
+        },
+        {
+          "bounds": [
+            "-1",
+            "1"
+          ],
+          "operators": 23,
+          "depth": 14,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[-1, 1] asin(exp(atan(tan(w0((exp(pi) - ((cos((acos(tan(asin(sin((1/2))))) + cos(((exp(2) + x) + e)))) - (x * (x / (3 - exp(x))))) + x))))))) dx",
+          "rpn": "-1 1 PI EXP HALF SIN ASIN TAN ACOS 2 EXP x + E + COS + COS x x 3 x EXP - / * - x + - W0 TAN ATAN EXP ASIN INT_X =",
+          "range_display_approx": [
+            "0.36723669108609",
+            "0.50785265174544"
+          ]
+        },
+        {
+          "bounds": [
+            "NEG_HALF",
+            "1"
+          ],
+          "operators": 21,
+          "depth": 7,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[NEG_HALF, 1] ((sin((exp(((-1) - 3)) * (acos(x) + ((x + x) - ((1/3) + 1))))) * (atan(((x + x) * x)) * (-cos((-(x + x)))))) - ((pi * x) - x)) dx",
+          "rpn": "NEG_HALF 1 -1 3 - EXP x ACOS x x + THIRD 1 + - + * SIN x x + x * ATAN x x + NEG COS NEG * * PI x * x - - INT_X =",
+          "range_display_approx": [
+            "-3.7057321203386",
+            "2.618097576092"
+          ]
+        },
+        {
+          "bounds": [
+            "NEG_HALF",
+            "HALF"
+          ],
+          "operators": 11,
+          "depth": 8,
+          "contains_x": false,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[NEG_HALF, HALF] sqrt((ln((tan(ln(((pi / e) - (-2)))) / sin(atan(1)))))^2) dx",
+          "rpn": "NEG_HALF HALF PI E / 2 NEG - LN TAN 1 ATAN SIN / LN SQUARE SQRT INT_X =",
+          "range_display_approx": [
+            "1.1484965340419",
+            "1.1484965340419"
+          ]
+        },
+        {
+          "bounds": [
+            "NEG_HALF",
+            "1"
+          ],
+          "operators": 22,
+          "depth": 13,
+          "contains_x": true,
+          "whole_tree_retries": 0,
+          "parsed": "Integral[NEG_HALF, 1] (((x * (1/3)) / ((-atan((1/2))) - (1/2))) + (3 / exp((tan((cos(((1/2) + x)) * cos((x / (((0)^2 / (-1)) + (w0((e - (x - x))))^2))))))^2))) dx",
+          "rpn": "NEG_HALF 1 x THIRD * HALF ATAN NEG HALF - / 3 HALF x + COS x 0 SQUARE -1 / E x x - - W0 SQUARE + / COS * TAN SQUARE EXP / + INT_X =",
+          "range_display_approx": [
+            "-0.080611233062992",
+            "3.1729539565189"
+          ]
+        }
+      ],
+      "audited_trees": 200,
+      "mean_operators": 19.695,
+      "trees_with_x": 199,
+      "operator_counts": {
+        "COS": 229,
+        "TAN": 145,
+        "/": 279,
+        "-": 569,
+        "SQUARE": 226,
+        "*": 509,
+        "ATAN": 234,
+        "+": 590,
+        "EXP": 242,
+        "W0": 97,
+        "LN": 83,
+        "SIN": 228,
+        "NEG": 205,
+        "SQRT": 96,
+        "ACOS": 101,
+        "ASIN": 106
+      },
+      "ineligible_candidates": {
+        "SQRT: sqrt input not certified nonnegative": 82,
+        "ACOS: inverse trig input outside [-1,1]": 126,
+        "/: denominator interval includes zero": 222,
+        "ASIN: inverse trig input outside [-1,1]": 118,
+        "TAN: tangent interval may contain a pole": 57,
+        "LN: log input not certified positive": 129,
+        "W0: W0 input not certified >= -1/e": 81,
+        "EXP: preview magnitude guard": 4,
+        "SQUARE: preview magnitude guard": 1
+      }
+    }
+  }
+}

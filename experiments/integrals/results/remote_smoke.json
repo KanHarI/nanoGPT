@@ -1,0 +1,175 @@
+{
+  "archive_directory": "out/integrals-remote-archive",
+  "conditions": {
+    "curriculum": {
+      "checkpoint_archive_verified": true,
+      "gamma20_test_answer_nll": 2.102193193776267,
+      "gamma20_test_valid_answer_rate": 0.0,
+      "offline_wandb_file": "out/integrals-remote-smoke/curriculum-seed0/wandb/offline-run-20261025_104141-ad1b846b/run-ad1b846b.wandb",
+      "parameters": 107520,
+      "timings": {
+        "evaluation": 6.731994499918073,
+        "labeling": 0.0,
+        "loading": 0.16390004276763648,
+        "training": 1.1526897469884716
+      },
+      "updates": 56
+    },
+    "hard": {
+      "checkpoint_archive_verified": true,
+      "gamma20_test_answer_nll": 2.10383226616042,
+      "gamma20_test_valid_answer_rate": 0.0,
+      "offline_wandb_file": "out/integrals-remote-smoke/hard-seed0/wandb/offline-run-20261025_104201-4ab00245/run-4ab00245.wandb",
+      "parameters": 107520,
+      "timings": {
+        "evaluation": 6.342166249931324,
+        "labeling": 0.0,
+        "loading": 0.22224133415147662,
+        "training": 1.0389743339037523
+      },
+      "updates": 56
+    },
+    "shuffled": {
+      "checkpoint_archive_verified": true,
+      "gamma20_test_answer_nll": 2.114645940916879,
+      "gamma20_test_valid_answer_rate": 0.0,
+      "offline_wandb_file": "out/integrals-remote-smoke/shuffled-seed0/wandb/offline-run-20261025_104153-4afeb0c8/run-4afeb0c8.wandb",
+      "parameters": 107520,
+      "timings": {
+        "evaluation": 5.915268084034324,
+        "labeling": 0.0,
+        "loading": 0.15760562190553173,
+        "training": 0.7837102910270914
+      },
+      "updates": 56
+    }
+  },
+  "config": {
+    "absolute_tolerance": 1e-06,
+    "baseline_examples": 2,
+    "batch_size": 4,
+    "block_size": 96,
+    "cache_dir": "out/integral-label-cache",
+    "checkpoint_interval": 14,
+    "condition": "curriculum",
+    "device": "cpu",
+    "dropout": 0.0,
+    "eval_batch_size": 4,
+    "eval_examples": 2,
+    "eval_gammas": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "eval_interval": 14,
+    "eval_seed": 20261024,
+    "final_examples": 2,
+    "final_generation_examples": 0,
+    "gamma_high": 20,
+    "gamma_low": 1,
+    "generation_examples": 2,
+    "generation_interval": 28,
+    "grad_clip": 1.0,
+    "label_max_attempts": 100,
+    "label_timeout_seconds": 5,
+    "learning_rate": 0.0003,
+    "log_interval": 1,
+    "max_operators": 32,
+    "n_embd": 64,
+    "n_head": 4,
+    "n_layer": 2,
+    "pack_expressions": true,
+    "precision": "float32",
+    "ramp_fraction": 0.5714285714285714,
+    "ramp_steps": 32,
+    "relative_tolerance": 0.01,
+    "seed": 0,
+    "steps": 56,
+    "threads": 2,
+    "version": "integral-full-sequence-v2-independent-hard:integral-ast-preview-v2-bounds2-rounding",
+    "warmup_steps": 1,
+    "weight_decay": 0.1
+  },
+  "dataset": {
+    "entry_count": 212,
+    "manifest_sha256": "91733813393a8439bcc7c72535f174c3784a76c9bcc49c918cdccad9749540bf",
+    "preparation": {
+      "elapsed_seconds": 63.04654208297143,
+      "examples_per_second": 10.278121187791864,
+      "generated_labels_per_second": 10.278121187791864,
+      "new_examples": 648,
+      "resumed_completed_tasks": 0,
+      "stats": {
+        "TimeoutError": 1,
+        "UncertainDiscontinuity": 32,
+        "ValueError": 34,
+        "generated": 648,
+        "rejected": 67
+      },
+      "workers": 2
+    },
+    "shards": 27
+  },
+  "date": "2026-10-25",
+  "device": "cpu",
+  "limitations": [
+    "CPU-only pipeline validation; H100 memory/throughput and CUDA resume remain preflight tasks.",
+    "Tiny model and two examples per evaluation cell do not support scientific conclusions.",
+    "Gamma-20 free-generated answers are not yet valid."
+  ],
+  "model": {
+    "context": 96,
+    "ff_width": 256,
+    "heads": 4,
+    "layers": 2,
+    "width": 64
+  },
+  "output_directory": "out/integrals-remote-smoke",
+  "remote_model_parameters_checked_on_meta_device": 201545728,
+  "reviewed_source_sha256": {
+    "experiments/integrals/__init__.py": "b53807919028cff0503870536e244b3929fa891523a542ff11226179ac90bd3e",
+    "experiments/integrals/benchmark.py": "1a6c9019a6b192b0289321f22e347d12888e9bd81247d73e1eb53aba8e947664",
+    "experiments/integrals/config.py": "4350cb2b02680ba872908638af673f97520e2bf99965acf2466575aaf432818f",
+    "experiments/integrals/corpus.py": "1e0d6329d1783ecd4b5ee3b2c843a0187bc38df40aad96d6d1d8dbe74ca6c2f8",
+    "experiments/integrals/data.py": "9e0bfdd695b5cb23420d0f981611ee2583bc0810bed834bf87ad2cf86c9bbe5c",
+    "experiments/integrals/encoding.py": "278b3653398db763aab9158c0656cb324affcaa82a69455c8fa73b368b8acce9",
+    "experiments/integrals/evaluate.py": "b042208645fcb1a1dcfc3c5ec42189dc38681cacbcb42ee695f6000cce87aed0",
+    "experiments/integrals/sweep.py": "0c766318ba255801ee2aa02f8e24e1f9d9bff97eb5130bd13d7c49c55c0bcf15",
+    "experiments/integrals/tests/__init__.py": "56a47d05a688091b080499e57d718591e1fd2892c49f264d4d07a29571919862",
+    "experiments/integrals/tests/test_integrals.py": "b907f273c3b0ec0b94c351418384421b7bdceaec3e30d7321f144d432a85c55f",
+    "experiments/integrals/tests/test_remote.py": "e8db3d0a6f2e32e9bfc1529c5bcfd0dbe618448beb1bb1b661c58471cabe9cfd",
+    "experiments/integrals/tracking.py": "cd24112658f957f0108ae3172209f9eb1f03ac2a7488763a8cf90dd3737ba3c4",
+    "experiments/integrals/train.py": "ffd9b200d7541cab918ad70f953b25fc3e9cbbda21ae9a9804157dff04f768ff"
+  },
+  "status": "passed",
+  "test_count": 48,
+  "verification": {
+    "all_240_loss_series_in_three_actual_offline_wandb_files": true,
+    "all_final_checkpoints_and_archives_verified": true,
+    "application_source_hashes_matched_at_initial_smoke": true,
+    "archive_restore_and_rearchive_regression_passed": true,
+    "completed_sweep_resume_verified": true,
+    "identical_curriculum_shuffled_batch_hashes": true,
+    "identical_initial_eval_grid": true,
+    "independent_decoding_cadence": true,
+    "no_cloud_resources_created": true,
+    "shutdown_enabled": false
+  }
+}

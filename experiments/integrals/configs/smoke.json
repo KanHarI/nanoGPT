@@ -1,0 +1,19 @@
+{
+  "steps": 8,
+  "batch_size": 4,
+  "n_layer": 2,
+  "n_head": 4,
+  "n_embd": 64,
+  "block_size": 128,
+  "warmup_steps": 2,
+  "eval_interval": 4,
+  "eval_examples": 2,
+  "final_examples": 2,
+  "baseline_examples": 2,
+  "eval_batch_size": 4,
+  "generation_examples": 2,
+  "log_interval": 1,
+  "threads": 2,
+  "device": "cpu",
+  "precision": "float32"
+}

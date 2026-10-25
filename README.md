@@ -6,6 +6,10 @@
 [Finite-field curriculum experiment](experiments/finite_field/README.md): procedural
 character-level arithmetic, answer-only loss, and documented CPU/GPU comparisons.
 
+[Numerical-integral curriculum experiment](experiments/integrals/README.md):
+domain-aware RPN ASTs, compact floating-point answers, full-sequence NLL,
+per-gamma evaluation, and a prepared-data remote training pipeline.
+
 
 ---
 
