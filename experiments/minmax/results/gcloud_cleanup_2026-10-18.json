@@ -1,0 +1,63 @@
+{
+  "started_at_utc": "2026-10-18T05:47:22.257542+00:00",
+  "project_id": "finite-field-curriculum-kanhar",
+  "project_name": "Finite Field Curriculum",
+  "project_number": "820421553694",
+  "request": "Delete experiment VMs, all disks and related resources, then delete the project",
+  "status": "complete",
+  "before": {
+    "instances": [
+      {
+        "name": "finite-field-h100",
+        "zone": "us-central1-a",
+        "status": "TERMINATED"
+      },
+      {
+        "name": "minmax-l4",
+        "zone": "us-central1-a",
+        "status": "TERMINATED"
+      }
+    ],
+    "persistent_disks": [
+      {
+        "name": "finite-field-h100",
+        "zone": "us-central1-a",
+        "size_gb": 200
+      },
+      {
+        "name": "minmax-l4",
+        "zone": "us-central1-a",
+        "size_gb": 200
+      }
+    ],
+    "snapshots": [],
+    "custom_images": [],
+    "reserved_addresses": [],
+    "reservations": [],
+    "storage_buckets": []
+  },
+  "preserved_reports": "out/minmax-gamma20-low-lr-final/",
+  "final_summary": "experiments/minmax/results/gpu_gamma20_low_lr_summary.json",
+  "checkpoint_disposition": "Delete VM-stored checkpoints with their disks, as requested.",
+  "completed_at_utc": "2026-10-18T05:50:12.008385+00:00",
+  "after_resource_cleanup": {
+    "instances": [],
+    "persistent_disks": []
+  },
+  "deleted_instances": [
+    "finite-field-h100",
+    "minmax-l4"
+  ],
+  "deleted_persistent_disks_gb": 400,
+  "billing": {
+    "billingEnabled": false,
+    "billingAccountName": ""
+  },
+  "project": {
+    "projectId": "finite-field-curriculum-kanhar",
+    "name": "Finite Field Curriculum",
+    "projectNumber": "820421553694",
+    "lifecycleState": "DELETE_REQUESTED"
+  },
+  "project_deletion_note": "Deletion accepted and verified; Google Cloud applies its standard 30-day recovery period before permanent project deletion."
+}

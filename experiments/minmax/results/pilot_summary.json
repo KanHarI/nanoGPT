@@ -1,0 +1,133 @@
+{
+  "config": {
+    "version": "minmax-v1",
+    "gamma_low": 1,
+    "gamma_high": 12,
+    "ramp_fraction": 0.4,
+    "max_operators": 32,
+    "operator_weights": [
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "steps": 300,
+    "batch_size": 32,
+    "block_size": 128,
+    "pack_expressions": true,
+    "n_layer": 2,
+    "n_head": 4,
+    "n_embd": 64,
+    "dropout": 0.0,
+    "learning_rate": 0.0006,
+    "warmup_steps": 10,
+    "weight_decay": 0.1,
+    "grad_clip": 1.0,
+    "eval_interval": 150,
+    "eval_examples": 32,
+    "final_examples": 128,
+    "baseline_examples": 256,
+    "eval_batch_size": 128,
+    "eval_seed": 20261017,
+    "eval_gammas": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "log_interval": 20,
+    "threads": 2,
+    "device": "cpu",
+    "precision": "float32"
+  },
+  "seeds": [
+    0
+  ],
+  "conditions": {
+    "curriculum": {
+      "mean_loss": 3.654885472729802,
+      "mean_accuracy": 0.0625,
+      "per_seed": {
+        "0": {
+          "loss": 3.654885472729802,
+          "accuracy": 0.0625,
+          "baselines": {
+            "uniform_loss": 3.713572066704308,
+            "uniform_accuracy": 0.024390243902439025,
+            "global_min_accuracy": 0.1640625,
+            "global_max_accuracy": 0.0703125,
+            "root_extreme_accuracy": 0.24074074074074073,
+            "root_extreme_coverage": 0.84375,
+            "frequency_loss": 3.703917395021966,
+            "root_frequency_loss": 3.6638334788134355
+          }
+        }
+      }
+    },
+    "hard": {
+      "mean_loss": 3.6758534219115973,
+      "mean_accuracy": 0.0546875,
+      "per_seed": {
+        "0": {
+          "loss": 3.6758534219115973,
+          "accuracy": 0.0546875,
+          "baselines": {
+            "uniform_loss": 3.713572066704308,
+            "uniform_accuracy": 0.024390243902439025,
+            "global_min_accuracy": 0.1640625,
+            "global_max_accuracy": 0.0703125,
+            "root_extreme_accuracy": 0.24074074074074073,
+            "root_extreme_coverage": 0.84375,
+            "frequency_loss": 3.703917395021966,
+            "root_frequency_loss": 3.6638334788134355
+          }
+        }
+      }
+    },
+    "shuffled": {
+      "mean_loss": 3.6553423050791025,
+      "mean_accuracy": 0.0703125,
+      "per_seed": {
+        "0": {
+          "loss": 3.6553423050791025,
+          "accuracy": 0.0703125,
+          "baselines": {
+            "uniform_loss": 3.713572066704308,
+            "uniform_accuracy": 0.024390243902439025,
+            "global_min_accuracy": 0.1640625,
+            "global_max_accuracy": 0.0703125,
+            "root_extreme_accuracy": 0.24074074074074073,
+            "root_extreme_coverage": 0.84375,
+            "frequency_loss": 3.703917395021966,
+            "root_frequency_loss": 3.6638334788134355
+          }
+        }
+      }
+    }
+  },
+  "curriculum_minus_control": {
+    "hard": {
+      "mean": -0.02096794918179512,
+      "per_seed": [
+        -0.02096794918179512
+      ],
+      "seeds": 1
+    },
+    "shuffled": {
+      "mean": -0.0004568323493003845,
+      "per_seed": [
+        -0.0004568323493003845
+      ],
+      "seeds": 1
+    }
+  }
+}

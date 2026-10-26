@@ -1,0 +1,96 @@
+{
+  "kind": "diagnostic_only",
+  "seed_namespace": "screenshot-audit-20261017",
+  "conditions": {
+    "curriculum": {
+      "step": 26668,
+      "weights_sha256": "359d071ad563e6d1a867fb2332a3755a586a2ebaca93279f919f245f8b8e8150",
+      "gamma": {
+        "18": {
+          "packed": {
+            "count": 512,
+            "loss": 0.10588231488458177,
+            "accuracy": 0.970703125
+          },
+          "prefix_only": {
+            "count": 512,
+            "loss": 0.11302120172921093,
+            "accuracy": 0.958984375
+          }
+        },
+        "20": {
+          "packed": {
+            "count": 512,
+            "loss": 0.1449088010214581,
+            "accuracy": 0.947265625
+          },
+          "prefix_only": {
+            "count": 512,
+            "loss": 0.14781535192202,
+            "accuracy": 0.951171875
+          }
+        }
+      }
+    },
+    "hard": {
+      "step": 26668,
+      "weights_sha256": "a2dd869d9620971bf820fb99978d3a72f9e58608bcd5c5adbe394225245ea566",
+      "gamma": {
+        "18": {
+          "packed": {
+            "count": 512,
+            "loss": 0.1388021169886713,
+            "accuracy": 0.953125
+          },
+          "prefix_only": {
+            "count": 512,
+            "loss": 0.23214898064628642,
+            "accuracy": 0.9296875
+          }
+        },
+        "20": {
+          "packed": {
+            "count": 512,
+            "loss": 0.17728747917402643,
+            "accuracy": 0.94921875
+          },
+          "prefix_only": {
+            "count": 512,
+            "loss": 0.2631752278687145,
+            "accuracy": 0.927734375
+          }
+        }
+      }
+    },
+    "shuffled": {
+      "step": 22760,
+      "weights_sha256": "1031ee9ca16fbd19fb405219365db5be0c45af657a36dd33fc52c8cac47ff5cb",
+      "gamma": {
+        "18": {
+          "packed": {
+            "count": 512,
+            "loss": 2.791535244208717,
+            "accuracy": 0.240234375
+          },
+          "prefix_only": {
+            "count": 512,
+            "loss": 2.8827924033644194,
+            "accuracy": 0.21875
+          }
+        },
+        "20": {
+          "packed": {
+            "count": 512,
+            "loss": 2.8084386215630275,
+            "accuracy": 0.208984375
+          },
+          "prefix_only": {
+            "count": 512,
+            "loss": 2.955198119367651,
+            "accuracy": 0.203125
+          }
+        }
+      }
+    }
+  }
+}

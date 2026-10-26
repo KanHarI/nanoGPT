@@ -1,0 +1,207 @@
+{
+  "checked_at_utc": "2026-10-17T18:36:04.596670+00:00",
+  "group": "gpu-24layer-gamma20-matched-updates",
+  "exact_shuffled_batch_spec_multiset": true,
+  "planned_updates": 26668,
+  "conditions": {
+    "curriculum": {
+      "run_id": "09e0db5a",
+      "source_files_verified": 17,
+      "same_initial_evaluation": true,
+      "config_diff": {},
+      "training_records_verified": 281,
+      "regenerated_batches": 11,
+      "regenerated_examples_and_labels_verified": 2816,
+      "wandb_rows_verified": 26,
+      "latest_training_step_at_snapshot": 26668,
+      "largest_logged_preclip_gradient_norm": 40.715084075927734,
+      "gradient_spikes": [
+        {
+          "step": 16910,
+          "gamma": 20,
+          "loss": 0.2992265224456787,
+          "grad_norm": 40.715084075927734
+        },
+        {
+          "step": 10640,
+          "gamma": 14.223065349643488,
+          "loss": 0.5882022976875305,
+          "grad_norm": 25.74492645263672
+        },
+        {
+          "step": 19665,
+          "gamma": 20,
+          "loss": 0.21683862805366516,
+          "grad_norm": 25.70987892150879
+        },
+        {
+          "step": 21185,
+          "gamma": 20,
+          "loss": 0.3839985728263855,
+          "grad_norm": 24.964570999145508
+        },
+        {
+          "step": 22420,
+          "gamma": 20,
+          "loss": 0.22716140747070312,
+          "grad_norm": 24.566953659057617
+        }
+      ],
+      "latest_monitoring_step": 26668,
+      "latest_gamma18": {
+        "loss": 0.18190952371315916,
+        "accuracy": 0.943359375,
+        "count": 512
+      },
+      "final_test": {
+        "1": {
+          "loss": 2.6926178534826093,
+          "accuracy": 0.418701171875,
+          "count": 4096
+        },
+        "12": {
+          "loss": 0.11782844710919615,
+          "accuracy": 0.969970703125,
+          "count": 4096
+        },
+        "18": {
+          "loss": 0.17166981466764408,
+          "accuracy": 0.955078125,
+          "count": 4096
+        },
+        "20": {
+          "loss": 0.18336009996538216,
+          "accuracy": 0.950927734375,
+          "count": 4096
+        }
+      }
+    },
+    "hard": {
+      "run_id": "c9126dcd",
+      "source_files_verified": 17,
+      "same_initial_evaluation": true,
+      "config_diff": {
+        "condition": "hard"
+      },
+      "training_records_verified": 281,
+      "regenerated_batches": 11,
+      "regenerated_examples_and_labels_verified": 2816,
+      "wandb_rows_verified": 26,
+      "latest_training_step_at_snapshot": 26668,
+      "largest_logged_preclip_gradient_norm": 26.295745849609375,
+      "gradient_spikes": [
+        {
+          "step": 20520,
+          "gamma": 20,
+          "loss": 0.6159149408340454,
+          "grad_norm": 26.295745849609375
+        },
+        {
+          "step": 23940,
+          "gamma": 20,
+          "loss": 0.4026392102241516,
+          "grad_norm": 17.043046951293945
+        },
+        {
+          "step": 25745,
+          "gamma": 20,
+          "loss": 0.2470296174287796,
+          "grad_norm": 15.4395751953125
+        },
+        {
+          "step": 25175,
+          "gamma": 20,
+          "loss": 0.15099960565567017,
+          "grad_norm": 15.121060371398926
+        },
+        {
+          "step": 16435,
+          "gamma": 20,
+          "loss": 0.5524604916572571,
+          "grad_norm": 13.675734519958496
+        }
+      ],
+      "latest_monitoring_step": 26668,
+      "latest_gamma18": {
+        "loss": 0.14863804145929294,
+        "accuracy": 0.95703125,
+        "count": 512
+      },
+      "final_test": {
+        "1": {
+          "loss": 1.7645689700655254,
+          "accuracy": 0.664794921875,
+          "count": 4096
+        },
+        "12": {
+          "loss": 0.1290669524693211,
+          "accuracy": 0.964111328125,
+          "count": 4096
+        },
+        "18": {
+          "loss": 0.16703594058322935,
+          "accuracy": 0.954833984375,
+          "count": 4096
+        },
+        "20": {
+          "loss": 0.18580555662184572,
+          "accuracy": 0.947509765625,
+          "count": 4096
+        }
+      }
+    },
+    "shuffled": {
+      "run_id": "fae1c271",
+      "source_files_verified": 17,
+      "same_initial_evaluation": true,
+      "config_diff": {
+        "condition": "shuffled"
+      },
+      "training_records_verified": 231,
+      "regenerated_batches": 11,
+      "regenerated_examples_and_labels_verified": 2816,
+      "wandb_rows_verified": 19,
+      "latest_training_step_at_snapshot": 21945,
+      "largest_logged_preclip_gradient_norm": 33675.6875,
+      "gradient_spikes": [
+        {
+          "step": 14345,
+          "gamma": 20,
+          "loss": 3.650421142578125,
+          "grad_norm": 33675.6875
+        },
+        {
+          "step": 14915,
+          "gamma": 20,
+          "loss": 3.709716796875,
+          "grad_norm": 19900.41796875
+        },
+        {
+          "step": 13585,
+          "gamma": 2.6070517433113105,
+          "loss": 3.7613525390625,
+          "grad_norm": 16982.68359375
+        },
+        {
+          "step": 14440,
+          "gamma": 11.499901877412182,
+          "loss": 4.567291259765625,
+          "grad_norm": 1367.9093017578125
+        },
+        {
+          "step": 12635,
+          "gamma": 20,
+          "loss": 3.696044921875,
+          "grad_norm": 710.27978515625
+        }
+      ],
+      "latest_monitoring_step": 21622,
+      "latest_gamma18": {
+        "loss": 2.874992437507899,
+        "accuracy": 0.203125,
+        "count": 512
+      },
+      "final_test": null
+    }
+  }
+}

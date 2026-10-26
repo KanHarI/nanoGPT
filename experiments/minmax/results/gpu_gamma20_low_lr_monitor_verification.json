@@ -1,0 +1,149 @@
+{
+  "checked_at_utc": "2026-10-17T19:18:17.433037+00:00",
+  "config": {
+    "version": "minmax-v1",
+    "condition": "shuffled",
+    "seed": 0,
+    "gamma_low": 1,
+    "gamma_high": 20,
+    "ramp_fraction": 0.5732619619019049,
+    "max_operators": 32,
+    "operator_weights": [
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "steps": 26668,
+    "batch_size": 256,
+    "block_size": 256,
+    "pack_expressions": true,
+    "n_layer": 24,
+    "n_head": 4,
+    "n_embd": 256,
+    "dropout": 0.0,
+    "learning_rate": 0.0003,
+    "warmup_steps": 955,
+    "weight_decay": 0.1,
+    "grad_clip": 1.0,
+    "eval_interval": 1138,
+    "eval_examples": 512,
+    "final_examples": 4096,
+    "baseline_examples": 4096,
+    "eval_batch_size": 256,
+    "eval_seed": 20261017,
+    "eval_gammas": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "log_interval": 95,
+    "threads": 4,
+    "device": "cuda",
+    "precision": "bfloat16"
+  },
+  "wandb": {
+    "id": "4c4da036",
+    "project": "minmax-curriculum",
+    "entity": "kanhar",
+    "group": "gpu-24layer-gamma20-lr3e-4",
+    "url": "https://wandb.ai/kanhar/minmax-curriculum/runs/4c4da036"
+  },
+  "execution_order": [
+    "shuffled",
+    "curriculum",
+    "hard"
+  ],
+  "trainer": "1563 .venv/bin/python -u -m experiments.minmax.sweep --config experiments/minmax/configs/gpu_gamma20_low_lr.json --out-dir out/minmax-gpu-24layer-gamma20-lr3e-4 --conditions shuffled curriculum hard --seeds 0 --resume --wandb online --wandb-entity kanhar --wandb-project minmax-curriculum --wandb-group gpu-24layer-gamma20-lr3e-4",
+  "units": {
+    "minmax-runner.service": "active",
+    "minmax-watch.timer": "active"
+  },
+  "watchdog_enabled": "enabled",
+  "watchdog": {
+    "timestamp": "2026-10-17T19:17:15.974473+00:00",
+    "action": "monitor",
+    "reason": "Training is active and progress is recent",
+    "retries": 0,
+    "units": {
+      "minmax-runner.service": "active"
+    },
+    "first_check_unix": 1792264635.9742763,
+    "runs": [
+      {
+        "condition": "curriculum",
+        "complete": false,
+        "step": 0,
+        "gamma": null
+      },
+      {
+        "condition": "hard",
+        "complete": false,
+        "step": 0,
+        "gamma": null
+      },
+      {
+        "condition": "shuffled",
+        "complete": false,
+        "step": 0,
+        "gamma": null
+      }
+    ],
+    "all_complete": false,
+    "comparison_complete": false
+  },
+  "initial_evaluation_matches_previous": true,
+  "training_records_checked": 2,
+  "step": 190,
+  "last_train": {
+    "kind": "train",
+    "step": 190,
+    "batch_id": 19229,
+    "batch_seed": 1358394914278223611,
+    "gamma": 20,
+    "loss": 3.6192626953125,
+    "accuracy": 0.0546875,
+    "learning_rate": 5.968586387434554e-05,
+    "grad_norm": 1.2018769979476929,
+    "train_seconds": 25.237352049999828,
+    "supervised_answers": 48640,
+    "characters": 1741168,
+    "packed_rows": 54,
+    "input_tokens": 13824,
+    "mean_operators": 19.87890625,
+    "mean_depth": 7.40234375,
+    "mean_stack_depth": 7.30859375,
+    "mean_negations": 3.9453125,
+    "roots": {
+      "t": 60,
+      "m": 50,
+      "~": 47,
+      "n": 50,
+      "u": 49
+    }
+  },
+  "latest_eval_step": 0,
+  "gamma20_test": {
+    "loss": 3.918644397519529,
+    "accuracy": 0.015625
+  },
+  "checkpoint_exists": true
+}

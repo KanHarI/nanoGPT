@@ -1,0 +1,20 @@
+{
+  "device": "cpu",
+  "steps": 2000,
+  "batch_size": 64,
+  "n_layer": 24,
+  "n_head": 4,
+  "n_embd": 256,
+  "block_size": 128,
+  "max_operators": 32,
+  "gamma_low": 1,
+  "gamma_high": 12,
+  "ramp_fraction": 0.4,
+  "warmup_steps": 40,
+  "learning_rate": 0.0006,
+  "eval_interval": 200,
+  "eval_examples": 128,
+  "final_examples": 512,
+  "baseline_examples": 1024,
+  "threads": 4
+}
