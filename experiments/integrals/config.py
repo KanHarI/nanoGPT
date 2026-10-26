@@ -1,6 +1,8 @@
 """Integral curriculum, exact-batch shuffled control, and constant-after-warmup LR."""
 
 from dataclasses import asdict, dataclass
+from bisect import bisect_right
+from itertools import accumulate
 import json
 import math
 from pathlib import Path
@@ -18,6 +20,8 @@ class Config:
     seed: int = 0
     gamma_low: float = 1
     gamma_high: float = 20
+    training_gamma_sampling: str = "uniform_integer"
+    gamma_stage_steps: tuple = ()  # Optional calibrated stage lengths for integer ceilings.
     ramp_fraction: float = 0.5
     ramp_steps: int = 0  # Explicit calibrated override; zero uses ramp_fraction.
     max_operators: int = 32
@@ -96,6 +100,17 @@ class Config:
             raise ValueError("Gammas must be finite and nonnegative")
         if self.gamma_low > self.gamma_high:
             raise ValueError("gamma_low exceeds gamma_high")
+        if self.training_gamma_sampling not in ("fixed", "uniform_integer"):
+            raise ValueError("Unsupported training gamma sampling")
+        if self.training_gamma_sampling == "uniform_integer" and self.gamma_low < 1:
+            raise ValueError("Uniform integer sampling requires gamma ceilings >= 1")
+        if self.gamma_stage_steps:
+            if (not float(self.gamma_low).is_integer() or not float(self.gamma_high).is_integer()
+                    or len(self.gamma_stage_steps) != int(self.gamma_high-self.gamma_low)+1
+                    or any(type(n) is not int or n < 1 for n in self.gamma_stage_steps)
+                    or sum(self.gamma_stage_steps) != self.steps
+                    or ramp_updates(self) != self.steps):
+                raise ValueError("Integer gamma stages must cover every ceiling and the entire ramp/run")
         if type(self.pack_expressions) is not bool or not self.cache_dir:
             raise ValueError("Invalid packing or cache configuration")
         if self.device not in ("cpu", "cuda", "mps") or self.precision not in ("float32", "bfloat16"):
@@ -105,11 +120,19 @@ class Config:
         return self
 
     def to_dict(self):
-        return json.loads(json.dumps(asdict(self)))
+        result = json.loads(json.dumps(asdict(self)))
+        if self.training_gamma_sampling == "fixed":
+            # Preserve identities of pre-mixture checkpoints and prepared corpora.
+            result.pop("training_gamma_sampling")
+        if not self.gamma_stage_steps:
+            result.pop("gamma_stage_steps")
+        return result
 
     @classmethod
     def load(cls, path):
-        return cls(**json.loads(Path(path).read_text())).validate()
+        values = json.loads(Path(path).read_text())
+        values.setdefault("training_gamma_sampling", "fixed")
+        return cls(**values).validate()
 
 
 @dataclass(frozen=True)
@@ -117,6 +140,7 @@ class BatchSpec:
     index: int
     gamma: float
     seed: int
+    gamma_sampling: str = "fixed"
 
 
 def batch_plan(config):
@@ -124,10 +148,18 @@ def batch_plan(config):
     indices = list(range(config.steps))
     if config.condition == "shuffled":
         random.Random(stream_seed(config.seed, "shuffle")).shuffle(indices)
-    return [BatchSpec(i, config.gamma_high if config.condition == "hard" else
-                      config.gamma_low+(config.gamma_high-config.gamma_low)*min(i/(ramp-1), 1),
+    boundaries = list(accumulate(config.gamma_stage_steps))
+    def gamma(i):
+        if config.condition == "hard":
+            return config.gamma_high
+        if boundaries:
+            return config.gamma_low+bisect_right(boundaries, i)
+        return config.gamma_low+(config.gamma_high-config.gamma_low)*min(i/(ramp-1), 1)
+    return [BatchSpec(i, gamma(i),
                       stream_seed(config.seed, "optimizer-hard-batch" if config.condition == "hard" else
-                                  "optimizer-batch", i)) for i in indices]
+                                  "optimizer-batch", i),
+                      "fixed" if config.condition == "hard" else config.training_gamma_sampling)
+            for i in indices]
 
 
 def learning_rate(config, step):

@@ -49,6 +49,26 @@ def calibrated_config(config, timings, ramp_minutes, plateau_minutes, loss_secon
                    log_interval=max(1, round(10/average))).validate()
 
 
+def staged_config(config, timings, minutes):
+    """Equal predicted compute time at each integer ceiling; no extra plateau."""
+    points = dict(timings)
+    if (not math.isfinite(minutes) or minutes <= 0 or
+            not float(config.gamma_low).is_integer() or not float(config.gamma_high).is_integer()):
+        raise ValueError("Need positive minutes and integer ceiling endpoints")
+    levels = list(range(int(config.gamma_low), int(config.gamma_high)+1))
+    if set(points) != set(levels) or any(not math.isfinite(t) or t <= 0 for t in points.values()):
+        raise ValueError("Need one positive timing for every integer ceiling")
+    stage_seconds = 60*minutes/len(levels)
+    counts = tuple(max(1, round(stage_seconds/points[g])) for g in levels)
+    updates = sum(counts)
+    mean = sum(n*points[g] for n,g in zip(counts, levels))/updates
+    interval = max(1, round(120/mean))
+    return replace(config, steps=updates, ramp_steps=updates, ramp_fraction=1., gamma_stage_steps=counts,
+                   warmup_steps=min(updates-1, 1000, max(1, round(updates*.01))),
+                   eval_interval=interval, generation_interval=5*interval, checkpoint_interval=interval,
+                   log_interval=max(1, round(30/mean))).validate()
+
+
 def measure(config, examples, warmup=3, iterations=8):
     if len(examples) < config.batch_size or warmup < 1 or iterations < 1:
         raise ValueError("Pilot bank too small or invalid measurement counts")

@@ -1,0 +1,3653 @@
+{
+  "date": "2026-10-25",
+  "project": "personal-383909",
+  "wandb_url": "https://wandb.ai/kanhar/numerical-integrals-curriculum/runs/ylp0hi7j",
+  "config": {
+    "version": "integral-full-sequence-v2-independent-hard:integral-ast-preview-v2-bounds2-rounding",
+    "condition": "shuffled",
+    "seed": 0,
+    "gamma_low": 1,
+    "gamma_high": 20,
+    "ramp_fraction": 0.5058229813664596,
+    "ramp_steps": 5212,
+    "max_operators": 32,
+    "steps": 10304,
+    "batch_size": 16,
+    "block_size": 128,
+    "pack_expressions": true,
+    "n_layer": 64,
+    "n_head": 8,
+    "n_embd": 512,
+    "dropout": 0.0,
+    "learning_rate": 0.0003,
+    "warmup_steps": 103,
+    "weight_decay": 0.1,
+    "grad_clip": 1.0,
+    "eval_interval": 1030,
+    "eval_examples": 32,
+    "final_examples": 64,
+    "baseline_examples": 128,
+    "eval_batch_size": 64,
+    "generation_examples": 2,
+    "final_generation_examples": 4,
+    "generation_interval": 5150,
+    "checkpoint_interval": 5150,
+    "eval_seed": 20261024,
+    "eval_gammas": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "absolute_tolerance": 1e-06,
+    "relative_tolerance": 0.01,
+    "cache_dir": "out/integral-label-cache",
+    "label_timeout_seconds": 5,
+    "label_max_attempts": 100,
+    "log_interval": 172,
+    "threads": 4,
+    "device": "cuda",
+    "precision": "bfloat16"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "torch": "2.9.1+cu129",
+    "cuda": "12.9",
+    "gpu": "NVIDIA H100 80GB HBM3",
+    "parameters": 201480192,
+    "platform": "Linux-7.0.0-1014-gcp-x86_64-with-glibc2.39",
+    "commit": "",
+    "branch": "",
+    "source_sha256": {
+      "model.py": "7c01703240dbec5d554527dc666e35b3df8391d0b117fddc07afcf325a21d11c",
+      "experiments/finite_field/runtime.py": "23387243cfad6ee89b2f18d7ee18aad7968e911a73fbbd801c24340e6bf96325",
+      "experiments/proposals/integral_ast_preview.py": "0571a6d134f3558823d516745b5025af77645b6a60faa80b55f0f378c6c5712c",
+      "experiments/proposals/integral_distribution.py": "df3cbdd45ec769cb50603636461b73a57617058f9dcab8cfec3806519e930c99",
+      "experiments/integrals/._corpus.py": "6b10b8aef5f1358f5ecac2e5e3428dadabc69e172f81c0661f421ab585916ac0",
+      "experiments/integrals/__init__.py": "b53807919028cff0503870536e244b3929fa891523a542ff11226179ac90bd3e",
+      "experiments/integrals/benchmark.py": "1a6c9019a6b192b0289321f22e347d12888e9bd81247d73e1eb53aba8e947664",
+      "experiments/integrals/config.py": "4350cb2b02680ba872908638af673f97520e2bf99965acf2466575aaf432818f",
+      "experiments/integrals/corpus.py": "cd8e60706dd87f0f68d8c6a21b1bf2aa846302a67ec865f42145f75b4727908e",
+      "experiments/integrals/data.py": "9e0bfdd695b5cb23420d0f981611ee2583bc0810bed834bf87ad2cf86c9bbe5c",
+      "experiments/integrals/encoding.py": "278b3653398db763aab9158c0656cb324affcaa82a69455c8fa73b368b8acce9",
+      "experiments/integrals/evaluate.py": "b042208645fcb1a1dcfc3c5ec42189dc38681cacbcb42ee695f6000cce87aed0",
+      "experiments/integrals/sweep.py": "0c766318ba255801ee2aa02f8e24e1f9d9bff97eb5130bd13d7c49c55c0bcf15",
+      "experiments/integrals/tests/._test_remote.py": "6b10b8aef5f1358f5ecac2e5e3428dadabc69e172f81c0661f421ab585916ac0",
+      "experiments/integrals/tests/__init__.py": "56a47d05a688091b080499e57d718591e1fd2892c49f264d4d07a29571919862",
+      "experiments/integrals/tests/test_integrals.py": "b907f273c3b0ec0b94c351418384421b7bdceaec3e30d7321f144d432a85c55f",
+      "experiments/integrals/tests/test_remote.py": "dc42c106a458850edfae003b72488fbc5938b3b78303bb40781521969e11ad18",
+      "experiments/integrals/tracking.py": "cd24112658f957f0108ae3172209f9eb1f03ac2a7488763a8cf90dd3737ba3c4",
+      "experiments/integrals/train.py": "ffd9b200d7541cab918ad70f953b25fc3e9cbbda21ae9a9804157dff04f768ff"
+    }
+  },
+  "data_manifest_sha256": "af29d80e964a587d577c026f11ef4dd758a26757d5e78892dadc12a721c8c387",
+  "generation_statistics": {
+    "generated": 171264,
+    "UncertainDiscontinuity": 6431,
+    "rejected": 14819,
+    "ValueError": 3776,
+    "TimeoutError": 4609,
+    "Ineligible": 3
+  },
+  "initial_monitor_test": {
+    "answer_nll": 3.495847662804382,
+    "full_nll": 3.722738390528096,
+    "bit_prior_nll": 0.618593800109102,
+    "generation_examples": 40,
+    "exact_answers": 0,
+    "within_tolerance": 0,
+    "valid_answers": 0
+  },
+  "final_monitor_test": {
+    "answer_nll": 0.4852009603353508,
+    "full_nll": 1.5286792209447189,
+    "bit_prior_nll": 0.618593800109102,
+    "generation_examples": 40,
+    "exact_answers": 0,
+    "within_tolerance": 0,
+    "valid_answers": 40
+  },
+  "fresh_final_test": {
+    "answer_nll": 0.485274896932177,
+    "full_nll": 1.5419379633222483,
+    "bit_prior_nll": 0.6212184970844998,
+    "generation_examples": 80,
+    "exact_answers": 1,
+    "within_tolerance": 1,
+    "valid_answers": 80
+  },
+  "paired_always_zero_exact_answers": 4,
+  "paired_always_zero_examples": 80,
+  "monitoring": [
+    {
+      "step": 0,
+      "aggregate_test": {
+        "answer_nll": 3.495847662804382,
+        "full_nll": 3.722738390528096,
+        "bit_prior_nll": 0.618593800109102,
+        "generation_examples": 40,
+        "exact_answers": 0,
+        "within_tolerance": 0,
+        "valid_answers": 0
+      },
+      "test_by_gamma": {
+        "1": {
+          "answer_nll": 3.44905231201223,
+          "full_nll": 3.6223400990694565,
+          "answer_bit_prior_nll": 0.57160910943403
+        },
+        "2": {
+          "answer_nll": 3.4576445652970245,
+          "full_nll": 3.6309815937959695,
+          "answer_bit_prior_nll": 0.5743132451227196
+        },
+        "3": {
+          "answer_nll": 3.534254160310541,
+          "full_nll": 3.679956778007395,
+          "answer_bit_prior_nll": 0.6390560137394423
+        },
+        "4": {
+          "answer_nll": 3.40468553347247,
+          "full_nll": 3.633463201664193,
+          "answer_bit_prior_nll": 0.6039212242556694
+        },
+        "5": {
+          "answer_nll": 3.521358664280602,
+          "full_nll": 3.7039476103114284,
+          "answer_bit_prior_nll": 0.6328113929540544
+        },
+        "6": {
+          "answer_nll": 3.5238432506365434,
+          "full_nll": 3.6999578671979756,
+          "answer_bit_prior_nll": 0.6361472795736051
+        },
+        "7": {
+          "answer_nll": 3.4672475893582617,
+          "full_nll": 3.6903394164432353,
+          "answer_bit_prior_nll": 0.6293421721998051
+        },
+        "8": {
+          "answer_nll": 3.486514525754111,
+          "full_nll": 3.693614035844803,
+          "answer_bit_prior_nll": 0.6052028711775035
+        },
+        "9": {
+          "answer_nll": 3.496789453285081,
+          "full_nll": 3.6957099786870815,
+          "answer_bit_prior_nll": 0.5944505843130766
+        },
+        "10": {
+          "answer_nll": 3.4733167780297145,
+          "full_nll": 3.712494646665103,
+          "answer_bit_prior_nll": 0.6113065648539848
+        },
+        "11": {
+          "answer_nll": 3.506752446293831,
+          "full_nll": 3.731993867323651,
+          "answer_bit_prior_nll": 0.6073709541717751
+        },
+        "12": {
+          "answer_nll": 3.481660737523011,
+          "full_nll": 3.7335301989460064,
+          "answer_bit_prior_nll": 0.6141201513091514
+        },
+        "13": {
+          "answer_nll": 3.459825098514557,
+          "full_nll": 3.7374489872261534,
+          "answer_bit_prior_nll": 0.6257770603278429
+        },
+        "14": {
+          "answer_nll": 3.5260978724275316,
+          "full_nll": 3.7503183162134794,
+          "answer_bit_prior_nll": 0.6484753019697528
+        },
+        "15": {
+          "answer_nll": 3.549437753856182,
+          "full_nll": 3.7657544262844924,
+          "answer_bit_prior_nll": 0.6137670653301204
+        },
+        "16": {
+          "answer_nll": 3.5010720156133175,
+          "full_nll": 3.7568665142333857,
+          "answer_bit_prior_nll": 0.6191666109770342
+        },
+        "17": {
+          "answer_nll": 3.55062680984182,
+          "full_nll": 3.7686964301644146,
+          "answer_bit_prior_nll": 0.6373132941324737
+        },
+        "18": {
+          "answer_nll": 3.5526152974260703,
+          "full_nll": 3.760132016027604,
+          "answer_bit_prior_nll": 0.5958723950530531
+        },
+        "19": {
+          "answer_nll": 3.502739262900182,
+          "full_nll": 3.757137921037553,
+          "answer_bit_prior_nll": 0.6541128358669004
+        },
+        "20": {
+          "answer_nll": 3.4714191292545626,
+          "full_nll": 3.7408811887827786,
+          "answer_bit_prior_nll": 0.6577398754200451
+        }
+      }
+    },
+    {
+      "step": 1030,
+      "aggregate_test": {
+        "answer_nll": 0.5460884533836049,
+        "full_nll": 1.602274230840066,
+        "bit_prior_nll": 0.618593800109102,
+        "generation_examples": 0,
+        "exact_answers": 0,
+        "within_tolerance": 0,
+        "valid_answers": 0
+      },
+      "test_by_gamma": {
+        "1": {
+          "answer_nll": 0.5444061009703935,
+          "full_nll": 0.8533363822541533,
+          "answer_bit_prior_nll": 0.57160910943403
+        },
+        "2": {
+          "answer_nll": 0.49219030586079626,
+          "full_nll": 0.8940794233521933,
+          "answer_bit_prior_nll": 0.5743132451227196
+        },
+        "3": {
+          "answer_nll": 0.5627984258441886,
+          "full_nll": 0.9836467574351204,
+          "answer_bit_prior_nll": 0.6390560137394423
+        },
+        "4": {
+          "answer_nll": 0.5025098024468336,
+          "full_nll": 1.0731720991847429,
+          "answer_bit_prior_nll": 0.6039212242556694
+        },
+        "5": {
+          "answer_nll": 0.5479548542394436,
+          "full_nll": 1.274416555658809,
+          "answer_bit_prior_nll": 0.6328113929540544
+        },
+        "6": {
+          "answer_nll": 0.5648414904332769,
+          "full_nll": 1.3229527362581686,
+          "answer_bit_prior_nll": 0.6361472795736051
+        },
+        "7": {
+          "answer_nll": 0.537364789179784,
+          "full_nll": 1.3876375185777337,
+          "answer_bit_prior_nll": 0.6293421721998051
+        },
+        "8": {
+          "answer_nll": 0.5539245664279276,
+          "full_nll": 1.3794074280445292,
+          "answer_bit_prior_nll": 0.6052028711775035
+        },
+        "9": {
+          "answer_nll": 0.5620743920174261,
+          "full_nll": 1.5388326362902498,
+          "answer_bit_prior_nll": 0.5944505843130766
+        },
+        "10": {
+          "answer_nll": 0.5458324833338598,
+          "full_nll": 1.5805657841385923,
+          "answer_bit_prior_nll": 0.6113065648539848
+        },
+        "11": {
+          "answer_nll": 0.551887868464941,
+          "full_nll": 1.6006629776147008,
+          "answer_bit_prior_nll": 0.6073709541717751
+        },
+        "12": {
+          "answer_nll": 0.5362052881724334,
+          "full_nll": 1.66399543069408,
+          "answer_bit_prior_nll": 0.6141201513091514
+        },
+        "13": {
+          "answer_nll": 0.527964289364588,
+          "full_nll": 1.7858643627960984,
+          "answer_bit_prior_nll": 0.6257770603278429
+        },
+        "14": {
+          "answer_nll": 0.5579320857401139,
+          "full_nll": 1.754909098846004,
+          "answer_bit_prior_nll": 0.6484753019697528
+        },
+        "15": {
+          "answer_nll": 0.5588334621601722,
+          "full_nll": 1.82131277900771,
+          "answer_bit_prior_nll": 0.6137670653301204
+        },
+        "16": {
+          "answer_nll": 0.5369824921155149,
+          "full_nll": 1.8412831644312577,
+          "answer_bit_prior_nll": 0.6191666109770342
+        },
+        "17": {
+          "answer_nll": 0.5786023092711859,
+          "full_nll": 1.8573032475153086,
+          "answer_bit_prior_nll": 0.6373132941324737
+        },
+        "18": {
+          "answer_nll": 0.5390245748536212,
+          "full_nll": 1.9137983371200118,
+          "answer_bit_prior_nll": 0.5958723950530531
+        },
+        "19": {
+          "answer_nll": 0.5657548782245223,
+          "full_nll": 1.9322061222891294,
+          "answer_bit_prior_nll": 0.6541128358669004
+        },
+        "20": {
+          "answer_nll": 0.5546846085510749,
+          "full_nll": 1.9802834987782527,
+          "answer_bit_prior_nll": 0.6577398754200451
+        }
+      }
+    },
+    {
+      "step": 2060,
+      "aggregate_test": {
+        "answer_nll": 0.5281984395786952,
+        "full_nll": 1.5831040597483859,
+        "bit_prior_nll": 0.618593800109102,
+        "generation_examples": 0,
+        "exact_answers": 0,
+        "within_tolerance": 0,
+        "valid_answers": 0
+      },
+      "test_by_gamma": {
+        "1": {
+          "answer_nll": 0.5397329135355123,
+          "full_nll": 0.8311977800860152,
+          "answer_bit_prior_nll": 0.57160910943403
+        },
+        "2": {
+          "answer_nll": 0.4902508005252457,
+          "full_nll": 0.911045811941226,
+          "answer_bit_prior_nll": 0.5743132451227196
+        },
+        "3": {
+          "answer_nll": 0.5371552991470837,
+          "full_nll": 0.9857932776649339,
+          "answer_bit_prior_nll": 0.6390560137394423
+        },
+        "4": {
+          "answer_nll": 0.47708780593321926,
+          "full_nll": 1.0667290230500104,
+          "answer_bit_prior_nll": 0.6039212242556694
+        },
+        "5": {
+          "answer_nll": 0.5195956939429119,
+          "full_nll": 1.2525662178959311,
+          "answer_bit_prior_nll": 0.6328113929540544
+        },
+        "6": {
+          "answer_nll": 0.5377101736994518,
+          "full_nll": 1.3086919006676037,
+          "answer_bit_prior_nll": 0.6361472795736051
+        },
+        "7": {
+          "answer_nll": 0.48120153878439204,
+          "full_nll": 1.3566075844412864,
+          "answer_bit_prior_nll": 0.6293421721998051
+        },
+        "8": {
+          "answer_nll": 0.5468815748920731,
+          "full_nll": 1.37845614635852,
+          "answer_bit_prior_nll": 0.6052028711775035
+        },
+        "9": {
+          "answer_nll": 0.5520575898964515,
+          "full_nll": 1.5227709947385364,
+          "answer_bit_prior_nll": 0.5944505843130766
+        },
+        "10": {
+          "answer_nll": 0.5173179269929408,
+          "full_nll": 1.5547038500032238,
+          "answer_bit_prior_nll": 0.6113065648539848
+        },
+        "11": {
+          "answer_nll": 0.540170451751432,
+          "full_nll": 1.590625008611226,
+          "answer_bit_prior_nll": 0.6073709541717751
+        },
+        "12": {
+          "answer_nll": 0.49709707059446373,
+          "full_nll": 1.635786315099173,
+          "answer_bit_prior_nll": 0.6141201513091514
+        },
+        "13": {
+          "answer_nll": 0.5079221060415355,
+          "full_nll": 1.7631618812192889,
+          "answer_bit_prior_nll": 0.6257770603278429
+        },
+        "14": {
+          "answer_nll": 0.5413962686398008,
+          "full_nll": 1.7320876480932494,
+          "answer_bit_prior_nll": 0.6484753019697528
+        },
+        "15": {
+          "answer_nll": 0.5377031418626886,
+          "full_nll": 1.7965912440627023,
+          "answer_bit_prior_nll": 0.6137670653301204
+        },
+        "16": {
+          "answer_nll": 0.528774807235355,
+          "full_nll": 1.8193115150972319,
+          "answer_bit_prior_nll": 0.6191666109770342
+        },
+        "17": {
+          "answer_nll": 0.582308557379812,
+          "full_nll": 1.8262408325110424,
+          "answer_bit_prior_nll": 0.6373132941324737
+        },
+        "18": {
+          "answer_nll": 0.5470893476236337,
+          "full_nll": 1.8955677494987346,
+          "answer_bit_prior_nll": 0.5958723950530531
+        },
+        "19": {
+          "answer_nll": 0.5677989839345433,
+          "full_nll": 1.9139475287768124,
+          "answer_bit_prior_nll": 0.6541128358669004
+        },
+        "20": {
+          "answer_nll": 0.5147167391613559,
+          "full_nll": 1.9473489812619245,
+          "answer_bit_prior_nll": 0.6577398754200451
+        }
+      }
+    },
+    {
+      "step": 3090,
+      "aggregate_test": {
+        "answer_nll": 0.5175066276496572,
+        "full_nll": 1.5629620339759671,
+        "bit_prior_nll": 0.618593800109102,
+        "generation_examples": 0,
+        "exact_answers": 0,
+        "within_tolerance": 0,
+        "valid_answers": 0
+      },
+      "test_by_gamma": {
+        "1": {
+          "answer_nll": 0.463594873461521,
+          "full_nll": 0.7774750046417394,
+          "answer_bit_prior_nll": 0.57160910943403
+        },
+        "2": {
+          "answer_nll": 0.45480613971735045,
+          "full_nll": 0.858674217291982,
+          "answer_bit_prior_nll": 0.5743132451227196
+        },
+        "3": {
+          "answer_nll": 0.5246907832084357,
+          "full_nll": 0.9479108304331735,
+          "answer_bit_prior_nll": 0.6390560137394423
+        },
+        "4": {
+          "answer_nll": 0.4830219209075689,
+          "full_nll": 1.0542435210712298,
+          "answer_bit_prior_nll": 0.6039212242556694
+        },
+        "5": {
+          "answer_nll": 0.5135486995111153,
+          "full_nll": 1.2253142207966323,
+          "answer_bit_prior_nll": 0.6328113929540544
+        },
+        "6": {
+          "answer_nll": 0.5238881767810588,
+          "full_nll": 1.2792697384383191,
+          "answer_bit_prior_nll": 0.6361472795736051
+        },
+        "7": {
+          "answer_nll": 0.47497987639664124,
+          "full_nll": 1.3203286929020228,
+          "answer_bit_prior_nll": 0.6293421721998051
+        },
+        "8": {
+          "answer_nll": 0.5306568501652821,
+          "full_nll": 1.3514842515910026,
+          "answer_bit_prior_nll": 0.6052028711775035
+        },
+        "9": {
+          "answer_nll": 0.5387203907825356,
+          "full_nll": 1.500604042815524,
+          "answer_bit_prior_nll": 0.5944505843130766
+        },
+        "10": {
+          "answer_nll": 0.5110690924154498,
+          "full_nll": 1.5416626879258106,
+          "answer_bit_prior_nll": 0.6113065648539848
+        },
+        "11": {
+          "answer_nll": 0.5274255259454159,
+          "full_nll": 1.5716438484438717,
+          "answer_bit_prior_nll": 0.6073709541717751
+        },
+        "12": {
+          "answer_nll": 0.5023382365967076,
+          "full_nll": 1.626402257347733,
+          "answer_bit_prior_nll": 0.6141201513091514
+        },
+        "13": {
+          "answer_nll": 0.5083169739994317,
+          "full_nll": 1.7449831751356706,
+          "answer_bit_prior_nll": 0.6257770603278429
+        },
+        "14": {
+          "answer_nll": 0.546937120606734,
+          "full_nll": 1.7314231711224135,
+          "answer_bit_prior_nll": 0.6484753019697528
+        },
+        "15": {
+          "answer_nll": 0.5329617403827537,
+          "full_nll": 1.7887533734522498,
+          "answer_bit_prior_nll": 0.6137670653301204
+        },
+        "16": {
+          "answer_nll": 0.5342553811076088,
+          "full_nll": 1.8113854446920994,
+          "answer_bit_prior_nll": 0.6191666109770342
+        },
+        "17": {
+          "answer_nll": 0.569591699004377,
+          "full_nll": 1.8008794953925829,
+          "answer_bit_prior_nll": 0.6373132941324737
+        },
+        "18": {
+          "answer_nll": 0.536655385915375,
+          "full_nll": 1.8742527005274232,
+          "answer_bit_prior_nll": 0.5958723950530531
+        },
+        "19": {
+          "answer_nll": 0.559160421301775,
+          "full_nll": 1.8962780120523164,
+          "answer_bit_prior_nll": 0.6541128358669004
+        },
+        "20": {
+          "answer_nll": 0.5135132647860051,
+          "full_nll": 1.937310547133225,
+          "answer_bit_prior_nll": 0.6577398754200451
+        }
+      }
+    },
+    {
+      "step": 4120,
+      "aggregate_test": {
+        "answer_nll": 0.5076961827945005,
+        "full_nll": 1.5526673848493253,
+        "bit_prior_nll": 0.618593800109102,
+        "generation_examples": 0,
+        "exact_answers": 0,
+        "within_tolerance": 0,
+        "valid_answers": 0
+      },
+      "test_by_gamma": {
+        "1": {
+          "answer_nll": 0.4600698636877496,
+          "full_nll": 0.7481315747582432,
+          "answer_bit_prior_nll": 0.57160910943403
+        },
+        "2": {
+          "answer_nll": 0.42376858780309185,
+          "full_nll": 0.8106122342699978,
+          "answer_bit_prior_nll": 0.5743132451227196
+        },
+        "3": {
+          "answer_nll": 0.5068255061840838,
+          "full_nll": 0.929678477145872,
+          "answer_bit_prior_nll": 0.6390560137394423
+        },
+        "4": {
+          "answer_nll": 0.46289604059087913,
+          "full_nll": 1.028231333040637,
+          "answer_bit_prior_nll": 0.6039212242556694
+        },
+        "5": {
+          "answer_nll": 0.49558579645807704,
+          "full_nll": 1.2087859734074053,
+          "answer_bit_prior_nll": 0.6328113929540544
+        },
+        "6": {
+          "answer_nll": 0.5425499339591104,
+          "full_nll": 1.2835855523670217,
+          "answer_bit_prior_nll": 0.6361472795736051
+        },
+        "7": {
+          "answer_nll": 0.4767508604012879,
+          "full_nll": 1.324107824884269,
+          "answer_bit_prior_nll": 0.6293421721998051
+        },
+        "8": {
+          "answer_nll": 0.5077160224890187,
+          "full_nll": 1.3318862628395136,
+          "answer_bit_prior_nll": 0.6052028711775035
+        },
+        "9": {
+          "answer_nll": 0.5313867634130085,
+          "full_nll": 1.4955028256250527,
+          "answer_bit_prior_nll": 0.5944505843130766
+        },
+        "10": {
+          "answer_nll": 0.4973204311759868,
+          "full_nll": 1.5248867808695488,
+          "answer_bit_prior_nll": 0.6113065648539848
+        },
+        "11": {
+          "answer_nll": 0.5210877045683446,
+          "full_nll": 1.5691381740926424,
+          "answer_bit_prior_nll": 0.6073709541717751
+        },
+        "12": {
+          "answer_nll": 0.48363986671548836,
+          "full_nll": 1.6101088400109014,
+          "answer_bit_prior_nll": 0.6141201513091514
+        },
+        "13": {
+          "answer_nll": 0.49941164274137656,
+          "full_nll": 1.7427823177553508,
+          "answer_bit_prior_nll": 0.6257770603278429
+        },
+        "14": {
+          "answer_nll": 0.5352272581988343,
+          "full_nll": 1.7195984214805458,
+          "answer_bit_prior_nll": 0.6484753019697528
+        },
+        "15": {
+          "answer_nll": 0.5313776247645104,
+          "full_nll": 1.7878139023437987,
+          "answer_bit_prior_nll": 0.6137670653301204
+        },
+        "16": {
+          "answer_nll": 0.5179947755864954,
+          "full_nll": 1.8019084835869128,
+          "answer_bit_prior_nll": 0.6191666109770342
+        },
+        "17": {
+          "answer_nll": 0.565799510659677,
+          "full_nll": 1.7996909356125184,
+          "answer_bit_prior_nll": 0.6373132941324737
+        },
+        "18": {
+          "answer_nll": 0.5314748177333968,
+          "full_nll": 1.8761580341809094,
+          "answer_bit_prior_nll": 0.5958723950530531
+        },
+        "19": {
+          "answer_nll": 0.5598806779515664,
+          "full_nll": 1.8868579632122695,
+          "answer_bit_prior_nll": 0.6541128358669004
+        },
+        "20": {
+          "answer_nll": 0.5031599708080259,
+          "full_nll": 1.9230918369443806,
+          "answer_bit_prior_nll": 0.6577398754200451
+        }
+      }
+    },
+    {
+      "step": 5150,
+      "aggregate_test": {
+        "answer_nll": 0.5117766439604955,
+        "full_nll": 1.5556216486953023,
+        "bit_prior_nll": 0.618593800109102,
+        "generation_examples": 40,
+        "exact_answers": 0,
+        "within_tolerance": 0,
+        "valid_answers": 40
+      },
+      "test_by_gamma": {
+        "1": {
+          "answer_nll": 0.46142614769113216,
+          "full_nll": 0.7376524182975864,
+          "answer_bit_prior_nll": 0.57160910943403
+        },
+        "2": {
+          "answer_nll": 0.4384035645003418,
+          "full_nll": 0.8352783833245851,
+          "answer_bit_prior_nll": 0.5743132451227196
+        },
+        "3": {
+          "answer_nll": 0.5214457706331034,
+          "full_nll": 0.9391353751620041,
+          "answer_bit_prior_nll": 0.6390560137394423
+        },
+        "4": {
+          "answer_nll": 0.48655457100487964,
+          "full_nll": 1.0426373862507075,
+          "answer_bit_prior_nll": 0.6039212242556694
+        },
+        "5": {
+          "answer_nll": 0.5128212060808437,
+          "full_nll": 1.2229977603370328,
+          "answer_bit_prior_nll": 0.6328113929540544
+        },
+        "6": {
+          "answer_nll": 0.526053992341206,
+          "full_nll": 1.2791422364721896,
+          "answer_bit_prior_nll": 0.6361472795736051
+        },
+        "7": {
+          "answer_nll": 0.4761542831381251,
+          "full_nll": 1.3362122342007772,
+          "answer_bit_prior_nll": 0.6293421721998051
+        },
+        "8": {
+          "answer_nll": 0.51388836890484,
+          "full_nll": 1.3374400872628172,
+          "answer_bit_prior_nll": 0.6052028711775035
+        },
+        "9": {
+          "answer_nll": 0.5552557121396343,
+          "full_nll": 1.5016717025955357,
+          "answer_bit_prior_nll": 0.5944505843130766
+        },
+        "10": {
+          "answer_nll": 0.5027079146719708,
+          "full_nll": 1.5199923653741199,
+          "answer_bit_prior_nll": 0.6113065648539848
+        },
+        "11": {
+          "answer_nll": 0.5305849011523865,
+          "full_nll": 1.5664508447784582,
+          "answer_bit_prior_nll": 0.6073709541717751
+        },
+        "12": {
+          "answer_nll": 0.4947592236863524,
+          "full_nll": 1.624304078924133,
+          "answer_bit_prior_nll": 0.6141201513091514
+        },
+        "13": {
+          "answer_nll": 0.4971850350063635,
+          "full_nll": 1.742022488301628,
+          "answer_bit_prior_nll": 0.6257770603278429
+        },
+        "14": {
+          "answer_nll": 0.529730536273876,
+          "full_nll": 1.7201941823309086,
+          "answer_bit_prior_nll": 0.6484753019697528
+        },
+        "15": {
+          "answer_nll": 0.5464326052156788,
+          "full_nll": 1.7905139418182119,
+          "answer_bit_prior_nll": 0.6137670653301204
+        },
+        "16": {
+          "answer_nll": 0.5138266304963638,
+          "full_nll": 1.7966797035181599,
+          "answer_bit_prior_nll": 0.6191666109770342
+        },
+        "17": {
+          "answer_nll": 0.5584548094723557,
+          "full_nll": 1.8029557899445905,
+          "answer_bit_prior_nll": 0.6373132941324737
+        },
+        "18": {
+          "answer_nll": 0.5265112520711617,
+          "full_nll": 1.8650480699358594,
+          "answer_bit_prior_nll": 0.5958723950530531
+        },
+        "19": {
+          "answer_nll": 0.5446660930356302,
+          "full_nll": 1.8881630129944789,
+          "answer_bit_prior_nll": 0.6541128358669004
+        },
+        "20": {
+          "answer_nll": 0.4986702616936652,
+          "full_nll": 1.9292560355760184,
+          "answer_bit_prior_nll": 0.6577398754200451
+        }
+      }
+    },
+    {
+      "step": 5212,
+      "aggregate_test": {
+        "answer_nll": 0.5027934715139704,
+        "full_nll": 1.5423800503259701,
+        "bit_prior_nll": 0.618593800109102,
+        "generation_examples": 40,
+        "exact_answers": 0,
+        "within_tolerance": 0,
+        "valid_answers": 40
+      },
+      "test_by_gamma": {
+        "1": {
+          "answer_nll": 0.45441040141018413,
+          "full_nll": 0.757622223430369,
+          "answer_bit_prior_nll": 0.57160910943403
+        },
+        "2": {
+          "answer_nll": 0.41056770643860674,
+          "full_nll": 0.8306599988403757,
+          "answer_bit_prior_nll": 0.5743132451227196
+        },
+        "3": {
+          "answer_nll": 0.5106193301632759,
+          "full_nll": 0.951057272551869,
+          "answer_bit_prior_nll": 0.6390560137394423
+        },
+        "4": {
+          "answer_nll": 0.4671723919959082,
+          "full_nll": 1.0358220934584847,
+          "answer_bit_prior_nll": 0.6039212242556694
+        },
+        "5": {
+          "answer_nll": 0.5020038160671122,
+          "full_nll": 1.216561435433169,
+          "answer_bit_prior_nll": 0.6328113929540544
+        },
+        "6": {
+          "answer_nll": 0.5206826342179868,
+          "full_nll": 1.2729130173826513,
+          "answer_bit_prior_nll": 0.6361472795736051
+        },
+        "7": {
+          "answer_nll": 0.4607363629272316,
+          "full_nll": 1.3205508248932467,
+          "answer_bit_prior_nll": 0.6293421721998051
+        },
+        "8": {
+          "answer_nll": 0.5141328616118699,
+          "full_nll": 1.3253556170942862,
+          "answer_bit_prior_nll": 0.6052028711775035
+        },
+        "9": {
+          "answer_nll": 0.5282935776397478,
+          "full_nll": 1.481351586773564,
+          "answer_bit_prior_nll": 0.5944505843130766
+        },
+        "10": {
+          "answer_nll": 0.4931749040385642,
+          "full_nll": 1.5086227108550785,
+          "answer_bit_prior_nll": 0.6113065648539848
+        },
+        "11": {
+          "answer_nll": 0.5202374764815302,
+          "full_nll": 1.5457082216259233,
+          "answer_bit_prior_nll": 0.6073709541717751
+        },
+        "12": {
+          "answer_nll": 0.49501130476580457,
+          "full_nll": 1.6101853660310526,
+          "answer_bit_prior_nll": 0.6141201513091514
+        },
+        "13": {
+          "answer_nll": 0.49483921858726326,
+          "full_nll": 1.7242832431976705,
+          "answer_bit_prior_nll": 0.6257770603278429
+        },
+        "14": {
+          "answer_nll": 0.5261324593778097,
+          "full_nll": 1.696930084767215,
+          "answer_bit_prior_nll": 0.6484753019697528
+        },
+        "15": {
+          "answer_nll": 0.5343717473156825,
+          "full_nll": 1.763661870608566,
+          "answer_bit_prior_nll": 0.6137670653301204
+        },
+        "16": {
+          "answer_nll": 0.5081039240618078,
+          "full_nll": 1.7805129675892455,
+          "answer_bit_prior_nll": 0.6191666109770342
+        },
+        "17": {
+          "answer_nll": 0.5534635566226436,
+          "full_nll": 1.7893739125712593,
+          "answer_bit_prior_nll": 0.6373132941324737
+        },
+        "18": {
+          "answer_nll": 0.5192829457040976,
+          "full_nll": 1.8576697613493294,
+          "answer_bit_prior_nll": 0.5958723950530531
+        },
+        "19": {
+          "answer_nll": 0.5342178146534674,
+          "full_nll": 1.8680442460554487,
+          "answer_bit_prior_nll": 0.6541128358669004
+        },
+        "20": {
+          "answer_nll": 0.508414996198813,
+          "full_nll": 1.9114169769173321,
+          "answer_bit_prior_nll": 0.6577398754200451
+        }
+      }
+    },
+    {
+      "step": 6180,
+      "aggregate_test": {
+        "answer_nll": 0.49849371717286234,
+        "full_nll": 1.545421834427525,
+        "bit_prior_nll": 0.618593800109102,
+        "generation_examples": 0,
+        "exact_answers": 0,
+        "within_tolerance": 0,
+        "valid_answers": 0
+      },
+      "test_by_gamma": {
+        "1": {
+          "answer_nll": 0.43947683623550154,
+          "full_nll": 0.7609523338763144,
+          "answer_bit_prior_nll": 0.57160910943403
+        },
+        "2": {
+          "answer_nll": 0.41883651513437925,
+          "full_nll": 0.8286363419061908,
+          "answer_bit_prior_nll": 0.5743132451227196
+        },
+        "3": {
+          "answer_nll": 0.5098950541375545,
+          "full_nll": 0.933470383245793,
+          "answer_bit_prior_nll": 0.6390560137394423
+        },
+        "4": {
+          "answer_nll": 0.4677503716060788,
+          "full_nll": 1.0367518079963933,
+          "answer_bit_prior_nll": 0.6039212242556694
+        },
+        "5": {
+          "answer_nll": 0.49422390135883426,
+          "full_nll": 1.221941826572674,
+          "answer_bit_prior_nll": 0.6328113929540544
+        },
+        "6": {
+          "answer_nll": 0.5072892897317486,
+          "full_nll": 1.2794395541360182,
+          "answer_bit_prior_nll": 0.6361472795736051
+        },
+        "7": {
+          "answer_nll": 0.45831616490769583,
+          "full_nll": 1.3435693200142858,
+          "answer_bit_prior_nll": 0.6293421721998051
+        },
+        "8": {
+          "answer_nll": 0.489598224162754,
+          "full_nll": 1.3199018387253036,
+          "answer_bit_prior_nll": 0.6052028711775035
+        },
+        "9": {
+          "answer_nll": 0.5377121882741319,
+          "full_nll": 1.4910471697330487,
+          "answer_bit_prior_nll": 0.5944505843130766
+        },
+        "10": {
+          "answer_nll": 0.49337169930705776,
+          "full_nll": 1.5177388017718805,
+          "answer_bit_prior_nll": 0.6113065648539848
+        },
+        "11": {
+          "answer_nll": 0.5251331706515755,
+          "full_nll": 1.5626003761740366,
+          "answer_bit_prior_nll": 0.6073709541717751
+        },
+        "12": {
+          "answer_nll": 0.48555553003747526,
+          "full_nll": 1.6193883621535536,
+          "answer_bit_prior_nll": 0.6141201513091514
+        },
+        "13": {
+          "answer_nll": 0.49027445458055546,
+          "full_nll": 1.7299300784014542,
+          "answer_bit_prior_nll": 0.6257770603278429
+        },
+        "14": {
+          "answer_nll": 0.5220191048660386,
+          "full_nll": 1.7042043940683498,
+          "answer_bit_prior_nll": 0.6484753019697528
+        },
+        "15": {
+          "answer_nll": 0.514654752981057,
+          "full_nll": 1.7650672331597612,
+          "answer_bit_prior_nll": 0.6137670653301204
+        },
+        "16": {
+          "answer_nll": 0.5069764423153954,
+          "full_nll": 1.780985054149896,
+          "answer_bit_prior_nll": 0.6191666109770342
+        },
+        "17": {
+          "answer_nll": 0.5486922206720399,
+          "full_nll": 1.7971184509466314,
+          "answer_bit_prior_nll": 0.6373132941324737
+        },
+        "18": {
+          "answer_nll": 0.503651908511009,
+          "full_nll": 1.843092126189648,
+          "answer_bit_prior_nll": 0.5958723950530531
+        },
+        "19": {
+          "answer_nll": 0.5529499112716232,
+          "full_nll": 1.8729845073695806,
+          "answer_bit_prior_nll": 0.6541128358669004
+        },
+        "20": {
+          "answer_nll": 0.5034966027147415,
+          "full_nll": 1.9026582851748395,
+          "answer_bit_prior_nll": 0.6577398754200451
+        }
+      }
+    },
+    {
+      "step": 7210,
+      "aggregate_test": {
+        "answer_nll": 0.49813293832049954,
+        "full_nll": 1.536537076120944,
+        "bit_prior_nll": 0.618593800109102,
+        "generation_examples": 0,
+        "exact_answers": 0,
+        "within_tolerance": 0,
+        "valid_answers": 0
+      },
+      "test_by_gamma": {
+        "1": {
+          "answer_nll": 0.44073597411001436,
+          "full_nll": 0.736950591426476,
+          "answer_bit_prior_nll": 0.57160910943403
+        },
+        "2": {
+          "answer_nll": 0.42052087242128827,
+          "full_nll": 0.8211741149098112,
+          "answer_bit_prior_nll": 0.5743132451227196
+        },
+        "3": {
+          "answer_nll": 0.5043807204835632,
+          "full_nll": 0.9342176294573394,
+          "answer_bit_prior_nll": 0.6390560137394423
+        },
+        "4": {
+          "answer_nll": 0.46759943177468294,
+          "full_nll": 1.0216068973879318,
+          "answer_bit_prior_nll": 0.6039212242556694
+        },
+        "5": {
+          "answer_nll": 0.4970411487725609,
+          "full_nll": 1.2085723758179376,
+          "answer_bit_prior_nll": 0.6328113929540544
+        },
+        "6": {
+          "answer_nll": 0.508578638799528,
+          "full_nll": 1.26323154438957,
+          "answer_bit_prior_nll": 0.6361472795736051
+        },
+        "7": {
+          "answer_nll": 0.46393938975831717,
+          "full_nll": 1.3205262234394795,
+          "answer_bit_prior_nll": 0.6293421721998051
+        },
+        "8": {
+          "answer_nll": 0.5203149891653344,
+          "full_nll": 1.3261235476977096,
+          "answer_bit_prior_nll": 0.6052028711775035
+        },
+        "9": {
+          "answer_nll": 0.5235821337773814,
+          "full_nll": 1.4728482030881835,
+          "answer_bit_prior_nll": 0.5944505843130766
+        },
+        "10": {
+          "answer_nll": 0.4937186214274334,
+          "full_nll": 1.5083406737420681,
+          "answer_bit_prior_nll": 0.6113065648539848
+        },
+        "11": {
+          "answer_nll": 0.5135247794080767,
+          "full_nll": 1.5495139357374024,
+          "answer_bit_prior_nll": 0.6073709541717751
+        },
+        "12": {
+          "answer_nll": 0.4814323081157324,
+          "full_nll": 1.5964434740195332,
+          "answer_bit_prior_nll": 0.6141201513091514
+        },
+        "13": {
+          "answer_nll": 0.4947674437880778,
+          "full_nll": 1.7185894894265359,
+          "answer_bit_prior_nll": 0.6257770603278429
+        },
+        "14": {
+          "answer_nll": 0.524117108883989,
+          "full_nll": 1.7043363259264237,
+          "answer_bit_prior_nll": 0.6484753019697528
+        },
+        "15": {
+          "answer_nll": 0.5188345625314729,
+          "full_nll": 1.7625141699788116,
+          "answer_bit_prior_nll": 0.6137670653301204
+        },
+        "16": {
+          "answer_nll": 0.4988292305468868,
+          "full_nll": 1.7773199508261666,
+          "answer_bit_prior_nll": 0.6191666109770342
+        },
+        "17": {
+          "answer_nll": 0.5470258721551156,
+          "full_nll": 1.786217938878183,
+          "answer_bit_prior_nll": 0.6373132941324737
+        },
+        "18": {
+          "answer_nll": 0.5100399840830505,
+          "full_nll": 1.8427457691604217,
+          "answer_bit_prior_nll": 0.5958723950530531
+        },
+        "19": {
+          "answer_nll": 0.5314470374545895,
+          "full_nll": 1.8648236738980566,
+          "answer_bit_prior_nll": 0.6541128358669004
+        },
+        "20": {
+          "answer_nll": 0.5022285189528962,
+          "full_nll": 1.902708517469326,
+          "answer_bit_prior_nll": 0.6577398754200451
+        }
+      }
+    },
+    {
+      "step": 8240,
+      "aggregate_test": {
+        "answer_nll": 0.4885068319451096,
+        "full_nll": 1.5306102350335464,
+        "bit_prior_nll": 0.618593800109102,
+        "generation_examples": 0,
+        "exact_answers": 0,
+        "within_tolerance": 0,
+        "valid_answers": 0
+      },
+      "test_by_gamma": {
+        "1": {
+          "answer_nll": 0.4186535534785695,
+          "full_nll": 0.725587468734882,
+          "answer_bit_prior_nll": 0.57160910943403
+        },
+        "2": {
+          "answer_nll": 0.39804214497871726,
+          "full_nll": 0.825222704382014,
+          "answer_bit_prior_nll": 0.5743132451227196
+        },
+        "3": {
+          "answer_nll": 0.49197117306292576,
+          "full_nll": 0.9242168532843265,
+          "answer_bit_prior_nll": 0.6390560137394423
+        },
+        "4": {
+          "answer_nll": 0.4488431287378002,
+          "full_nll": 1.01723171503591,
+          "answer_bit_prior_nll": 0.6039212242556694
+        },
+        "5": {
+          "answer_nll": 0.49848998433805847,
+          "full_nll": 1.2099491273777994,
+          "answer_bit_prior_nll": 0.6328113929540544
+        },
+        "6": {
+          "answer_nll": 0.4988569800157815,
+          "full_nll": 1.2477856644715482,
+          "answer_bit_prior_nll": 0.6361472795736051
+        },
+        "7": {
+          "answer_nll": 0.4610822602624986,
+          "full_nll": 1.3088986040751542,
+          "answer_bit_prior_nll": 0.6293421721998051
+        },
+        "8": {
+          "answer_nll": 0.4785988256453493,
+          "full_nll": 1.3154806605238614,
+          "answer_bit_prior_nll": 0.6052028711775035
+        },
+        "9": {
+          "answer_nll": 0.5141612608180627,
+          "full_nll": 1.467394666665827,
+          "answer_bit_prior_nll": 0.5944505843130766
+        },
+        "10": {
+          "answer_nll": 0.4807496404548926,
+          "full_nll": 1.498390258366482,
+          "answer_bit_prior_nll": 0.6113065648539848
+        },
+        "11": {
+          "answer_nll": 0.5017328575824129,
+          "full_nll": 1.541199496801477,
+          "answer_bit_prior_nll": 0.6073709541717751
+        },
+        "12": {
+          "answer_nll": 0.48730418773759865,
+          "full_nll": 1.5956458583567539,
+          "answer_bit_prior_nll": 0.6141201513091514
+        },
+        "13": {
+          "answer_nll": 0.48521063832920064,
+          "full_nll": 1.7206518943163056,
+          "answer_bit_prior_nll": 0.6257770603278429
+        },
+        "14": {
+          "answer_nll": 0.5093164913267694,
+          "full_nll": 1.6894785366614424,
+          "answer_bit_prior_nll": 0.6484753019697528
+        },
+        "15": {
+          "answer_nll": 0.5144890636413818,
+          "full_nll": 1.7566192663736049,
+          "answer_bit_prior_nll": 0.6137670653301204
+        },
+        "16": {
+          "answer_nll": 0.49947674962991834,
+          "full_nll": 1.7688527692469387,
+          "answer_bit_prior_nll": 0.6191666109770342
+        },
+        "17": {
+          "answer_nll": 0.5358555185293881,
+          "full_nll": 1.7751894908772758,
+          "answer_bit_prior_nll": 0.6373132941324737
+        },
+        "18": {
+          "answer_nll": 0.5083092503574724,
+          "full_nll": 1.8431128727311599,
+          "answer_bit_prior_nll": 0.5958723950530531
+        },
+        "19": {
+          "answer_nll": 0.5385563227847732,
+          "full_nll": 1.86302882586029,
+          "answer_bit_prior_nll": 0.6541128358669004
+        },
+        "20": {
+          "answer_nll": 0.5004366071906199,
+          "full_nll": 1.9014544771719923,
+          "answer_bit_prior_nll": 0.6577398754200451
+        }
+      }
+    },
+    {
+      "step": 9270,
+      "aggregate_test": {
+        "answer_nll": 0.49513469069948507,
+        "full_nll": 1.5283315758628278,
+        "bit_prior_nll": 0.618593800109102,
+        "generation_examples": 0,
+        "exact_answers": 0,
+        "within_tolerance": 0,
+        "valid_answers": 0
+      },
+      "test_by_gamma": {
+        "1": {
+          "answer_nll": 0.44013360670240737,
+          "full_nll": 0.7270946764968641,
+          "answer_bit_prior_nll": 0.57160910943403
+        },
+        "2": {
+          "answer_nll": 0.40948893720971163,
+          "full_nll": 0.8068113070497618,
+          "answer_bit_prior_nll": 0.5743132451227196
+        },
+        "3": {
+          "answer_nll": 0.5079583985479985,
+          "full_nll": 0.9241434546470341,
+          "answer_bit_prior_nll": 0.6390560137394423
+        },
+        "4": {
+          "answer_nll": 0.45574051746565863,
+          "full_nll": 1.0068399696541663,
+          "answer_bit_prior_nll": 0.6039212242556694
+        },
+        "5": {
+          "answer_nll": 0.4985629092956775,
+          "full_nll": 1.2010657624213321,
+          "answer_bit_prior_nll": 0.6328113929540544
+        },
+        "6": {
+          "answer_nll": 0.5186539772291455,
+          "full_nll": 1.258422996290892,
+          "answer_bit_prior_nll": 0.6361472795736051
+        },
+        "7": {
+          "answer_nll": 0.4759113522033139,
+          "full_nll": 1.3119936628863815,
+          "answer_bit_prior_nll": 0.6293421721998051
+        },
+        "8": {
+          "answer_nll": 0.49112198607313723,
+          "full_nll": 1.326743189811325,
+          "answer_bit_prior_nll": 0.6052028711775035
+        },
+        "9": {
+          "answer_nll": 0.523670334786792,
+          "full_nll": 1.4634591745447088,
+          "answer_bit_prior_nll": 0.5944505843130766
+        },
+        "10": {
+          "answer_nll": 0.4813844037970349,
+          "full_nll": 1.4935963523871452,
+          "answer_bit_prior_nll": 0.6113065648539848
+        },
+        "11": {
+          "answer_nll": 0.5073422700601701,
+          "full_nll": 1.5380843535277968,
+          "answer_bit_prior_nll": 0.6073709541717751
+        },
+        "12": {
+          "answer_nll": 0.5097583146202201,
+          "full_nll": 1.5984461720978858,
+          "answer_bit_prior_nll": 0.6141201513091514
+        },
+        "13": {
+          "answer_nll": 0.47581739782461746,
+          "full_nll": 1.7095295125030012,
+          "answer_bit_prior_nll": 0.6257770603278429
+        },
+        "14": {
+          "answer_nll": 0.5211838268769498,
+          "full_nll": 1.6958871560448439,
+          "answer_bit_prior_nll": 0.6484753019697528
+        },
+        "15": {
+          "answer_nll": 0.5178299582539694,
+          "full_nll": 1.7514898309505067,
+          "answer_bit_prior_nll": 0.6137670653301204
+        },
+        "16": {
+          "answer_nll": 0.5085863962600082,
+          "full_nll": 1.7750870839929458,
+          "answer_bit_prior_nll": 0.6191666109770342
+        },
+        "17": {
+          "answer_nll": 0.5397261694359778,
+          "full_nll": 1.775957807878881,
+          "answer_bit_prior_nll": 0.6373132941324737
+        },
+        "18": {
+          "answer_nll": 0.5037195684426479,
+          "full_nll": 1.838762282152213,
+          "answer_bit_prior_nll": 0.5958723950530531
+        },
+        "19": {
+          "answer_nll": 0.5231147212545173,
+          "full_nll": 1.850958017058097,
+          "answer_bit_prior_nll": 0.6541128358669004
+        },
+        "20": {
+          "answer_nll": 0.4929887676497466,
+          "full_nll": 1.8960592449632498,
+          "answer_bit_prior_nll": 0.6577398754200451
+        }
+      }
+    },
+    {
+      "step": 10300,
+      "aggregate_test": {
+        "answer_nll": 0.48209817539583516,
+        "full_nll": 1.524273629321468,
+        "bit_prior_nll": 0.618593800109102,
+        "generation_examples": 40,
+        "exact_answers": 0,
+        "within_tolerance": 0,
+        "valid_answers": 40
+      },
+      "test_by_gamma": {
+        "1": {
+          "answer_nll": 0.40681318027158603,
+          "full_nll": 0.6938745339299223,
+          "answer_bit_prior_nll": 0.57160910943403
+        },
+        "2": {
+          "answer_nll": 0.37180207032244134,
+          "full_nll": 0.7746866747282175,
+          "answer_bit_prior_nll": 0.5743132451227196
+        },
+        "3": {
+          "answer_nll": 0.48563224396041604,
+          "full_nll": 0.9125023793980029,
+          "answer_bit_prior_nll": 0.6390560137394423
+        },
+        "4": {
+          "answer_nll": 0.4497589288886437,
+          "full_nll": 1.0116346612033973,
+          "answer_bit_prior_nll": 0.6039212242556694
+        },
+        "5": {
+          "answer_nll": 0.49070629267914356,
+          "full_nll": 1.2006928113714668,
+          "answer_bit_prior_nll": 0.6328113929540544
+        },
+        "6": {
+          "answer_nll": 0.4956324570944811,
+          "full_nll": 1.2449250359519084,
+          "answer_bit_prior_nll": 0.6361472795736051
+        },
+        "7": {
+          "answer_nll": 0.45057512276382894,
+          "full_nll": 1.311585185278171,
+          "answer_bit_prior_nll": 0.6293421721998051
+        },
+        "8": {
+          "answer_nll": 0.4776528611378775,
+          "full_nll": 1.30019882961347,
+          "answer_bit_prior_nll": 0.6052028711775035
+        },
+        "9": {
+          "answer_nll": 0.5138695669986971,
+          "full_nll": 1.4631798600371286,
+          "answer_bit_prior_nll": 0.5944505843130766
+        },
+        "10": {
+          "answer_nll": 0.4787472747189635,
+          "full_nll": 1.4987865181267994,
+          "answer_bit_prior_nll": 0.6113065648539848
+        },
+        "11": {
+          "answer_nll": 0.5026078697020628,
+          "full_nll": 1.538051790244518,
+          "answer_bit_prior_nll": 0.6073709541717751
+        },
+        "12": {
+          "answer_nll": 0.4779828275599617,
+          "full_nll": 1.589852511056357,
+          "answer_bit_prior_nll": 0.6141201513091514
+        },
+        "13": {
+          "answer_nll": 0.46862694836688334,
+          "full_nll": 1.707179533943699,
+          "answer_bit_prior_nll": 0.6257770603278429
+        },
+        "14": {
+          "answer_nll": 0.5125980970569799,
+          "full_nll": 1.6889052968811833,
+          "answer_bit_prior_nll": 0.6484753019697528
+        },
+        "15": {
+          "answer_nll": 0.5122983995158522,
+          "full_nll": 1.754634287420932,
+          "answer_bit_prior_nll": 0.6137670653301204
+        },
+        "16": {
+          "answer_nll": 0.49482897878598514,
+          "full_nll": 1.7769844344366696,
+          "answer_bit_prior_nll": 0.6191666109770342
+        },
+        "17": {
+          "answer_nll": 0.5305077348307999,
+          "full_nll": 1.775200840050032,
+          "answer_bit_prior_nll": 0.6373132941324737
+        },
+        "18": {
+          "answer_nll": 0.4897825921144821,
+          "full_nll": 1.8374086929578464,
+          "answer_bit_prior_nll": 0.5958723950530531
+        },
+        "19": {
+          "answer_nll": 0.532545098119564,
+          "full_nll": 1.85988312789626,
+          "answer_bit_prior_nll": 0.6541128358669004
+        },
+        "20": {
+          "answer_nll": 0.49899496302805346,
+          "full_nll": 1.8959901627965898,
+          "answer_bit_prior_nll": 0.6577398754200451
+        }
+      }
+    },
+    {
+      "step": 10304,
+      "aggregate_test": {
+        "answer_nll": 0.4852009603353508,
+        "full_nll": 1.5286792209447189,
+        "bit_prior_nll": 0.618593800109102,
+        "generation_examples": 40,
+        "exact_answers": 0,
+        "within_tolerance": 0,
+        "valid_answers": 40
+      },
+      "test_by_gamma": {
+        "1": {
+          "answer_nll": 0.409792950344906,
+          "full_nll": 0.6960615700454362,
+          "answer_bit_prior_nll": 0.57160910943403
+        },
+        "2": {
+          "answer_nll": 0.374628289246175,
+          "full_nll": 0.7797234137314568,
+          "answer_bit_prior_nll": 0.5743132451227196
+        },
+        "3": {
+          "answer_nll": 0.5109211629054958,
+          "full_nll": 0.9246036454143155,
+          "answer_bit_prior_nll": 0.6390560137394423
+        },
+        "4": {
+          "answer_nll": 0.4487383509352055,
+          "full_nll": 1.0131051066484145,
+          "answer_bit_prior_nll": 0.6039212242556694
+        },
+        "5": {
+          "answer_nll": 0.49328251879550017,
+          "full_nll": 1.2076627801016877,
+          "answer_bit_prior_nll": 0.6328113929540544
+        },
+        "6": {
+          "answer_nll": 0.49990995162040364,
+          "full_nll": 1.2538939047324316,
+          "answer_bit_prior_nll": 0.6361472795736051
+        },
+        "7": {
+          "answer_nll": 0.45675775952076947,
+          "full_nll": 1.3230202630930281,
+          "answer_bit_prior_nll": 0.6293421721998051
+        },
+        "8": {
+          "answer_nll": 0.46726594628307794,
+          "full_nll": 1.2998512401398448,
+          "answer_bit_prior_nll": 0.6052028711775035
+        },
+        "9": {
+          "answer_nll": 0.5217757932904143,
+          "full_nll": 1.4714202111587844,
+          "answer_bit_prior_nll": 0.5944505843130766
+        },
+        "10": {
+          "answer_nll": 0.482987107847943,
+          "full_nll": 1.5102326603851943,
+          "answer_bit_prior_nll": 0.6113065648539848
+        },
+        "11": {
+          "answer_nll": 0.5105614909269727,
+          "full_nll": 1.5443508701160396,
+          "answer_bit_prior_nll": 0.6073709541717751
+        },
+        "12": {
+          "answer_nll": 0.4765865754939763,
+          "full_nll": 1.5967373184743068,
+          "answer_bit_prior_nll": 0.6141201513091514
+        },
+        "13": {
+          "answer_nll": 0.47570609025699795,
+          "full_nll": 1.7107577721293945,
+          "answer_bit_prior_nll": 0.6257770603278429
+        },
+        "14": {
+          "answer_nll": 0.5138344255521068,
+          "full_nll": 1.692004248777288,
+          "answer_bit_prior_nll": 0.6484753019697528
+        },
+        "15": {
+          "answer_nll": 0.5127858368062205,
+          "full_nll": 1.7553945937382542,
+          "answer_bit_prior_nll": 0.6137670653301204
+        },
+        "16": {
+          "answer_nll": 0.49586530595518397,
+          "full_nll": 1.783140960322542,
+          "answer_bit_prior_nll": 0.6191666109770342
+        },
+        "17": {
+          "answer_nll": 0.5349483569616496,
+          "full_nll": 1.7793571588134949,
+          "answer_bit_prior_nll": 0.6373132941324737
+        },
+        "18": {
+          "answer_nll": 0.49418978102832106,
+          "full_nll": 1.8378352999844578,
+          "answer_bit_prior_nll": 0.5958723950530531
+        },
+        "19": {
+          "answer_nll": 0.5254558180612159,
+          "full_nll": 1.857806290371083,
+          "answer_bit_prior_nll": 0.6541128358669004
+        },
+        "20": {
+          "answer_nll": 0.4980256948744812,
+          "full_nll": 1.8960718221220196,
+          "answer_bit_prior_nll": 0.6577398754200451
+        }
+      }
+    }
+  ],
+  "final": {
+    "step": 10304,
+    "config": {
+      "version": "integral-full-sequence-v2-independent-hard:integral-ast-preview-v2-bounds2-rounding",
+      "condition": "shuffled",
+      "seed": 0,
+      "gamma_low": 1,
+      "gamma_high": 20,
+      "ramp_fraction": 0.5058229813664596,
+      "ramp_steps": 5212,
+      "max_operators": 32,
+      "steps": 10304,
+      "batch_size": 16,
+      "block_size": 128,
+      "pack_expressions": true,
+      "n_layer": 64,
+      "n_head": 8,
+      "n_embd": 512,
+      "dropout": 0.0,
+      "learning_rate": 0.0003,
+      "warmup_steps": 103,
+      "weight_decay": 0.1,
+      "grad_clip": 1.0,
+      "eval_interval": 1030,
+      "eval_examples": 32,
+      "final_examples": 64,
+      "baseline_examples": 128,
+      "eval_batch_size": 64,
+      "generation_examples": 2,
+      "final_generation_examples": 4,
+      "generation_interval": 5150,
+      "checkpoint_interval": 5150,
+      "eval_seed": 20261024,
+      "eval_gammas": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "absolute_tolerance": 1e-06,
+      "relative_tolerance": 0.01,
+      "cache_dir": "out/integral-label-cache",
+      "label_timeout_seconds": 5,
+      "label_max_attempts": 100,
+      "log_interval": 172,
+      "threads": 4,
+      "device": "cuda",
+      "precision": "bfloat16"
+    },
+    "parameters": 201480192,
+    "loss_grid": {
+      "train": {
+        "1": {
+          "gamma": 1.0,
+          "seed": 15793403116199480690,
+          "examples": 64,
+          "sign_nll": 0.4102321064201533,
+          "exponent_nll": 0.33622552734850614,
+          "mantissa_nll": 0.3904098897996846,
+          "answer_nll": 0.37247420439715434,
+          "full_nll": 0.6590231572445765,
+          "non_answer_nll": 1.0869362601633936,
+          "answer_token_fraction": 0.5989304812834224,
+          "tokens": 1496,
+          "answer_bits": 896,
+          "slices": {
+            "without_x": {
+              "answer_nll": 0.3322142297402024,
+              "examples": 24
+            },
+            "nonzero": {
+              "answer_nll": 0.4231727236452011,
+              "examples": 52
+            },
+            "without_rounding": {
+              "answer_nll": 0.3923653537550798,
+              "examples": 52
+            },
+            "with_x": {
+              "answer_nll": 0.3966302167624235,
+              "examples": 40
+            },
+            "with_rounding": {
+              "answer_nll": 0.2862793157498042,
+              "examples": 12
+            },
+            "quantized_zero": {
+              "answer_nll": 0.15278071289261183,
+              "examples": 12
+            }
+          },
+          "answer_bit_prior_nll": 0.5540064877021529,
+          "always_zero_exact_accuracy": 0.1875,
+          "always_zero_tolerance_accuracy": 0.1875,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 4.681243143294112
+        },
+        "2": {
+          "gamma": 2.0,
+          "seed": 16814087695944847299,
+          "examples": 64,
+          "sign_nll": 0.47317818443116266,
+          "exponent_nll": 0.34955773758047143,
+          "mantissa_nll": 0.4628596438622026,
+          "answer_nll": 0.4231317159450815,
+          "full_nll": 0.8335702870868422,
+          "non_answer_nll": 1.3642383386640682,
+          "answer_token_fraction": 0.5638766519823789,
+          "tokens": 1589,
+          "answer_bits": 896,
+          "slices": {
+            "without_x": {
+              "answer_nll": 0.3893280040938407,
+              "examples": 24
+            },
+            "quantized_zero": {
+              "answer_nll": 0.12787031885236502,
+              "examples": 10
+            },
+            "without_rounding": {
+              "answer_nll": 0.44630528126466784,
+              "examples": 47
+            },
+            "with_x": {
+              "answer_nll": 0.44341398272663357,
+              "examples": 40
+            },
+            "nonzero": {
+              "answer_nll": 0.4778097818295161,
+              "examples": 54
+            },
+            "with_rounding": {
+              "answer_nll": 0.35906371693400774,
+              "examples": 17
+            }
+          },
+          "answer_bit_prior_nll": 0.5899292084835809,
+          "always_zero_exact_accuracy": 0.15625,
+          "always_zero_tolerance_accuracy": 0.15625,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.25,
+          "tolerance_accuracy": 0.25,
+          "decoded_mae": 1.4008075809018203
+        },
+        "3": {
+          "gamma": 3.0,
+          "seed": 17079321605328196678,
+          "examples": 64,
+          "sign_nll": 0.4558548082713969,
+          "exponent_nll": 0.32335236477629226,
+          "mantissa_nll": 0.5003091096501748,
+          "answer_nll": 0.43393496495387546,
+          "full_nll": 0.9383640292900275,
+          "non_answer_nll": 1.510475980739638,
+          "answer_token_fraction": 0.531435349940688,
+          "tokens": 1686,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.4437244914472103,
+              "examples": 50
+            },
+            "quantized_zero": {
+              "answer_nll": 0.13792548222201212,
+              "examples": 7
+            },
+            "without_rounding": {
+              "answer_nll": 0.4650198988277804,
+              "examples": 44
+            },
+            "nonzero": {
+              "answer_nll": 0.4702870262819424,
+              "examples": 57
+            },
+            "with_rounding": {
+              "answer_nll": 0.36554816626012326,
+              "examples": 20
+            },
+            "without_x": {
+              "answer_nll": 0.39897245009030613,
+              "examples": 14
+            }
+          },
+          "answer_bit_prior_nll": 0.5960028246008252,
+          "always_zero_exact_accuracy": 0.109375,
+          "always_zero_tolerance_accuracy": 0.109375,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 0.5549274952210457
+        },
+        "4": {
+          "gamma": 4.0,
+          "seed": 4529110935164798212,
+          "examples": 64,
+          "sign_nll": 0.4452566473992192,
+          "exponent_nll": 0.382951057662649,
+          "mantissa_nll": 0.4737813688401502,
+          "answer_nll": 0.439304491888119,
+          "full_nll": 1.0470486170535533,
+          "non_answer_nll": 1.6514201333112992,
+          "answer_token_fraction": 0.4986087924318308,
+          "tokens": 1797,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.43429356142878534,
+              "examples": 55
+            },
+            "nonzero": {
+              "answer_nll": 0.49692690906659615,
+              "examples": 53
+            },
+            "without_rounding": {
+              "answer_nll": 0.48331496825343684,
+              "examples": 38
+            },
+            "with_rounding": {
+              "answer_nll": 0.3749815318733454,
+              "examples": 26
+            },
+            "quantized_zero": {
+              "answer_nll": 0.16166931289163503,
+              "examples": 11
+            },
+            "without_x": {
+              "answer_nll": 0.46992697152826524,
+              "examples": 9
+            }
+          },
+          "answer_bit_prior_nll": 0.6241507010474102,
+          "always_zero_exact_accuracy": 0.171875,
+          "always_zero_tolerance_accuracy": 0.171875,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 0.21398029780351857
+        },
+        "5": {
+          "gamma": 5.0,
+          "seed": 5638378900170460928,
+          "examples": 64,
+          "sign_nll": 0.5858333785145078,
+          "exponent_nll": 0.44022824562598545,
+          "mantissa_nll": 0.5120889936683852,
+          "answer_nll": 0.4916918968565369,
+          "full_nll": 1.1121922436578648,
+          "non_answer_nll": 1.7055415614102554,
+          "answer_token_fraction": 0.4888161483906165,
+          "tokens": 1833,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.48425460940804976,
+              "examples": 58
+            },
+            "nonzero": {
+              "answer_nll": 0.5261592137916334,
+              "examples": 58
+            },
+            "with_rounding": {
+              "answer_nll": 0.4789552522393373,
+              "examples": 26
+            },
+            "without_rounding": {
+              "answer_nll": 0.5004064707379592,
+              "examples": 38
+            },
+            "without_x": {
+              "answer_nll": 0.5635858500997225,
+              "examples": 6
+            },
+            "quantized_zero": {
+              "answer_nll": 0.15850800772507986,
+              "examples": 6
+            }
+          },
+          "answer_bit_prior_nll": 0.6316495835171841,
+          "always_zero_exact_accuracy": 0.09375,
+          "always_zero_tolerance_accuracy": 0.09375,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 1.3075568922715666
+        },
+        "6": {
+          "gamma": 6.0,
+          "seed": 9246996196247084853,
+          "examples": 64,
+          "sign_nll": 0.4490755781516782,
+          "exponent_nll": 0.3773745082175083,
+          "mantissa_nll": 0.534914657670015,
+          "answer_nll": 0.4725189557570957,
+          "full_nll": 1.218073425162975,
+          "non_answer_nll": 1.8423881958056554,
+          "answer_token_fraction": 0.4557477110885046,
+          "tokens": 1966,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.4670165840346934,
+              "examples": 59
+            },
+            "nonzero": {
+              "answer_nll": 0.5090274261800867,
+              "examples": 57
+            },
+            "without_rounding": {
+              "answer_nll": 0.5053450820537714,
+              "examples": 26
+            },
+            "with_rounding": {
+              "answer_nll": 0.45005901432351064,
+              "examples": 38
+            },
+            "quantized_zero": {
+              "answer_nll": 0.17523591220378876,
+              "examples": 7
+            },
+            "without_x": {
+              "answer_nll": 0.5374472439289093,
+              "examples": 5
+            }
+          },
+          "answer_bit_prior_nll": 0.6384936850813789,
+          "always_zero_exact_accuracy": 0.109375,
+          "always_zero_tolerance_accuracy": 0.109375,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 0.7359137241732184
+        },
+        "7": {
+          "gamma": 7.0,
+          "seed": 14240004936880627420,
+          "examples": 64,
+          "sign_nll": 0.5191294325122726,
+          "exponent_nll": 0.3834151925286278,
+          "mantissa_nll": 0.5384728631993312,
+          "answer_nll": 0.4817134500535758,
+          "full_nll": 1.2760630783956393,
+          "non_answer_nll": 1.9143924658346425,
+          "answer_token_fraction": 0.4455494778717056,
+          "tokens": 2011,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.48375346165682587,
+              "examples": 56
+            },
+            "quantized_zero": {
+              "answer_nll": 0.1927641545023237,
+              "examples": 7
+            },
+            "without_rounding": {
+              "answer_nll": 0.49392134323716164,
+              "examples": 28
+            },
+            "with_rounding": {
+              "answer_nll": 0.47221847168273395,
+              "examples": 36
+            },
+            "without_x": {
+              "answer_nll": 0.46743359230458736,
+              "examples": 8
+            },
+            "nonzero": {
+              "answer_nll": 0.5171984826263628,
+              "examples": 57
+            }
+          },
+          "answer_bit_prior_nll": 0.6348103132975005,
+          "always_zero_exact_accuracy": 0.109375,
+          "always_zero_tolerance_accuracy": 0.109375,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 5.289480826809494
+        },
+        "8": {
+          "gamma": 8.0,
+          "seed": 13213846041521792161,
+          "examples": 64,
+          "sign_nll": 0.5947006476781098,
+          "exponent_nll": 0.3668268851681205,
+          "mantissa_nll": 0.5596956394755352,
+          "answer_nll": 0.49331429923735676,
+          "full_nll": 1.3779770640968247,
+          "non_answer_nll": 2.006571701142093,
+          "answer_token_fraction": 0.4153917477978674,
+          "tokens": 2157,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.48071144599663584,
+              "examples": 57
+            },
+            "nonzero": {
+              "answer_nll": 0.5156272719303767,
+              "examples": 60
+            },
+            "with_rounding": {
+              "answer_nll": 0.4842693507671356,
+              "examples": 36
+            },
+            "without_rounding": {
+              "answer_nll": 0.5049435847571918,
+              "examples": 28
+            },
+            "without_x": {
+              "answer_nll": 0.59593779700143,
+              "examples": 7
+            },
+            "quantized_zero": {
+              "answer_nll": 0.1586201712489128,
+              "examples": 4
+            }
+          },
+          "answer_bit_prior_nll": 0.6363067610185301,
+          "always_zero_exact_accuracy": 0.0625,
+          "always_zero_tolerance_accuracy": 0.0625,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 4.011559166046944
+        },
+        "9": {
+          "gamma": 9.0,
+          "seed": 6321415259463784101,
+          "examples": 64,
+          "sign_nll": 0.47921014548046514,
+          "exponent_nll": 0.3762133862303017,
+          "mantissa_nll": 0.5081693077414684,
+          "answer_nll": 0.45897368132598004,
+          "full_nll": 1.4773273542395073,
+          "non_answer_nll": 2.1010080725788924,
+          "answer_token_fraction": 0.3798219584569733,
+          "tokens": 2359,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.4606494296525345,
+              "examples": 61
+            },
+            "nonzero": {
+              "answer_nll": 0.498153351779495,
+              "examples": 56
+            },
+            "without_rounding": {
+              "answer_nll": 0.4570960541566213,
+              "examples": 15
+            },
+            "with_rounding": {
+              "answer_nll": 0.45954848810726284,
+              "examples": 49
+            },
+            "quantized_zero": {
+              "answer_nll": 0.18471612874418497,
+              "examples": 8
+            },
+            "without_x": {
+              "answer_nll": 0.42490050693353015,
+              "examples": 3
+            }
+          },
+          "answer_bit_prior_nll": 0.5888612125123943,
+          "always_zero_exact_accuracy": 0.125,
+          "always_zero_tolerance_accuracy": 0.125,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 3.4692987258691232
+        },
+        "10": {
+          "gamma": 10.0,
+          "seed": 1952956543908036845,
+          "examples": 64,
+          "sign_nll": 0.5160947844051407,
+          "exponent_nll": 0.4510809960647748,
+          "mantissa_nll": 0.5559751955687489,
+          "answer_nll": 0.5156643806627861,
+          "full_nll": 1.5595104399082536,
+          "non_answer_nll": 2.173215209648371,
+          "answer_token_fraction": 0.3702479338842975,
+          "tokens": 2420,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.5121448179559102,
+              "examples": 63
+            },
+            "nonzero": {
+              "answer_nll": 0.5472301638732522,
+              "examples": 59
+            },
+            "with_rounding": {
+              "answer_nll": 0.5272302746164556,
+              "examples": 49
+            },
+            "without_rounding": {
+              "answer_nll": 0.47788257201512657,
+              "examples": 15
+            },
+            "quantized_zero": {
+              "answer_nll": 0.14318847358226777,
+              "examples": 5
+            },
+            "without_x": {
+              "answer_nll": 0.7373985052108765,
+              "examples": 1
+            }
+          },
+          "answer_bit_prior_nll": 0.6427850872563249,
+          "always_zero_exact_accuracy": 0.078125,
+          "always_zero_tolerance_accuracy": 0.078125,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 31.157801328926777
+        },
+        "11": {
+          "gamma": 11.0,
+          "seed": 15053061093655542840,
+          "examples": 64,
+          "sign_nll": 0.4810011326117092,
+          "exponent_nll": 0.39469214833607114,
+          "mantissa_nll": 0.5056710962429634,
+          "answer_nll": 0.46427361744541223,
+          "full_nll": 1.5342270021875508,
+          "non_answer_nll": 2.1716460399062716,
+          "answer_token_fraction": 0.37333333333333335,
+          "tokens": 2400,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.47131187178320805,
+              "examples": 59
+            },
+            "nonzero": {
+              "answer_nll": 0.5128453674641522,
+              "examples": 55
+            },
+            "without_rounding": {
+              "answer_nll": 0.5162953041493893,
+              "examples": 20
+            },
+            "with_rounding": {
+              "answer_nll": 0.4406274211677638,
+              "examples": 44
+            },
+            "quantized_zero": {
+              "answer_nll": 0.16744637820455763,
+              "examples": 9
+            },
+            "without_x": {
+              "answer_nll": 0.38122243583202364,
+              "examples": 5
+            }
+          },
+          "answer_bit_prior_nll": 0.6194548925896325,
+          "always_zero_exact_accuracy": 0.140625,
+          "always_zero_tolerance_accuracy": 0.140625,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 0.9147808259707038
+        },
+        "12": {
+          "gamma": 12.0,
+          "seed": 2476272253509524888,
+          "examples": 64,
+          "sign_nll": 0.5561204466284835,
+          "exponent_nll": 0.47004568061092866,
+          "mantissa_nll": 0.5760267666047412,
+          "answer_nll": 0.536754498751504,
+          "full_nll": 1.6131930166404618,
+          "non_answer_nll": 2.2163755757577266,
+          "answer_token_fraction": 0.3591182364729459,
+          "tokens": 2495,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.5321056943747305,
+              "examples": 62
+            },
+            "nonzero": {
+              "answer_nll": 0.5481228167491574,
+              "examples": 62
+            },
+            "with_rounding": {
+              "answer_nll": 0.5349134209481152,
+              "examples": 55
+            },
+            "quantized_zero": {
+              "answer_nll": 0.18433741480112076,
+              "examples": 2
+            },
+            "without_rounding": {
+              "answer_nll": 0.5480057017670737,
+              "examples": 9
+            },
+            "without_x": {
+              "answer_nll": 0.6808682084083557,
+              "examples": 2
+            }
+          },
+          "answer_bit_prior_nll": 0.6212472285587339,
+          "always_zero_exact_accuracy": 0.03125,
+          "always_zero_tolerance_accuracy": 0.03125,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 5.894672809749739
+        },
+        "13": {
+          "gamma": 13.0,
+          "seed": 1133991124178327437,
+          "examples": 64,
+          "sign_nll": 0.5874892492429353,
+          "exponent_nll": 0.43311137456803406,
+          "mantissa_nll": 0.5997475608459126,
+          "answer_nll": 0.5393590434893147,
+          "full_nll": 1.6865584679812677,
+          "non_answer_nll": 2.261763103876505,
+          "answer_token_fraction": 0.33395452851285873,
+          "tokens": 2683,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.5457918483113485,
+              "examples": 63
+            },
+            "nonzero": {
+              "answer_nll": 0.5517513247266892,
+              "examples": 62
+            },
+            "without_rounding": {
+              "answer_nll": 0.572379965867315,
+              "examples": 14
+            },
+            "without_x": {
+              "answer_nll": 0.13409404456615448,
+              "examples": 1
+            },
+            "quantized_zero": {
+              "answer_nll": 0.15519917756319046,
+              "examples": 2
+            },
+            "with_rounding": {
+              "answer_nll": 0.530113219320774,
+              "examples": 50
+            }
+          },
+          "answer_bit_prior_nll": 0.6402474282440173,
+          "always_zero_exact_accuracy": 0.03125,
+          "always_zero_tolerance_accuracy": 0.03125,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 2.0218190767403916
+        },
+        "14": {
+          "gamma": 14.0,
+          "seed": 1772399651271104996,
+          "examples": 64,
+          "sign_nll": 0.5332292129241978,
+          "exponent_nll": 0.41556736780876236,
+          "mantissa_nll": 0.5376458371074477,
+          "answer_nll": 0.49373091063054225,
+          "full_nll": 1.69762618036984,
+          "non_answer_nll": 2.2845087492960703,
+          "answer_token_fraction": 0.32772494513533285,
+          "tokens": 2734,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.49810179947845395,
+              "examples": 62
+            },
+            "nonzero": {
+              "answer_nll": 0.5136565357446671,
+              "examples": 60
+            },
+            "with_rounding": {
+              "answer_nll": 0.48397612929344175,
+              "examples": 50
+            },
+            "without_rounding": {
+              "answer_nll": 0.5285695195198059,
+              "examples": 14
+            },
+            "without_x": {
+              "answer_nll": 0.35823408514261246,
+              "examples": 2
+            },
+            "quantized_zero": {
+              "answer_nll": 0.19484689831733704,
+              "examples": 4
+            }
+          },
+          "answer_bit_prior_nll": 0.6318293826101044,
+          "always_zero_exact_accuracy": 0.0625,
+          "always_zero_tolerance_accuracy": 0.0625,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 3.2146523716207893
+        },
+        "15": {
+          "gamma": 15.0,
+          "seed": 18210792034678148203,
+          "examples": 64,
+          "sign_nll": 0.577017081581289,
+          "exponent_nll": 0.3839348898607568,
+          "mantissa_nll": 0.48848989162127054,
+          "answer_nll": 0.4574721902753741,
+          "full_nll": 1.749493414174288,
+          "non_answer_nll": 2.3323992634257613,
+          "answer_token_fraction": 0.3108952116585704,
+          "tokens": 2882,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.45891951201927095,
+              "examples": 63
+            },
+            "nonzero": {
+              "answer_nll": 0.5112193119194772,
+              "examples": 54
+            },
+            "with_rounding": {
+              "answer_nll": 0.4527905326336622,
+              "examples": 60
+            },
+            "quantized_zero": {
+              "answer_nll": 0.1672378771007061,
+              "examples": 10
+            },
+            "without_rounding": {
+              "answer_nll": 0.5276974141597748,
+              "examples": 4
+            },
+            "without_x": {
+              "answer_nll": 0.3662923574447632,
+              "examples": 1
+            }
+          },
+          "answer_bit_prior_nll": 0.6379349169581232,
+          "always_zero_exact_accuracy": 0.15625,
+          "always_zero_tolerance_accuracy": 0.15625,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 0.9087858912518271
+        },
+        "16": {
+          "gamma": 16.0,
+          "seed": 13991005944659678946,
+          "examples": 64,
+          "sign_nll": 0.5902293103426928,
+          "exponent_nll": 0.4263267617086967,
+          "mantissa_nll": 0.5275373472837828,
+          "answer_nll": 0.4958687069397456,
+          "full_nll": 1.7466862612216143,
+          "non_answer_nll": 2.2982278599600763,
+          "answer_token_fraction": 0.30601092896174864,
+          "tokens": 2928,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.4958687308244407,
+              "examples": 64
+            },
+            "nonzero": {
+              "answer_nll": 0.5424318185874394,
+              "examples": 56
+            },
+            "with_rounding": {
+              "answer_nll": 0.4885116888765703,
+              "examples": 57
+            },
+            "quantized_zero": {
+              "answer_nll": 0.16992711648344994,
+              "examples": 8
+            },
+            "without_rounding": {
+              "answer_nll": 0.5557760723999569,
+              "examples": 7
+            }
+          },
+          "answer_bit_prior_nll": 0.6306724852459509,
+          "always_zero_exact_accuracy": 0.125,
+          "always_zero_tolerance_accuracy": 0.125,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 1.1910380030734915
+        },
+        "17": {
+          "gamma": 17.0,
+          "seed": 3877562160391109585,
+          "examples": 64,
+          "sign_nll": 0.5652991370152449,
+          "exponent_nll": 0.43570173283133046,
+          "mantissa_nll": 0.5456867695737628,
+          "answer_nll": 0.5078072826972857,
+          "full_nll": 1.8126265266698973,
+          "non_answer_nll": 2.370145860289096,
+          "answer_token_fraction": 0.29936518543267626,
+          "tokens": 2993,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.5080605130346995,
+              "examples": 63
+            },
+            "quantized_zero": {
+              "answer_nll": 0.21178390085697174,
+              "examples": 6
+            },
+            "with_rounding": {
+              "answer_nll": 0.507081333758696,
+              "examples": 53
+            },
+            "nonzero": {
+              "answer_nll": 0.5384304163784817,
+              "examples": 58
+            },
+            "without_x": {
+              "answer_nll": 0.4918552339076996,
+              "examples": 1
+            },
+            "without_rounding": {
+              "answer_nll": 0.5113051696257158,
+              "examples": 11
+            }
+          },
+          "answer_bit_prior_nll": 0.6214966039221096,
+          "always_zero_exact_accuracy": 0.09375,
+          "always_zero_tolerance_accuracy": 0.09375,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 2.4215278858230067
+        },
+        "18": {
+          "gamma": 18.0,
+          "seed": 3008482107509808278,
+          "examples": 64,
+          "sign_nll": 0.4800518110569101,
+          "exponent_nll": 0.42024385114600593,
+          "mantissa_nll": 0.5660785464181117,
+          "answer_nll": 0.5078499598665596,
+          "full_nll": 1.8298577948922659,
+          "non_answer_nll": 2.3670546294423946,
+          "answer_token_fraction": 0.28893905191873587,
+          "tokens": 3101,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.508831805534779,
+              "examples": 63
+            },
+            "nonzero": {
+              "answer_nll": 0.5367655845011695,
+              "examples": 59
+            },
+            "with_rounding": {
+              "answer_nll": 0.509104887858547,
+              "examples": 58
+            },
+            "quantized_zero": {
+              "answer_nll": 0.16664590686559677,
+              "examples": 5
+            },
+            "without_rounding": {
+              "answer_nll": 0.4957192540168762,
+              "examples": 6
+            },
+            "without_x": {
+              "answer_nll": 0.4459952712059021,
+              "examples": 1
+            }
+          },
+          "answer_bit_prior_nll": 0.6398503034518515,
+          "always_zero_exact_accuracy": 0.078125,
+          "always_zero_tolerance_accuracy": 0.078125,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 0.8563375921092636
+        },
+        "19": {
+          "gamma": 19.0,
+          "seed": 2424851210631552668,
+          "examples": 64,
+          "sign_nll": 0.5572690115077421,
+          "exponent_nll": 0.4868866861768765,
+          "mantissa_nll": 0.5640442338788034,
+          "answer_nll": 0.5360040223873251,
+          "full_nll": 1.8888402631409311,
+          "non_answer_nll": 2.404645059615498,
+          "answer_token_fraction": 0.27603203943314847,
+          "tokens": 3246,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.5305488130875996,
+              "examples": 63
+            },
+            "nonzero": {
+              "answer_nll": 0.557876788576444,
+              "examples": 60
+            },
+            "with_rounding": {
+              "answer_nll": 0.5287159888959322,
+              "examples": 61
+            },
+            "without_rounding": {
+              "answer_nll": 0.6841945250829061,
+              "examples": 3
+            },
+            "quantized_zero": {
+              "answer_nll": 0.2079128958284855,
+              "examples": 4
+            },
+            "without_x": {
+              "answer_nll": 0.8796836733818054,
+              "examples": 1
+            }
+          },
+          "answer_bit_prior_nll": 0.630544273871033,
+          "always_zero_exact_accuracy": 0.0625,
+          "always_zero_tolerance_accuracy": 0.0625,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 10.473361413408577
+        },
+        "20": {
+          "gamma": 20.0,
+          "seed": 325987492040522474,
+          "examples": 64,
+          "sign_nll": 0.5543840618774993,
+          "exponent_nll": 0.4903445601768908,
+          "mantissa_nll": 0.5626851850486219,
+          "answer_nll": 0.5362563102250663,
+          "full_nll": 1.9341386208296336,
+          "non_answer_nll": 2.436747990934647,
+          "answer_token_fraction": 0.2644628099173554,
+          "tokens": 3388,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.5362563356757164,
+              "examples": 64
+            },
+            "nonzero": {
+              "answer_nll": 0.5577681784828504,
+              "examples": 60
+            },
+            "without_rounding": {
+              "answer_nll": 0.5420302748680115,
+              "examples": 3
+            },
+            "with_rounding": {
+              "answer_nll": 0.5359723714531445,
+              "examples": 61
+            },
+            "quantized_zero": {
+              "answer_nll": 0.2135786935687065,
+              "examples": 4
+            }
+          },
+          "answer_bit_prior_nll": 0.6591033612571052,
+          "always_zero_exact_accuracy": 0.0625,
+          "always_zero_tolerance_accuracy": 0.078125,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 24.781815974007962
+        }
+      },
+      "test": {
+        "1": {
+          "gamma": 1.0,
+          "seed": 2374786662666253153,
+          "examples": 64,
+          "sign_nll": 0.47956633190915454,
+          "exponent_nll": 0.3342469545537824,
+          "mantissa_nll": 0.4355985269030498,
+          "answer_nll": 0.4025420942787475,
+          "full_nll": 0.6943672836205891,
+          "non_answer_nll": 1.1209176419408013,
+          "answer_token_fraction": 0.5937707090788602,
+          "tokens": 1509,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.43117973286854594,
+              "examples": 38
+            },
+            "quantized_zero": {
+              "answer_nll": 0.21864081670840582,
+              "examples": 9
+            },
+            "without_rounding": {
+              "answer_nll": 0.41461526615811245,
+              "examples": 56
+            },
+            "nonzero": {
+              "answer_nll": 0.4326350522312251,
+              "examples": 55
+            },
+            "without_x": {
+              "answer_nll": 0.36068712977262646,
+              "examples": 26
+            },
+            "with_rounding": {
+              "answer_nll": 0.3180300397798419,
+              "examples": 8
+            }
+          },
+          "answer_bit_prior_nll": 0.5636706262951948,
+          "always_zero_exact_accuracy": 0.140625,
+          "always_zero_tolerance_accuracy": 0.140625,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 1.557208219406252
+        },
+        "2": {
+          "gamma": 2.0,
+          "seed": 799982284852911600,
+          "examples": 64,
+          "sign_nll": 0.5372573064232711,
+          "exponent_nll": 0.341814525449081,
+          "mantissa_nll": 0.4228593725954397,
+          "answer_nll": 0.40208606531658525,
+          "full_nll": 0.859948371451279,
+          "non_answer_nll": 1.427368324835353,
+          "answer_token_fraction": 0.5534280420012353,
+          "tokens": 1619,
+          "answer_bits": 896,
+          "slices": {
+            "without_x": {
+              "answer_nll": 0.41663362204351206,
+              "examples": 22
+            },
+            "nonzero": {
+              "answer_nll": 0.4588768184185028,
+              "examples": 52
+            },
+            "without_rounding": {
+              "answer_nll": 0.38820693406219386,
+              "examples": 49
+            },
+            "with_x": {
+              "answer_nll": 0.39446595098291126,
+              "examples": 42
+            },
+            "quantized_zero": {
+              "answer_nll": 0.15599292237311602,
+              "examples": 12
+            },
+            "with_rounding": {
+              "answer_nll": 0.44742465714613594,
+              "examples": 15
+            }
+          },
+          "answer_bit_prior_nll": 0.602503818418689,
+          "always_zero_exact_accuracy": 0.1875,
+          "always_zero_tolerance_accuracy": 0.1875,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 1.9968936147378067
+        },
+        "3": {
+          "gamma": 3.0,
+          "seed": 2549225160122707940,
+          "examples": 64,
+          "sign_nll": 0.4412879305309616,
+          "exponent_nll": 0.35895772642361407,
+          "mantissa_nll": 0.44902045122205436,
+          "answer_nll": 0.41630286945896194,
+          "full_nll": 0.8683869066529821,
+          "non_answer_nll": 1.4121013997078038,
+          "answer_token_fraction": 0.5460085313833029,
+          "tokens": 1641,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.4410330607218945,
+              "examples": 47
+            },
+            "nonzero": {
+              "answer_nll": 0.48254945845558095,
+              "examples": 52
+            },
+            "without_rounding": {
+              "answer_nll": 0.4736387776615827,
+              "examples": 46
+            },
+            "without_x": {
+              "answer_nll": 0.34793124304098244,
+              "examples": 17
+            },
+            "with_rounding": {
+              "answer_nll": 0.26977784517738557,
+              "examples": 18
+            },
+            "quantized_zero": {
+              "answer_nll": 0.1292344288279613,
+              "examples": 12
+            }
+          },
+          "answer_bit_prior_nll": 0.6027450346585103,
+          "always_zero_exact_accuracy": 0.1875,
+          "always_zero_tolerance_accuracy": 0.1875,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 3.834214699383476
+        },
+        "4": {
+          "gamma": 4.0,
+          "seed": 337424729151267680,
+          "examples": 64,
+          "sign_nll": 0.5179076790227555,
+          "exponent_nll": 0.3769056555291172,
+          "mantissa_nll": 0.5137683835453117,
+          "answer_nll": 0.4651845017879168,
+          "full_nll": 1.0338470892949678,
+          "non_answer_nll": 1.6135077018163757,
+          "answer_token_fraction": 0.5047887323943662,
+          "tokens": 1775,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.47317372408567693,
+              "examples": 51
+            },
+            "nonzero": {
+              "answer_nll": 0.491726881114103,
+              "examples": 59
+            },
+            "without_rounding": {
+              "answer_nll": 0.47149129835672154,
+              "examples": 43
+            },
+            "without_x": {
+              "answer_nll": 0.43384226583517516,
+              "examples": 13
+            },
+            "with_rounding": {
+              "answer_nll": 0.4522706454708463,
+              "examples": 21
+            },
+            "quantized_zero": {
+              "answer_nll": 0.15198467969894408,
+              "examples": 5
+            }
+          },
+          "answer_bit_prior_nll": 0.6228169598484403,
+          "always_zero_exact_accuracy": 0.078125,
+          "always_zero_tolerance_accuracy": 0.078125,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 2.975849885872375
+        },
+        "5": {
+          "gamma": 5.0,
+          "seed": 16592860157220667449,
+          "examples": 64,
+          "sign_nll": 0.5418127618031576,
+          "exponent_nll": 0.43600517034501535,
+          "mantissa_nll": 0.5709053428805646,
+          "answer_nll": 0.520648668326625,
+          "full_nll": 1.1828010408936385,
+          "non_answer_nll": 1.774315024762077,
+          "answer_token_fraction": 0.4718272775144813,
+          "tokens": 1899,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.5158453960237759,
+              "examples": 56
+            },
+            "nonzero": {
+              "answer_nll": 0.5505978808564654,
+              "examples": 59
+            },
+            "without_rounding": {
+              "answer_nll": 0.5120712264130513,
+              "examples": 36
+            },
+            "without_x": {
+              "answer_nll": 0.554271761327982,
+              "examples": 8
+            },
+            "with_rounding": {
+              "answer_nll": 0.5316768613244806,
+              "examples": 28
+            },
+            "quantized_zero": {
+              "answer_nll": 0.1672482594847679,
+              "examples": 5
+            }
+          },
+          "answer_bit_prior_nll": 0.6414785321623546,
+          "always_zero_exact_accuracy": 0.078125,
+          "always_zero_tolerance_accuracy": 0.078125,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.25,
+          "tolerance_accuracy": 0.25,
+          "decoded_mae": 0.7487827150384607
+        },
+        "6": {
+          "gamma": 6.0,
+          "seed": 2373758614778682062,
+          "examples": 64,
+          "sign_nll": 0.47579522473097313,
+          "exponent_nll": 0.3885921231689281,
+          "mantissa_nll": 0.4396163038892382,
+          "answer_nll": 0.42397759083496567,
+          "full_nll": 1.222559456049482,
+          "non_answer_nll": 1.9020745094513873,
+          "answer_token_fraction": 0.45972293483837867,
+          "tokens": 1949,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.43765266740863973,
+              "examples": 55
+            },
+            "nonzero": {
+              "answer_nll": 0.4840519507141674,
+              "examples": 51
+            },
+            "with_rounding": {
+              "answer_nll": 0.4047369924100006,
+              "examples": 34
+            },
+            "without_rounding": {
+              "answer_nll": 0.44578363945086796,
+              "examples": 30
+            },
+            "quantized_zero": {
+              "answer_nll": 0.1883013414648863,
+              "examples": 13
+            },
+            "without_x": {
+              "answer_nll": 0.3404078019989861,
+              "examples": 9
+            }
+          },
+          "answer_bit_prior_nll": 0.5924910903078402,
+          "always_zero_exact_accuracy": 0.203125,
+          "always_zero_tolerance_accuracy": 0.203125,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 0.7122614257061192
+        },
+        "7": {
+          "gamma": 7.0,
+          "seed": 8680065947111792430,
+          "examples": 64,
+          "sign_nll": 0.567514304042561,
+          "exponent_nll": 0.4019594654917455,
+          "mantissa_nll": 0.5431475174764273,
+          "answer_nll": 0.49446369795090767,
+          "full_nll": 1.2983184025000847,
+          "non_answer_nll": 1.9295662686491317,
+          "answer_token_fraction": 0.43986254295532645,
+          "tokens": 2037,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.48496748062602263,
+              "examples": 57
+            },
+            "nonzero": {
+              "answer_nll": 0.5289245587691926,
+              "examples": 57
+            },
+            "with_rounding": {
+              "answer_nll": 0.459330999929654,
+              "examples": 38
+            },
+            "without_rounding": {
+              "answer_nll": 0.5458115425247413,
+              "examples": 26
+            },
+            "quantized_zero": {
+              "answer_nll": 0.21385403616087778,
+              "examples": 7
+            },
+            "without_x": {
+              "answer_nll": 0.5717902438981193,
+              "examples": 7
+            }
+          },
+          "answer_bit_prior_nll": 0.6341161333632345,
+          "always_zero_exact_accuracy": 0.109375,
+          "always_zero_tolerance_accuracy": 0.125,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 2.8583076661965605
+        },
+        "8": {
+          "gamma": 8.0,
+          "seed": 12634086273151315114,
+          "examples": 64,
+          "sign_nll": 0.5499249224667437,
+          "exponent_nll": 0.4257376714118436,
+          "mantissa_nll": 0.5455079064309984,
+          "answer_nll": 0.5030483236409964,
+          "full_nll": 1.4036069979651504,
+          "non_answer_nll": 2.0429893848070217,
+          "answer_token_fraction": 0.4151992585727525,
+          "tokens": 2158,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.5042677150483716,
+              "examples": 57
+            },
+            "nonzero": {
+              "answer_nll": 0.534113834644186,
+              "examples": 58
+            },
+            "with_rounding": {
+              "answer_nll": 0.4744024823109309,
+              "examples": 36
+            },
+            "without_rounding": {
+              "answer_nll": 0.5398787307952132,
+              "examples": 28
+            },
+            "without_x": {
+              "answer_nll": 0.49311915252889904,
+              "examples": 7
+            },
+            "quantized_zero": {
+              "answer_nll": 0.20274856934944788,
+              "examples": 6
+            }
+          },
+          "answer_bit_prior_nll": 0.625313264216509,
+          "always_zero_exact_accuracy": 0.09375,
+          "always_zero_tolerance_accuracy": 0.09375,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 0.3818677195746525
+        },
+        "9": {
+          "gamma": 9.0,
+          "seed": 15891714115880612025,
+          "examples": 64,
+          "sign_nll": 0.5263957324932562,
+          "exponent_nll": 0.399833993844004,
+          "mantissa_nll": 0.5388693379256893,
+          "answer_nll": 0.4883228860799136,
+          "full_nll": 1.4585651838759266,
+          "non_answer_nll": 2.1006162169817078,
+          "answer_token_fraction": 0.3982222222222222,
+          "tokens": 2250,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.49245424414503164,
+              "examples": 58
+            },
+            "nonzero": {
+              "answer_nll": 0.5253583043813705,
+              "examples": 58
+            },
+            "with_rounding": {
+              "answer_nll": 0.4854477813298052,
+              "examples": 44
+            },
+            "without_rounding": {
+              "answer_nll": 0.4946481853723526,
+              "examples": 20
+            },
+            "quantized_zero": {
+              "answer_nll": 0.13031407197316489,
+              "examples": 6
+            },
+            "without_x": {
+              "answer_nll": 0.44838665425777435,
+              "examples": 6
+            }
+          },
+          "answer_bit_prior_nll": 0.6310443830827959,
+          "always_zero_exact_accuracy": 0.09375,
+          "always_zero_tolerance_accuracy": 0.09375,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 1.240704806059617
+        },
+        "10": {
+          "gamma": 10.0,
+          "seed": 5000531702273354538,
+          "examples": 64,
+          "sign_nll": 0.5072926289212774,
+          "exponent_nll": 0.4071121901506558,
+          "mantissa_nll": 0.5521675795363308,
+          "answer_nll": 0.4971567297118002,
+          "full_nll": 1.5113568127912833,
+          "non_answer_nll": 2.1312226207307217,
+          "answer_token_fraction": 0.3793395427603726,
+          "tokens": 2362,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.5003928226088324,
+              "examples": 62
+            },
+            "nonzero": {
+              "answer_nll": 0.5411398614707746,
+              "examples": 57
+            },
+            "with_rounding": {
+              "answer_nll": 0.4881762124908467,
+              "examples": 48
+            },
+            "without_rounding": {
+              "answer_nll": 0.5240983814001083,
+              "examples": 16
+            },
+            "quantized_zero": {
+              "answer_nll": 0.13900859973260335,
+              "examples": 7
+            },
+            "without_x": {
+              "answer_nll": 0.39683865010738373,
+              "examples": 2
+            }
+          },
+          "answer_bit_prior_nll": 0.6143851520953164,
+          "always_zero_exact_accuracy": 0.109375,
+          "always_zero_tolerance_accuracy": 0.109375,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 30.82959240052326
+        },
+        "11": {
+          "gamma": 11.0,
+          "seed": 14711856175850405063,
+          "examples": 64,
+          "sign_nll": 0.5329475724865915,
+          "exponent_nll": 0.4036359189036375,
+          "mantissa_nll": 0.576871968640944,
+          "answer_nll": 0.5118644940094522,
+          "full_nll": 1.582051602082997,
+          "non_answer_nll": 2.18512559506029,
+          "answer_token_fraction": 0.3604183427192277,
+          "tokens": 2486,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.5197997073973378,
+              "examples": 62
+            },
+            "nonzero": {
+              "answer_nll": 0.5294203557929055,
+              "examples": 61
+            },
+            "without_rounding": {
+              "answer_nll": 0.5640526482692132,
+              "examples": 13
+            },
+            "with_rounding": {
+              "answer_nll": 0.49856165869563235,
+              "examples": 51
+            },
+            "without_x": {
+              "answer_nll": 0.26587358117103577,
+              "examples": 2
+            },
+            "quantized_zero": {
+              "answer_nll": 0.15489577253659567,
+              "examples": 3
+            }
+          },
+          "answer_bit_prior_nll": 0.6071539824487504,
+          "always_zero_exact_accuracy": 0.046875,
+          "always_zero_tolerance_accuracy": 0.046875,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 0.725517274345214
+        },
+        "12": {
+          "gamma": 12.0,
+          "seed": 14026643326675953624,
+          "examples": 64,
+          "sign_nll": 0.5343875286343973,
+          "exponent_nll": 0.40710129100771153,
+          "mantissa_nll": 0.56642132044135,
+          "answer_nll": 0.5072331819431254,
+          "full_nll": 1.639133345125952,
+          "non_answer_nll": 2.2655586361771025,
+          "answer_token_fraction": 0.3562624254473161,
+          "tokens": 2515,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.5046681149552266,
+              "examples": 60
+            },
+            "nonzero": {
+              "answer_nll": 0.5362911870924093,
+              "examples": 59
+            },
+            "with_rounding": {
+              "answer_nll": 0.4924355996948368,
+              "examples": 53
+            },
+            "without_x": {
+              "answer_nll": 0.545709602534771,
+              "examples": 4
+            },
+            "without_rounding": {
+              "answer_nll": 0.5785307748751207,
+              "examples": 11
+            },
+            "quantized_zero": {
+              "answer_nll": 0.16434905380010606,
+              "examples": 5
+            }
+          },
+          "answer_bit_prior_nll": 0.6322528561919699,
+          "always_zero_exact_accuracy": 0.078125,
+          "always_zero_tolerance_accuracy": 0.078125,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 0.9931236093549287
+        },
+        "13": {
+          "gamma": 13.0,
+          "seed": 17461666029158947865,
+          "examples": 64,
+          "sign_nll": 0.5303741114184959,
+          "exponent_nll": 0.38948484896827723,
+          "mantissa_nll": 0.5835995116752883,
+          "answer_nll": 0.5104710321187278,
+          "full_nll": 1.6772235819425514,
+          "non_answer_nll": 2.276999993096967,
+          "answer_token_fraction": 0.3395225464190981,
+          "tokens": 2639,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.5110041338109201,
+              "examples": 62
+            },
+            "nonzero": {
+              "answer_nll": 0.5265152591173766,
+              "examples": 61
+            },
+            "with_rounding": {
+              "answer_nll": 0.5022412246465683,
+              "examples": 50
+            },
+            "without_rounding": {
+              "answer_nll": 0.5398633150117738,
+              "examples": 14
+            },
+            "without_x": {
+              "answer_nll": 0.4939456731081009,
+              "examples": 2
+            },
+            "quantized_zero": {
+              "answer_nll": 0.18423894544442496,
+              "examples": 3
+            }
+          },
+          "answer_bit_prior_nll": 0.636679075897195,
+          "always_zero_exact_accuracy": 0.046875,
+          "always_zero_tolerance_accuracy": 0.046875,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 3.1201593894388244
+        },
+        "14": {
+          "gamma": 14.0,
+          "seed": 18095347914265344905,
+          "examples": 64,
+          "sign_nll": 0.5414363039599266,
+          "exponent_nll": 0.37253921010851626,
+          "mantissa_nll": 0.5614808741241859,
+          "answer_nll": 0.4925699533925711,
+          "full_nll": 1.697347910895188,
+          "non_answer_nll": 2.2712346997959565,
+          "answer_token_fraction": 0.3226503420957868,
+          "tokens": 2777,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.49227426827899995,
+              "examples": 63
+            },
+            "nonzero": {
+              "answer_nll": 0.5116844341158867,
+              "examples": 60
+            },
+            "with_rounding": {
+              "answer_nll": 0.47814458498248347,
+              "examples": 54
+            },
+            "without_rounding": {
+              "answer_nll": 0.5704670786857605,
+              "examples": 10
+            },
+            "quantized_zero": {
+              "answer_nll": 0.20585308223962784,
+              "examples": 4
+            },
+            "without_x": {
+              "answer_nll": 0.5111994743347168,
+              "examples": 1
+            }
+          },
+          "answer_bit_prior_nll": 0.6099794411831924,
+          "always_zero_exact_accuracy": 0.0625,
+          "always_zero_tolerance_accuracy": 0.0625,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 0.4645201194937175
+        },
+        "15": {
+          "gamma": 15.0,
+          "seed": 13184112077436345528,
+          "examples": 64,
+          "sign_nll": 0.5411844388145255,
+          "exponent_nll": 0.460678144359008,
+          "mantissa_nll": 0.5808610866081381,
+          "answer_nll": 0.5351045609624764,
+          "full_nll": 1.7386390244043206,
+          "non_answer_nll": 2.302343613658838,
+          "answer_token_fraction": 0.3189747241011036,
+          "tokens": 2809,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.5351045858114958,
+              "examples": 64
+            },
+            "nonzero": {
+              "answer_nll": 0.5474943148512994,
+              "examples": 62
+            },
+            "without_rounding": {
+              "answer_nll": 0.5701560808552636,
+              "examples": 9
+            },
+            "with_rounding": {
+              "answer_nll": 0.5293688866225156,
+              "examples": 55
+            },
+            "quantized_zero": {
+              "answer_nll": 0.1510229855775833,
+              "examples": 2
+            }
+          },
+          "answer_bit_prior_nll": 0.6328249036401711,
+          "always_zero_exact_accuracy": 0.03125,
+          "always_zero_tolerance_accuracy": 0.03125,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 91.9749093327435
+        },
+        "16": {
+          "gamma": 16.0,
+          "seed": 17163620205055528889,
+          "examples": 64,
+          "sign_nll": 0.44327820908802096,
+          "exponent_nll": 0.40989055006320996,
+          "mantissa_nll": 0.5500167441521171,
+          "answer_nll": 0.4923474937586434,
+          "full_nll": 1.7694254090742456,
+          "non_answer_nll": 2.320876884796067,
+          "answer_token_fraction": 0.30158195893638506,
+          "tokens": 2971,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.4914045236886494,
+              "examples": 63
+            },
+            "nonzero": {
+              "answer_nll": 0.5130316858490308,
+              "examples": 60
+            },
+            "with_rounding": {
+              "answer_nll": 0.489160632816228,
+              "examples": 55
+            },
+            "quantized_zero": {
+              "answer_nll": 0.18208498135209084,
+              "examples": 4
+            },
+            "without_rounding": {
+              "answer_nll": 0.5118229190508524,
+              "examples": 9
+            },
+            "without_x": {
+              "answer_nll": 0.5517560839653015,
+              "examples": 1
+            }
+          },
+          "answer_bit_prior_nll": 0.6312055067683404,
+          "always_zero_exact_accuracy": 0.0625,
+          "always_zero_tolerance_accuracy": 0.0625,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 0.6064208119195328
+        },
+        "17": {
+          "gamma": 17.0,
+          "seed": 11070233949555515371,
+          "examples": 64,
+          "sign_nll": 0.5950495172874071,
+          "exponent_nll": 0.4521136943336387,
+          "mantissa_nll": 0.6148614827917527,
+          "answer_nll": 0.555322132234973,
+          "full_nll": 1.8451619072432188,
+          "non_answer_nll": 2.3777409111175913,
+          "answer_token_fraction": 0.2922374429223744,
+          "tokens": 3066,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.5553221581503749,
+              "examples": 64
+            },
+            "nonzero": {
+              "answer_nll": 0.5619844742237575,
+              "examples": 63
+            },
+            "with_rounding": {
+              "answer_nll": 0.5586663630773436,
+              "examples": 53
+            },
+            "without_rounding": {
+              "answer_nll": 0.53920917077498,
+              "examples": 11
+            },
+            "quantized_zero": {
+              "answer_nll": 0.13559624552726746,
+              "examples": 1
+            }
+          },
+          "answer_bit_prior_nll": 0.6489947616598325,
+          "always_zero_exact_accuracy": 0.015625,
+          "always_zero_tolerance_accuracy": 0.015625,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 3.240473820396266
+        },
+        "18": {
+          "gamma": 18.0,
+          "seed": 13944869037628693055,
+          "examples": 64,
+          "sign_nll": 0.5084347737429198,
+          "exponent_nll": 0.4555468421704063,
+          "mantissa_nll": 0.531023391329768,
+          "answer_nll": 0.5024540082309353,
+          "full_nll": 1.8677278283542216,
+          "non_answer_nll": 2.4049633763693574,
+          "answer_token_fraction": 0.2823826032146234,
+          "tokens": 3173,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.5024540273007005,
+              "examples": 64
+            },
+            "nonzero": {
+              "answer_nll": 0.534928000435747,
+              "examples": 58
+            },
+            "with_rounding": {
+              "answer_nll": 0.4993962841729323,
+              "examples": 60
+            },
+            "quantized_zero": {
+              "answer_nll": 0.18853895366191864,
+              "examples": 6
+            },
+            "without_rounding": {
+              "answer_nll": 0.5483201742172241,
+              "examples": 4
+            }
+          },
+          "answer_bit_prior_nll": 0.6398078525034341,
+          "always_zero_exact_accuracy": 0.09375,
+          "always_zero_tolerance_accuracy": 0.09375,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 3.8703503135688315
+        },
+        "19": {
+          "gamma": 19.0,
+          "seed": 17749268696542071182,
+          "examples": 64,
+          "sign_nll": 0.5634455309918849,
+          "exponent_nll": 0.42255391019971283,
+          "mantissa_nll": 0.5341665220153118,
+          "answer_nll": 0.4963962327223531,
+          "full_nll": 1.8793754431516696,
+          "non_answer_nll": 2.417667959461256,
+          "answer_token_fraction": 0.2801751094434021,
+          "tokens": 3198,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.49639625987038016,
+              "examples": 64
+            },
+            "nonzero": {
+              "answer_nll": 0.5304189427145596,
+              "examples": 58
+            },
+            "with_rounding": {
+              "answer_nll": 0.4882964522674166,
+              "examples": 58
+            },
+            "quantized_zero": {
+              "answer_nll": 0.16751032570997873,
+              "examples": 6
+            },
+            "without_rounding": {
+              "answer_nll": 0.5746944000323614,
+              "examples": 6
+            }
+          },
+          "answer_bit_prior_nll": 0.6318118040963091,
+          "always_zero_exact_accuracy": 0.09375,
+          "always_zero_tolerance_accuracy": 0.09375,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 0.7594053473260243
+        },
+        "20": {
+          "gamma": 20.0,
+          "seed": 18023259971755901843,
+          "examples": 64,
+          "sign_nll": 0.5670079213596182,
+          "exponent_nll": 0.41236132943522535,
+          "mantissa_nll": 0.5254006672280411,
+          "answer_nll": 0.48800142188286244,
+          "full_nll": 1.9406478469536395,
+          "non_answer_nll": 2.465686651658527,
+          "answer_token_fraction": 0.2654814814814815,
+          "tokens": 3375,
+          "answer_bits": 896,
+          "slices": {
+            "with_x": {
+              "answer_nll": 0.48800144251435995,
+              "examples": 64
+            },
+            "nonzero": {
+              "answer_nll": 0.527487519278861,
+              "examples": 57
+            },
+            "with_rounding": {
+              "answer_nll": 0.4842756410114101,
+              "examples": 61
+            },
+            "quantized_zero": {
+              "answer_nll": 0.16647196028913772,
+              "examples": 7
+            },
+            "without_rounding": {
+              "answer_nll": 0.5637594064076742,
+              "examples": 3
+            }
+          },
+          "answer_bit_prior_nll": 0.6230947628519177,
+          "always_zero_exact_accuracy": 0.109375,
+          "always_zero_tolerance_accuracy": 0.109375,
+          "generation_examples": 4,
+          "valid_answers": 4,
+          "valid_answer_rate": 1.0,
+          "exact_answer_accuracy": 0.0,
+          "tolerance_accuracy": 0.0,
+          "decoded_mae": 1.3618561749836795
+        }
+      }
+    },
+    "timings": {
+      "training": 523.7623504020058,
+      "evaluation": 67.78955956500005,
+      "labeling": 0.0,
+      "loading": 9.770346359001728
+    },
+    "supervised_tokens": 7376095,
+    "label_cache_stats": {
+      "loaded_examples": 173824
+    },
+    "data_fingerprint": "af29d80e964a587d577c026f11ef4dd758a26757d5e78892dadc12a721c8c387",
+    "phase": "final"
+  },
+  "interpretation": "Loss optimization and output-format learning succeed. Greedy numerical answer accuracy remains poor; this run does not establish integration competence or a curriculum benefit.",
+  "verification": {
+    "logged_training_batches_verified": 60,
+    "all_logged_hashes_match_fresh_corpus": true,
+    "shuffled_plan_is_complete_permutation": true,
+    "logged_learning_rates_match_constant_after_warmup_schedule": true,
+    "data_manifest_sha256": "af29d80e964a587d577c026f11ef4dd758a26757d5e78892dadc12a721c8c387"
+  },
+  "completion": {
+    "phase": "complete",
+    "updated_at": "2026-10-25T12:32:54Z",
+    "vms_stopped": true,
+    "checkpoint": "/Users/kanhar/workspace/personal/nanoGPT/out/integrals-h100-shuffled10m-20261025/results/out/shuffled10m/shuffled-seed0/checkpoint.pt"
+  },
+  "checkpoint_sha256": "352ccb3fcd332459db5ec5f3d4aacdbda9d506e9cbc1f340c679507b5c0002c3"
+}

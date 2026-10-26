@@ -20,7 +20,7 @@ import time
 import numpy as np
 
 from .config import Config, batch_plan, ramp_updates
-from .data import Dataset, Example, STOI, VOCAB, VERSION, stream_seed
+from .data import Dataset, Example, STOI, VOCAB, VERSION, example_plan, stream_seed
 from .encoding import encode
 
 FORMAT = "integral-shards-v1"
@@ -49,21 +49,47 @@ def data_recipe(config):
     keys = ("version", "seed", "gamma_low", "gamma_high", "max_operators", "steps", "batch_size",
             "eval_seed", "eval_gammas", "eval_examples", "final_examples", "baseline_examples", "label_timeout_seconds",
             "label_max_attempts")
-    return {**{key:config.to_dict()[key] for key in keys}, "ramp_updates":ramp_updates(config)}
+    recipe = {**{key:config.to_dict()[key] for key in keys}, "ramp_updates":ramp_updates(config)}
+    if config.training_gamma_sampling != "fixed":
+        recipe["training_gamma_sampling"] = config.training_gamma_sampling
+    if config.gamma_stage_steps:
+        recipe["gamma_stage_steps"] = list(config.gamma_stage_steps)
+    return recipe
 
 
-def tasks(config, kind="training", pilot_examples=2048):
+def task_identity(entry):
+    identity = {k:entry[k] for k in ("name", "gamma", "seed", "count")}
+    if entry.get("gamma_sampling", "fixed") != "fixed":
+        identity["gamma_sampling"] = entry["gamma_sampling"]
+    return identity
+
+
+def training_streams(conditions=None):
+    """Shuffled and curriculum share a stream; hard has independent samples."""
+    if conditions is None:
+        return ["curriculum", "hard"]
+    if not conditions or any(c not in ("curriculum", "shuffled", "hard") for c in conditions):
+        raise ValueError("Invalid training conditions")
+    selected = {"curriculum" if c == "shuffled" else c for c in conditions}
+    return [c for c in ("curriculum", "hard") if c in selected]
+
+
+def tasks(config, kind="training", pilot_examples=2048, conditions=None):
     result = []
-    def add(name, gamma, seed, count):
-        result.append(dict(name=name, gamma=float(gamma), seed=seed, count=count))
+    def add(name, gamma, seed, count, gamma_sampling="fixed"):
+        task = dict(name=name, gamma=float(gamma), seed=seed, count=count)
+        if gamma_sampling != "fixed":
+            task["gamma_sampling"] = gamma_sampling
+        result.append(task)
     if kind == "pilot":
         for gamma in dict.fromkeys([*config.eval_gammas, config.gamma_low, config.gamma_high]):
-            add(f"pilot/{gamma:g}", gamma, stream_seed(config.eval_seed, "pilot", f"{gamma:g}"), pilot_examples)
+            mode = config.training_gamma_sampling if config.condition != "hard" and gamma >= 1 else "fixed"
+            add(f"pilot/{gamma:g}", gamma, stream_seed(config.eval_seed, "pilot", f"{gamma:g}"), pilot_examples, mode)
         add("pilot/stress", config.gamma_high, stream_seed(config.eval_seed, "pilot-stress"), pilot_examples)
     else:
-        for condition in ("curriculum", "hard"):
+        for condition in training_streams(conditions):
             for spec in batch_plan(replace(config, condition=condition)):
-                add(f"training/{condition}/{spec.index}", spec.gamma, spec.seed, config.batch_size)
+                add(f"training/{condition}/{spec.index}", spec.gamma, spec.seed, config.batch_size, spec.gamma_sampling)
     for phase, count in (("monitor", config.eval_examples), ("final", config.final_examples)):
         if kind == "pilot" and phase == "final":
             continue
@@ -88,9 +114,11 @@ def _generate(payload):
         return task, [(example.to_dict(), {"method":"analytic-benchmark-only", "value":k+1})]*task["count"], {}
     dataset = Dataset(None, **settings)
     output = []
-    for index in range(task["count"]):
-        example = dataset.sample(task["gamma"], stream_seed(task["seed"], "item", index))
+    for gamma, seed in example_plan(task["gamma"], task["seed"], task["count"], task.get("gamma_sampling", "fixed")):
+        example = dataset.sample(gamma, seed)
         output.append((example.to_dict(), dataset.last_provenance))
+        if task["name"].startswith("training/"):
+            dataset.stats[f"training_sample_gamma/{gamma:g}"] += 1
     return task, output, dict(dataset.stats)
 
 
@@ -154,15 +182,21 @@ def _write_shard(directory, rows, number):
     return info
 
 
-def prepare(config, directory, workers=1, tasks_per_shard=16, kind="training", pilot_examples=2048):
+def prepare(config, directory, workers=1, tasks_per_shard=16, kind="training", pilot_examples=2048,
+            conditions=None):
     config.validate()
     if workers < 1 or tasks_per_shard < 1 or pilot_examples < 1 or kind not in ("training", "pilot"):
         raise ValueError("Invalid preparation settings")
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=True)
-    requested = tasks(config, kind, pilot_examples)
+    streams = training_streams(conditions)
+    if kind == "pilot" and conditions is not None:
+        raise ValueError("Condition selection applies only to training corpora")
+    requested = tasks(config, kind, pilot_examples, streams)
     identity = dict(format=FORMAT, vocabulary=list(VOCAB), recipe=data_recipe(config), kind=kind,
                     pilot_examples=pilot_examples if kind == "pilot" else None, tasks_per_shard=tasks_per_shard)
+    if streams != training_streams():
+        identity["training_conditions"] = streams
     state_path = directory/"preparation.json"
     # One exporter per directory; flock is released automatically after a crash.
     import fcntl
@@ -184,7 +218,7 @@ def prepare(config, directory, workers=1, tasks_per_shard=16, kind="training", p
                 raise ValueError("Noncontiguous shard sequence")
             verify_shard(folder, info)
             shards.append(info)
-            completed.extend({k:e[k] for k in ("name", "gamma", "seed", "count")} for e in info["entries"])
+            completed.extend(task_identity(e) for e in info["entries"])
         if completed != requested[:len(completed)]:
             raise ValueError("Prepared task identities do not match the requested plan")
         if (directory/"manifest.json").exists():
@@ -267,15 +301,19 @@ class Corpus:
                 if entry["name"] in self.entries or entry["shard"] != name:
                     raise ValueError("Duplicate/misplaced corpus entry")
                 self.entries[entry["name"]] = entry
-                identity = (float(entry["gamma"]), entry["seed"], entry["count"])
+                identity = (float(entry["gamma"]), entry["seed"], entry["count"], entry.get("gamma_sampling", "fixed"))
                 if identity in self.by_identity:
                     raise ValueError("Duplicate sample identity")
                 self.by_identity[identity] = entry
             if verify_all:
                 self._verify(name)
         if config:
-            requested = tasks(config, self.manifest["kind"], self.manifest.get("pilot_examples") or 2048)
-            actual = [{k:e[k] for k in ("name", "gamma", "seed", "count")} for e in self.entries.values()]
+            streams = training_streams(self.manifest.get("training_conditions"))
+            required = "curriculum" if config.condition == "shuffled" else config.condition
+            if require_training and required not in streams:
+                raise ValueError("Corpus does not contain the requested training condition")
+            requested = tasks(config, self.manifest["kind"], self.manifest.get("pilot_examples") or 2048, streams)
+            actual = [task_identity(e) for e in self.entries.values()]
             if actual != requested:
                 raise ValueError("Incomplete or changed corpus task inventory")
 
@@ -309,12 +347,15 @@ class Corpus:
     def named(self, name):
         return self.read(self.entries[name])
 
-    def examples(self, gamma, seed, count):
+    def examples(self, gamma, seed, count, gamma_sampling="fixed"):
         try:
-            entry = self.by_identity[float(gamma), seed, count]
+            entry = self.by_identity[float(gamma), seed, count, gamma_sampling]
         except KeyError as exc:
             raise ValueError("Missing prepared batch/bank; numerical generation is disabled") from exc
         return self.read(entry)
+
+    def training_examples(self, spec, count):
+        return self.examples(spec.gamma, spec.seed, count, spec.gamma_sampling)
 
 
 class Prefetch:
@@ -325,7 +366,7 @@ class Prefetch:
     def __iter__(self):
         with ThreadPoolExecutor(max_workers=1) as pool:
             def fetch(spec):
-                return spec, self.dataset.examples(spec.gamma, spec.seed, self.count)
+                return spec, self.dataset.training_examples(spec, self.count)
             yield from _bounded_map(pool, fetch, self.specs, 2)
 
 
@@ -337,9 +378,11 @@ def main():
     parser.add_argument("--tasks-per-shard", type=int, default=16)
     parser.add_argument("--kind", choices=("training", "pilot"), default="training")
     parser.add_argument("--pilot-examples", type=int, default=2048)
+    parser.add_argument("--conditions", nargs="+", choices=("curriculum", "shuffled", "hard"),
+                        help="Export only selected training streams; default exports both")
     args = parser.parse_args()
     print(prepare(Config.load(args.config), args.out_dir, args.workers, args.tasks_per_shard,
-                  args.kind, args.pilot_examples))
+                  args.kind, args.pilot_examples, args.conditions))
 
 
 if __name__ == "__main__":

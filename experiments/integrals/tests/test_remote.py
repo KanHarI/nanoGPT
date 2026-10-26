@@ -11,7 +11,7 @@ import torch
 from experiments.integrals.benchmark import calibrated_config, choose_candidate
 from experiments.integrals.config import Config, batch_plan, ramp_updates
 from experiments.integrals.corpus import Corpus, Prefetch, _generate, prepare, tasks
-from experiments.integrals.data import Dataset, stream_seed
+from experiments.integrals.data import Dataset, example_plan, stream_seed
 from experiments.integrals.evaluate import Evaluation, baseline_scores, fit_bit_prior
 from experiments.integrals.sweep import Archive, completed_report, sweep
 from experiments.integrals.train import run
@@ -29,11 +29,26 @@ def tiny(directory):
 
 def fixture_generate(payload):
     task, _ = payload
-    return task, [(example((task["seed"]+i)%3).to_dict(), {"method":"test-fixture"})
-                  for i in range(task["count"])], {"generated":task["count"]}
+    return task, [(replace(example(seed%3), gamma=gamma).to_dict(), {"method":"test-fixture"})
+                  for gamma,seed in example_plan(task["gamma"],task["seed"],task["count"],task.get("gamma_sampling","fixed"))], {"generated":task["count"]}
 
 
 class CorpusTests(unittest.TestCase):
+    def test_shuffled_only_export_omits_hard_and_rejects_wrong_condition(self):
+        with tempfile.TemporaryDirectory() as directory, patch("experiments.integrals.corpus._generate", fixture_generate):
+            config = replace(tiny(directory), condition="shuffled")
+            path = Path(directory)/"data"
+            prepare(config, path, conditions=["shuffled"])
+            corpus = Corpus(path, config, verify_all=True)
+            self.assertFalse(any(name.startswith("training/hard/") for name in corpus.entries))
+            self.assertEqual(sum(name.startswith("training/") for name in corpus.entries), config.steps)
+            for spec in batch_plan(config):
+                self.assertEqual(len(corpus.training_examples(spec, config.batch_size)), config.batch_size)
+            with self.assertRaises(ValueError):
+                Corpus(path, replace(config, condition="hard"))
+            with self.assertRaises(ValueError):
+                prepare(config, path)  # Resume cannot silently add another stream.
+
     def test_export_resume_checksums_and_identical_shuffled_examples(self):
         with tempfile.TemporaryDirectory() as directory, patch("experiments.integrals.corpus._generate", fixture_generate):
             config = tiny(directory)
@@ -43,10 +58,10 @@ class CorpusTests(unittest.TestCase):
             with patch("experiments.integrals.corpus._generate", side_effect=AssertionError("unexpected regeneration")):
                 self.assertEqual(prepare(config, path, tasks_per_shard=3).read_bytes(), original)
             corpus = Corpus(path, config, verify_all=True)
-            curriculum = {spec.index:[e.text for e in corpus.examples(spec.gamma,spec.seed,config.batch_size)]
+            curriculum = {spec.index:[e.text for e in corpus.training_examples(spec,config.batch_size)]
                           for spec in batch_plan(config)}
             for spec in batch_plan(replace(config,condition="shuffled")):
-                self.assertEqual([e.text for e in corpus.examples(spec.gamma,spec.seed,config.batch_size)], curriculum[spec.index])
+                self.assertEqual([e.text for e in corpus.training_examples(spec,config.batch_size)], curriculum[spec.index])
             prefetched = list(Prefetch(corpus, batch_plan(config), config.batch_size))
             self.assertEqual([spec.index for spec,_ in prefetched], list(range(4)))
             with self.assertRaises(ValueError):
@@ -91,7 +106,7 @@ class CorpusTests(unittest.TestCase):
             task = tasks(config)[0]
             settings = dict(max_operators=config.max_operators, timeout_seconds=5, max_attempts=100)
             _, rows, _ = _generate((task, settings))
-            direct = Dataset(None, **settings).examples(task["gamma"], task["seed"], task["count"])
+            direct = Dataset(None, **settings).training_examples(batch_plan(config)[0], task["count"])
             self.assertEqual([row[0] for row in rows], [e.to_dict() for e in direct])
             stress = dict(name="pilot/stress", gamma=20, seed=0, count=1)
             _, rows, _ = _generate((stress, {**settings, "max_operators":32}))

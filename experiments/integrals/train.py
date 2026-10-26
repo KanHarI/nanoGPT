@@ -147,6 +147,9 @@ def run(config, out_dir, resume=False, stop_after=None, tracking=None, data_dir=
                 os.link(checkpoint_path, previous_tmp)
                 previous_tmp.replace(directory/"checkpoint-previous.pt")
             temporary.replace(checkpoint_path)
+            # Relay only committed history: a Spot restart can rewind newer log lines.
+            write_json(directory/"checkpoint_progress.json", dict(
+                step=step, records=records, history_records=state["history_records"], completed=completed))
             if checkpoint_callback:
                 checkpoint_callback(directory)
 
@@ -173,7 +176,7 @@ def run(config, out_dir, resume=False, stop_after=None, tracking=None, data_dir=
         limit = config.steps if stop_after is None else stop_after
         model.train()
         batches = (iter(Prefetch(dataset, plan[step:limit], config.batch_size)) if data_dir else
-                   ((spec, dataset.examples(spec.gamma, spec.seed, config.batch_size)) for spec in plan[step:limit]))
+                   ((spec, dataset.training_examples(spec, config.batch_size)) for spec in plan[step:limit]))
         while step < limit:
             started = time.perf_counter()
             spec, examples = next(batches)
@@ -199,6 +202,7 @@ def run(config, out_dir, resume=False, stop_after=None, tracking=None, data_dir=
             if step % config.log_interval == 0 or step == limit:
                 metrics = summarize_losses(loss_totals(logits.detach(), y))
                 log(dict(kind="train", step=step, batch_id=spec.index, batch_seed=spec.seed, gamma=spec.gamma,
+                         gamma_sampling=spec.gamma_sampling, sample_gammas=[e.gamma for e in examples],
                          batch_sha256=hashlib.sha256("".join(e.text for e in examples).encode()).hexdigest(),
                          learning_rate=lr, grad_norm=norm.item(), timings=dict(timings), **metrics,
                          supervised_tokens=supervised_tokens, packed_rows=x.shape[0], padded_tokens=x.numel(),

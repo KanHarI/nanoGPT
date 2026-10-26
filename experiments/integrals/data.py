@@ -6,6 +6,7 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import random
 
 import torch
 
@@ -30,6 +31,18 @@ FIELD_IDS = {"sign": tuple(STOI[t] for t in SIGN_TOKENS),
 
 def stream_seed(seed, *identity):
     return int.from_bytes(hashlib.sha256(":".join(map(str,(VERSION,seed,*identity))).encode()).digest()[:8], "big")
+
+
+def example_plan(gamma, seed, count, gamma_sampling="fixed"):
+    """Draw each sample's gamma independently of AST RNG and rejection retries."""
+    if gamma_sampling not in ("fixed", "uniform_integer"):
+        raise ValueError("Unsupported gamma sampling")
+    if not math.isfinite(gamma) or gamma < (1 if gamma_sampling == "uniform_integer" else 0):
+        raise ValueError("Invalid gamma or gamma ceiling")
+    for index in range(count):
+        sample_gamma = (random.Random(stream_seed(seed, "sample-gamma", index)).randint(1, math.floor(gamma))
+                        if gamma_sampling == "uniform_integer" else gamma)
+        yield sample_gamma, stream_seed(seed, "item", index)
 
 
 @dataclass(frozen=True)
@@ -157,7 +170,12 @@ class Dataset:
         raise RuntimeError(f"Cannot label gamma={gamma}, K={k}, bounds={a},{b}; no easier fallback")
 
     def examples(self,gamma,seed,count):
-        return [self.sample(gamma,stream_seed(seed,"item",i)) for i in range(count)]
+        return [self.sample(g,s) for g,s in example_plan(gamma,seed,count)]
+
+    def training_examples(self, spec, count):
+        if spec.gamma_sampling == "fixed":
+            return self.examples(spec.gamma, spec.seed, count)
+        return [self.sample(g,s) for g,s in example_plan(spec.gamma, spec.seed, count, spec.gamma_sampling)]
 
 
 def batch(examples,block_size,device="cpu",pack=True):
