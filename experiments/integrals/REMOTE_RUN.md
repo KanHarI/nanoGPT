@@ -2,8 +2,10 @@
 
 The [proposal](REMOTE_EXPERIMENT.md) uses 64 layers, width 512, 8 heads, and FF
 width 2048 on one H100 80 GB. The commands below prepare data, calibrate, and run
-the comparison. They do not provision a machine. H100 measurements and the final
-main-run budget remain launch-time work.
+the comparison. They do not provision a machine. The
+[completed staged comparison](GPU_STAGED_120M.md) records the measured H100
+budget, results, verified checkpoints, and shutdown status. Recalibrate budgets
+when changing hardware, batch size, context, or data policy.
 
 ## Environment
 
@@ -67,6 +69,33 @@ LR warms up to 0.0003 and then stays constant.
 `gpu_calibration: false`. CPU timings must not be used to budget an H100 run.
 Release the benchmark GPU during full data preparation if it has no other work.
 
+### Equal-time ceiling stages
+
+For the completed two-condition comparison, the batch/context were held at
+16/128 to limit fresh-label preparation cost, and each ceiling 1..20 targeted
+six minutes of optimizer computation. Given a pilot prepared with the same
+model, batch, and `training_gamma_sampling="uniform_integer"` configuration:
+
+```bash
+.venv/bin/python -m experiments.integrals.staged \
+  --config experiments/integrals/configs/h100_gamma20_staged120m.json \
+  --data-dir out/integral-stage-pilot --out-dir out/integral-stage-calibration \
+  --minutes 120 --iterations 80
+```
+
+Prepare `out/integral-stage-pilot` with the corpus command above, using this
+same config, `--kind pilot`, and a new directory. The staged calibrator checks
+maximum-length stress records and measures every integer ceiling. It freezes
+`gamma_stage_steps`, the total update budget, and monitoring intervals in
+`config.json`. It does not benchmark alternative batch sizes. Every stage,
+including the maximum ceiling, receives a nonzero update budget; there is no
+additional plateau. The committed config preserves the completed run's exact
+schedule; new timing measurements produce a new schedule.
+
+Export this schedule with `--conditions curriculum shuffled`, and pass the
+same two conditions to the sweep command below. This prepares one shared
+training stream without unused hard-only labels.
+
 ## 3. Complete CPU corpus
 
 Copy the calibrated config back to the preparation host:
@@ -85,6 +114,11 @@ version `integral-full-sequence-v2-independent-hard`; earlier v1 smoke artifacts
 are historical and cannot be mixed into the new recipe.
 
 The training volume is 2*U*B accepted examples, plus evaluation/calibration banks.
+For a single shuffled diagnostic, add `--conditions shuffled` to the exporter.
+This generates only the U*B curriculum-stream batches that shuffled training
+permutes, plus all independent evaluation and baseline banks. Every optimizer
+sample is freshly generated; there is no repeated finite pool. The manifest
+records the subset and rejects a hard-only run against this corpus.
 The exporter does not repeat epochs to fill the budget. Shards contain raw token
 bytes, memory-mapped offsets, metadata, and compressed numerical provenance.
 Each shard is committed atomically; `manifest.json` appears only when the full
@@ -157,6 +191,48 @@ It invokes `remote_run.sh` with `--resume`. Installing/enabling the service,
 mounting storage, and authorizing shutdown are explicit host setup steps.
 
 ## Metrics and validation
+
+The standard profiles now use `training_gamma_sampling="uniform_integer"`:
+each curriculum/shuffled expression draws gamma from 1..floor(current ceiling).
+The prepared corpus, inline CPU path, and pilot timing banks share this rule.
+Hard-only, evaluation, and baseline banks stay at exact gamma. Existing saved
+configs without the new field retain their fixed-gamma semantics; use a new
+export directory when enabling the mixture. See the [sampling details](README.md#curriculum-and-controls).
+
+### Collapsible W&B layout
+
+The [current comparison dashboard](https://wandb.ai/kanhar/numerical-integrals-curriculum?nw=lbhglazgzvp)
+selects completed curriculum `9keuu6r2` and shuffled `898e18f4`, using purple
+and orange respectively. The earlier diagnostics have separate archives for
+[gamma 1–20](https://wandb.ai/kanhar/numerical-integrals-curriculum?nw=bfp0x6fybm1)
+and [gamma 1–5, twenty minutes](https://wandb.ai/kanhar/numerical-integrals-curriculum?nw=oqppf6lmos9).
+The current view has a collapsible section for each gamma 1..20, containing ten metric plots:
+answer/full/non-answer/sign/exponent/mantissa NLL, exact accuracy, tolerance
+accuracy, valid-answer rate, and decoded MAE. Train/test share each plot; fresh
+final-bank values appear as points. Run names remain in the default legends;
+generic Train/Test title overrides can conceal which condition a line represents.
+Counts and other diagnostics remain in the
+logged data and reports, without automatically creating additional plots.
+The personal workspace was also updated, after backing up its previous layout.
+All charts start at optimizer update 1,000 and use logarithmic Y axes, with linear
+update axes. The earlier history and zero values remain logged; zeros cannot be
+displayed on a logarithmic axis. These settings also apply to the archived view.
+
+To create this layout in another project, install the optional UI dependency
+`wandb-workspaces==0.4.13` and run:
+
+```bash
+.venv/bin/python -m experiments.integrals.workspace \
+  --entity ENTITY --project PROJECT --gamma-high 20 --output out/gamma-workspace.json
+```
+
+`--personal-view-id` optionally updates a known existing view after saving its
+original specification. The command verifies the saved layout by reading it
+back. It only changes chart configuration; training and logged histories are
+not resumed or rewritten. Automatic panel generation is disabled.
+Use `--start-step 0` to show initialization or `--linear-y` for linear metric axes.
+
+### Evaluation
 
 Every gamma 1..20 has independent procedural train/test banks. Loss and decoding
 have separate intervals, with forced evaluation at the ramp boundary and endpoint.

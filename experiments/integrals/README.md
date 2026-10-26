@@ -2,8 +2,8 @@
 
 Full-sequence next-token NLL training on domain-checked numerical-integral ASTs.
 The implementation reuses the [documented generator and numerical checks](../proposals/NUMERICAL_INTEGRALS.md),
-adds stable quantized targets, and trains the existing causal GPT. No cloud
-deployment is involved. The CPU smoke configuration is a pipeline check, not a
+adds stable quantized targets, and trains the existing causal GPT.
+The CPU smoke configuration is a pipeline check, not a
 learning experiment or a choice of the eventual GPU model/budget.
 
 The [proposed remote experiment](REMOTE_EXPERIMENT.md) uses the 64-layer,
@@ -11,6 +11,39 @@ width-512 finite-field backbone and lays out CPU label preparation, H100
 calibration, matched controls, and evaluation. The [remote runbook](REMOTE_RUN.md)
 gives the implemented export, calibration, training, resume, durable-archive, and
 optional shutdown commands.
+
+## Completed H100 experiments
+
+The [staged curriculum versus shuffled comparison](GPU_STAGED_120M.md) completed
+125,796 updates per condition on the 201M-parameter model, targeting 120 minutes
+of optimizer computation each. Curriculum samples an integer gamma independently
+for each expression under a ceiling that increases from 1 to 20. Shuffled sees
+the exact same expressions and per-gamma counts in a different batch order.
+
+| Fresh final test metric | Curriculum | Shuffled |
+| --- | ---: | ---: |
+| Answer NLL, nats/answer bit | 0.368998 | 0.369265 |
+| Exact greedy answers | 235/1,280 (18.36%) | 258/1,280 (20.16%) |
+
+Curriculum had lower mean monitoring test loss through much of training, but no
+clear final advantage in this single-seed experiment. Actual optimizer time was
+112.81 and 112.56 minutes; evaluation and checkpointing added wall time.
+The [result JSON](results/h100_staged120m_comparison.json) and
+[comparison plot](results/h100_staged120m_comparison.png) record the measurements.
+
+The [current dashboard](https://wandb.ai/kanhar/numerical-integrals-curriculum?nw=lbhglazgzvp)
+explicitly selects both completed runs: curriculum in purple and shuffled in
+orange. It has collapsible gamma 1–20 sections with paired train/test curves;
+fresh final results appear as points. Gamma 1 opens initially. Charts start at
+update 1,000 with logarithmic metric axes and legends that include run names.
+Both VMs are stopped and verified checkpoints are retained in private cloud
+storage; see the [artifact locations](GPU_STAGED_120M.md#checkpoints-and-shutdown).
+
+Earlier learning checks are documented separately: the
+[ten-minute gamma 1–20 diagnostic](GPU_DIAGNOSTIC.md),
+[ten-minute gamma 1–5 diagnostic](GPU_GAMMA5.md), and
+[twenty-minute gamma 1–5 follow-up](GPU_GAMMA5_20M.md). These used the historical
+fixed-gamma-per-batch schedule and do not themselves compare curricula.
 
 ## Records and vocabulary
 
@@ -139,18 +172,46 @@ model/optimizer checkpoints remain local.
 
 ## Curriculum and controls
 
+An optional `gamma_stage_steps` list gives calibrated update counts for integer
+ceilings from `gamma_low` through `gamma_high`. It covers the whole run and takes
+precedence over the continuous ramp below. Every ceiling, including the maximum,
+gets a full stage. Shuffled preserves this exact stage plan's samples, and corpus
+identity includes the stage lengths. Omit the list to use the continuous ramp.
+
 With U updates and R=max(2,ceil(U*ramp_fraction)), update index i starts at zero:
 
 ```text
-gamma(i) = gamma_low + (gamma_high-gamma_low) * min(i/(R-1), 1)
+gamma_ceiling(i) = gamma_low + (gamma_high-gamma_low) * min(i/(R-1), 1)
+sample_gamma ~ UniformInteger(1, floor(gamma_ceiling(i)))  # independently per expression
+K ~ Poisson(sample_gamma), conditioned on 0..32
 ```
 
-Defaults are gamma 1..20, half the updates ramping and half at gamma 20.
-`curriculum` uses this order; `hard` uses gamma 20 throughout; `shuffled` permutes
-exactly the curriculum batch identities (gamma and seed, including within-batch
-order). Shared cached labels make curriculum/shuffled examples identical. The
-same model seed gives paired initialization. Hard-only matches updates/examples,
-but can have different token counts and compute cost.
+The default `training_gamma_sampling="uniform_integer"` ramps the ceiling from
+1 to 20 for half the updates, then holds it at 20. Each expression gets its own
+integer draw, including within one batch. A ceiling of 5.7 allows gamma 1..5;
+at 20 every integer 1..20 has probability 1/20 and the mean sample gamma is 10.5.
+After choosing gamma, generation proceeds exactly as before. Numerical retries
+keep that gamma, operator count, and bounds; failed candidates do not cause a
+redraw toward an easier gamma. Gamma is a Poisson parameter, not an AST-size cap.
+
+`curriculum` follows the increasing ceiling. `shuffled` permutes exactly its
+batch identities, preserving every sample-gamma draw, expression, and within-batch
+order. Independent RNG streams for gamma and AST generation make prepared data,
+inline generation, and resumption agree. `hard` continues to use exact gamma 20
+throughout. Evaluation and baseline banks also use their exact named gamma,
+so a gamma-20 evaluation is never a mixture. Pilot timing banks follow the
+training sampling rule; analytic stress expressions still test maximum length.
+The same model seed gives paired initialization. Hard-only matches updates/examples,
+but its token counts and compute cost can differ.
+
+The standard smoke and GPU profiles enable the new rule. Historical JSON configs
+that omit `training_gamma_sampling` retain the old `"fixed"` behavior when loaded;
+this preserves their checkpoint and corpus identities. Explicit `"fixed"` also
+selects that behavior. Corpus recipes record the new policy and reject mixing old
+fixed-gamma data with a new run. Local training logs record the ceiling as `gamma`,
+the policy as `gamma_sampling`, and the actual per-expression `sample_gammas`.
+The existing W&B `train/gamma` curve is the ceiling for mixture runs. Previously
+completed diagnostics keep their original fixed-gamma interpretation.
 
 AdamW uses linear LR warmup followed by a **constant** LR. No decay. The ordinary
 configuration retains the previous 24-layer, width-256, 4-head model, FF width 1024;
@@ -164,6 +225,9 @@ Use the repository virtualenv (Python 3.10+). Dependencies are listed in
 ```bash
 .venv/bin/python -m unittest \
   experiments.integrals.tests.test_integrals \
+  experiments.integrals.tests.test_remote \
+  experiments.integrals.tests.test_gamma_sampling \
+  experiments.integrals.tests.test_staged \
   experiments.proposals.test_integral_ast_preview \
   experiments.proposals.test_integral_distribution -v
 
@@ -184,6 +248,8 @@ local service socket even in offline mode. `--wandb disabled` skips the SDK;
 Outputs: `config.json`, `environment.json` (parameter count, versions, source
 hashes), `vocabulary.json`, `metrics.jsonl`, `wandb_history.jsonl`, `final.json`, and
 `checkpoint.pt` (model, optimizer, RNG, schedule position, counters).
+`checkpoint_progress.json` is published after a checkpoint replacement and
+identifies the committed prefix of both histories for external reporting tools.
 The checkpoint is saved after each monitoring evaluation and at completion.
 
 For interruption/resume, `--stop-after N` retains the original complete schedule;
@@ -197,6 +263,18 @@ Tests cover every canonical encoding and every positive midpoint, malformed labe
 numerical rejection/cache behavior, complete packing and prompt gradients, loss
 decomposition, free decoding without answer leakage, independent evaluation banks,
 exact shuffled batch matching, constant LR, and bit-identical CPU resume with dropout.
+
+### Uniform sample-gamma validation, 2026-10-25
+
+The [sampling validation report](results/uniform_gamma_smoke.json) records
+**55 passing tests** (31 training/data tests and 24 generator/numerical regressions).
+New checks cover inclusive uniform integer draws, fractional ceilings, independent
+sample RNG, exact curriculum/shuffled sample pairing, unchanged evaluation banks,
+and historical config/corpus compatibility. Prepared and inline generation give
+identical real numerical labels. A two-worker CPU export produced 158 accepted
+labels, then curriculum, shuffled, and hard each completed an eight-update smoke.
+The per-sample gammas and expression hashes matched for curriculum/shuffled, and
+hard-only remained at exact gamma 5. These short runs validate the pipeline.
 
 ### Historical v1 smoke, 2026-10-25
 

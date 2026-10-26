@@ -1,0 +1,1022 @@
+{
+  "date": "2026-10-26",
+  "project": "personal-383909",
+  "data_fingerprint": "588f9df58b53de73ecd59d100329e99a9266e17adf65985a1b43c52a36f15ff0",
+  "steps_per_condition": 125796,
+  "training_examples_per_condition": 2012736,
+  "conditions": {
+    "curriculum": {
+      "wandb_url": "https://wandb.ai/kanhar/numerical-integrals-curriculum/runs/9keuu6r2",
+      "config": {
+        "version": "integral-full-sequence-v2-independent-hard:integral-ast-preview-v2-bounds2-rounding",
+        "condition": "curriculum",
+        "seed": 0,
+        "gamma_low": 1,
+        "gamma_high": 20,
+        "training_gamma_sampling": "uniform_integer",
+        "gamma_stage_steps": [
+          6350,
+          6316,
+          6305,
+          6342,
+          6319,
+          6331,
+          6303,
+          6281,
+          6289,
+          6264,
+          6272,
+          6292,
+          6278,
+          6292,
+          6275,
+          6306,
+          6263,
+          6246,
+          6256,
+          6216
+        ],
+        "ramp_fraction": 1.0,
+        "ramp_steps": 125796,
+        "max_operators": 32,
+        "steps": 125796,
+        "batch_size": 16,
+        "block_size": 128,
+        "pack_expressions": true,
+        "n_layer": 64,
+        "n_head": 8,
+        "n_embd": 512,
+        "dropout": 0.0,
+        "learning_rate": 0.0003,
+        "warmup_steps": 1000,
+        "weight_decay": 0.1,
+        "grad_clip": 1.0,
+        "eval_interval": 2097,
+        "eval_examples": 128,
+        "final_examples": 512,
+        "baseline_examples": 512,
+        "eval_batch_size": 64,
+        "generation_examples": 16,
+        "final_generation_examples": 64,
+        "generation_interval": 10485,
+        "checkpoint_interval": 2097,
+        "eval_seed": 20261024,
+        "eval_gammas": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "absolute_tolerance": 1e-06,
+        "relative_tolerance": 0.01,
+        "cache_dir": "out/integral-label-cache",
+        "label_timeout_seconds": 5,
+        "label_max_attempts": 100,
+        "log_interval": 524,
+        "threads": 4,
+        "device": "cuda",
+        "precision": "bfloat16"
+      },
+      "timings": {
+        "training": 6768.667023655088,
+        "evaluation": 303.44833290700467,
+        "labeling": 0.0,
+        "loading": 96.88359048801408
+      },
+      "checkpoint": {
+        "object": "gs://personal-383909-integrals-checkpoints/h100-gamma20-staged120m-20261025/curriculum/checkpoint.pt",
+        "generation": "1792986044333854",
+        "size": 2418275525,
+        "sha256": "50c6d9d2ad92a6750eb039a17b18855e0255599a8c0f7cb90dc2186154aeb2d3",
+        "md5Hash": "I8lxr7Ro8aVNVywFcPAvbQ=="
+      },
+      "train": {
+        "answer_nll": 0.36885871560419625,
+        "full_nll": 1.4834340065321827,
+        "exact_answers": 243,
+        "generation_examples": 1280,
+        "exact_accuracy": 0.18984375,
+        "bit_prior_nll": 0.6223386445662182
+      },
+      "test": {
+        "answer_nll": 0.368998360329448,
+        "full_nll": 1.4856092319717378,
+        "exact_answers": 235,
+        "generation_examples": 1280,
+        "exact_accuracy": 0.18359375,
+        "bit_prior_nll": 0.6221860370332076
+      },
+      "final_test_by_gamma": {
+        "1": {
+          "answer_nll": 0.1043803650649774,
+          "full_nll": 0.5537909385775382,
+          "exact_answer_accuracy": 0.5625,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "2": {
+          "answer_nll": 0.20526171891550252,
+          "full_nll": 0.7360465711954486,
+          "exact_answer_accuracy": 0.40625,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "3": {
+          "answer_nll": 0.2521530319012036,
+          "full_nll": 0.8446364061266355,
+          "exact_answer_accuracy": 0.46875,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "4": {
+          "answer_nll": 0.2945258715758671,
+          "full_nll": 0.9802294744127235,
+          "exact_answer_accuracy": 0.25,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "5": {
+          "answer_nll": 0.3440532173586348,
+          "full_nll": 1.0973549687522446,
+          "exact_answer_accuracy": 0.15625,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "6": {
+          "answer_nll": 0.3368769904342628,
+          "full_nll": 1.1604026458095675,
+          "exact_answer_accuracy": 0.3125,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "7": {
+          "answer_nll": 0.3665083697730154,
+          "full_nll": 1.2546554343743987,
+          "exact_answer_accuracy": 0.1875,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "8": {
+          "answer_nll": 0.37710040677926926,
+          "full_nll": 1.3279805248497352,
+          "exact_answer_accuracy": 0.109375,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "9": {
+          "answer_nll": 0.39194785710601615,
+          "full_nll": 1.404632277492109,
+          "exact_answer_accuracy": 0.15625,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "10": {
+          "answer_nll": 0.40141589614364037,
+          "full_nll": 1.444762338941834,
+          "exact_answer_accuracy": 0.15625,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "11": {
+          "answer_nll": 0.40057957020733526,
+          "full_nll": 1.5146819161763108,
+          "exact_answer_accuracy": 0.109375,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "12": {
+          "answer_nll": 0.419261270006282,
+          "full_nll": 1.5817405890079723,
+          "exact_answer_accuracy": 0.125,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "13": {
+          "answer_nll": 0.4235512860560898,
+          "full_nll": 1.6159042690971985,
+          "exact_answer_accuracy": 0.03125,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "14": {
+          "answer_nll": 0.42622592417667704,
+          "full_nll": 1.6618138578646484,
+          "exact_answer_accuracy": 0.078125,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "15": {
+          "answer_nll": 0.4276401094818709,
+          "full_nll": 1.6902976968641426,
+          "exact_answer_accuracy": 0.078125,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "16": {
+          "answer_nll": 0.4494418765702172,
+          "full_nll": 1.7477047592355006,
+          "exact_answer_accuracy": 0.09375,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "17": {
+          "answer_nll": 0.45453441453198756,
+          "full_nll": 1.7982609364585505,
+          "exact_answer_accuracy": 0.015625,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "18": {
+          "answer_nll": 0.43212873139541486,
+          "full_nll": 1.8264286427299192,
+          "exact_answer_accuracy": 0.125,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "19": {
+          "answer_nll": 0.43537001497418665,
+          "full_nll": 1.8464870019619082,
+          "exact_answer_accuracy": 0.125,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "20": {
+          "answer_nll": 0.4370102841365094,
+          "full_nll": 1.893179689436229,
+          "exact_answer_accuracy": 0.125,
+          "examples": 512,
+          "generation_examples": 64
+        }
+      },
+      "monitoring": [
+        {
+          "step": 0,
+          "test_answer_nll": 3.497627717629075
+        },
+        {
+          "step": 2097,
+          "test_answer_nll": 0.5780256300260654
+        },
+        {
+          "step": 4194,
+          "test_answer_nll": 0.5410565240385056
+        },
+        {
+          "step": 6291,
+          "test_answer_nll": 0.5147184344425568
+        },
+        {
+          "step": 8388,
+          "test_answer_nll": 0.48407821715370775
+        },
+        {
+          "step": 10485,
+          "test_answer_nll": 0.47791985506961226
+        },
+        {
+          "step": 12582,
+          "test_answer_nll": 0.4667970904220884
+        },
+        {
+          "step": 14679,
+          "test_answer_nll": 0.4734454083155147
+        },
+        {
+          "step": 16776,
+          "test_answer_nll": 0.46390529206658127
+        },
+        {
+          "step": 18873,
+          "test_answer_nll": 0.4514313463077698
+        },
+        {
+          "step": 20970,
+          "test_answer_nll": 0.4504165789576068
+        },
+        {
+          "step": 23067,
+          "test_answer_nll": 0.43739437915903867
+        },
+        {
+          "step": 25164,
+          "test_answer_nll": 0.4403455686983317
+        },
+        {
+          "step": 27261,
+          "test_answer_nll": 0.43519201171920513
+        },
+        {
+          "step": 29358,
+          "test_answer_nll": 0.43187036719090427
+        },
+        {
+          "step": 31455,
+          "test_answer_nll": 0.4293485228826469
+        },
+        {
+          "step": 33552,
+          "test_answer_nll": 0.4269292856973288
+        },
+        {
+          "step": 35649,
+          "test_answer_nll": 0.4193658808707292
+        },
+        {
+          "step": 37746,
+          "test_answer_nll": 0.41880691223606953
+        },
+        {
+          "step": 39843,
+          "test_answer_nll": 0.4139514505628782
+        },
+        {
+          "step": 41940,
+          "test_answer_nll": 0.41377995694621483
+        },
+        {
+          "step": 44037,
+          "test_answer_nll": 0.41501126468365696
+        },
+        {
+          "step": 46134,
+          "test_answer_nll": 0.41655731592653555
+        },
+        {
+          "step": 48231,
+          "test_answer_nll": 0.40613922467719876
+        },
+        {
+          "step": 50328,
+          "test_answer_nll": 0.402391884231279
+        },
+        {
+          "step": 52425,
+          "test_answer_nll": 0.40734022430755673
+        },
+        {
+          "step": 54522,
+          "test_answer_nll": 0.3996145283093207
+        },
+        {
+          "step": 56619,
+          "test_answer_nll": 0.39359099027547345
+        },
+        {
+          "step": 58716,
+          "test_answer_nll": 0.39237329544981936
+        },
+        {
+          "step": 60813,
+          "test_answer_nll": 0.39519300284018877
+        },
+        {
+          "step": 62910,
+          "test_answer_nll": 0.39256225922121235
+        },
+        {
+          "step": 65007,
+          "test_answer_nll": 0.3912407918127518
+        },
+        {
+          "step": 67104,
+          "test_answer_nll": 0.3872809884886692
+        },
+        {
+          "step": 69201,
+          "test_answer_nll": 0.3869030182766319
+        },
+        {
+          "step": 71298,
+          "test_answer_nll": 0.38292336137660804
+        },
+        {
+          "step": 73395,
+          "test_answer_nll": 0.3805748123786771
+        },
+        {
+          "step": 75492,
+          "test_answer_nll": 0.38741778468787275
+        },
+        {
+          "step": 77589,
+          "test_answer_nll": 0.3783952400002883
+        },
+        {
+          "step": 79686,
+          "test_answer_nll": 0.37622565144240605
+        },
+        {
+          "step": 81783,
+          "test_answer_nll": 0.3780142414263318
+        },
+        {
+          "step": 83880,
+          "test_answer_nll": 0.3774277633312989
+        },
+        {
+          "step": 85977,
+          "test_answer_nll": 0.3756307546671719
+        },
+        {
+          "step": 88074,
+          "test_answer_nll": 0.3686006676336961
+        },
+        {
+          "step": 90171,
+          "test_answer_nll": 0.3663169333389955
+        },
+        {
+          "step": 92268,
+          "test_answer_nll": 0.3724316698074651
+        },
+        {
+          "step": 94365,
+          "test_answer_nll": 0.37198935458789933
+        },
+        {
+          "step": 96462,
+          "test_answer_nll": 0.3634323979970913
+        },
+        {
+          "step": 98559,
+          "test_answer_nll": 0.375372867900113
+        },
+        {
+          "step": 100656,
+          "test_answer_nll": 0.3684052250289361
+        },
+        {
+          "step": 102753,
+          "test_answer_nll": 0.3660477042881114
+        },
+        {
+          "step": 104850,
+          "test_answer_nll": 0.36191944086933703
+        },
+        {
+          "step": 106947,
+          "test_answer_nll": 0.3602704649832061
+        },
+        {
+          "step": 109044,
+          "test_answer_nll": 0.36578587422529024
+        },
+        {
+          "step": 111141,
+          "test_answer_nll": 0.3692016979649306
+        },
+        {
+          "step": 113238,
+          "test_answer_nll": 0.36591593516592896
+        },
+        {
+          "step": 115335,
+          "test_answer_nll": 0.35964100390232584
+        },
+        {
+          "step": 117432,
+          "test_answer_nll": 0.3592701706781465
+        },
+        {
+          "step": 119529,
+          "test_answer_nll": 0.36424259761087235
+        },
+        {
+          "step": 121626,
+          "test_answer_nll": 0.35687721029714553
+        },
+        {
+          "step": 123723,
+          "test_answer_nll": 0.3612167054384896
+        },
+        {
+          "step": 125796,
+          "test_answer_nll": 0.3686013033558668
+        }
+      ]
+    },
+    "shuffled": {
+      "wandb_url": "https://wandb.ai/kanhar/numerical-integrals-curriculum/runs/898e18f4",
+      "config": {
+        "version": "integral-full-sequence-v2-independent-hard:integral-ast-preview-v2-bounds2-rounding",
+        "condition": "shuffled",
+        "seed": 0,
+        "gamma_low": 1,
+        "gamma_high": 20,
+        "training_gamma_sampling": "uniform_integer",
+        "gamma_stage_steps": [
+          6350,
+          6316,
+          6305,
+          6342,
+          6319,
+          6331,
+          6303,
+          6281,
+          6289,
+          6264,
+          6272,
+          6292,
+          6278,
+          6292,
+          6275,
+          6306,
+          6263,
+          6246,
+          6256,
+          6216
+        ],
+        "ramp_fraction": 1.0,
+        "ramp_steps": 125796,
+        "max_operators": 32,
+        "steps": 125796,
+        "batch_size": 16,
+        "block_size": 128,
+        "pack_expressions": true,
+        "n_layer": 64,
+        "n_head": 8,
+        "n_embd": 512,
+        "dropout": 0.0,
+        "learning_rate": 0.0003,
+        "warmup_steps": 1000,
+        "weight_decay": 0.1,
+        "grad_clip": 1.0,
+        "eval_interval": 2097,
+        "eval_examples": 128,
+        "final_examples": 512,
+        "baseline_examples": 512,
+        "eval_batch_size": 64,
+        "generation_examples": 16,
+        "final_generation_examples": 64,
+        "generation_interval": 10485,
+        "checkpoint_interval": 2097,
+        "eval_seed": 20261024,
+        "eval_gammas": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "absolute_tolerance": 1e-06,
+        "relative_tolerance": 0.01,
+        "cache_dir": "out/integral-label-cache",
+        "label_timeout_seconds": 5,
+        "label_max_attempts": 100,
+        "log_interval": 524,
+        "threads": 4,
+        "device": "cuda",
+        "precision": "bfloat16"
+      },
+      "timings": {
+        "training": 6753.895527743936,
+        "evaluation": 263.7307184260044,
+        "labeling": 0.0,
+        "loading": 97.68768975608509
+      },
+      "checkpoint": {
+        "object": "gs://personal-383909-integrals-checkpoints/h100-gamma20-staged120m-20261025/shuffled/checkpoint.pt",
+        "generation": "1792986060828404",
+        "size": 2418275525,
+        "sha256": "c1261a1eb648f88aee1eeb1ca2a18c7e71fd77ca4cd0fae4e991fcffd65e5866",
+        "md5Hash": "4Oe+eVqGgmTAg4TaWzGOZg=="
+      },
+      "train": {
+        "answer_nll": 0.36887599362427564,
+        "full_nll": 1.4890345790899406,
+        "exact_answers": 269,
+        "generation_examples": 1280,
+        "exact_accuracy": 0.21015625,
+        "bit_prior_nll": 0.6223386445662182
+      },
+      "test": {
+        "answer_nll": 0.3692647798807474,
+        "full_nll": 1.4906219445113884,
+        "exact_answers": 258,
+        "generation_examples": 1280,
+        "exact_accuracy": 0.2015625,
+        "bit_prior_nll": 0.6221860370332076
+      },
+      "final_test_by_gamma": {
+        "1": {
+          "answer_nll": 0.07368377477371878,
+          "full_nll": 0.4731852487275695,
+          "exact_answer_accuracy": 0.765625,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "2": {
+          "answer_nll": 0.17540977794551996,
+          "full_nll": 0.6783817476013353,
+          "exact_answer_accuracy": 0.515625,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "3": {
+          "answer_nll": 0.23370163839951935,
+          "full_nll": 0.8043297202089007,
+          "exact_answer_accuracy": 0.484375,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "4": {
+          "answer_nll": 0.2851674513115309,
+          "full_nll": 0.9537567958928584,
+          "exact_answer_accuracy": 0.28125,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "5": {
+          "answer_nll": 0.3460386935439398,
+          "full_nll": 1.0839720637386145,
+          "exact_answer_accuracy": 0.203125,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "6": {
+          "answer_nll": 0.3427906227435845,
+          "full_nll": 1.1536506745736181,
+          "exact_answer_accuracy": 0.359375,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "7": {
+          "answer_nll": 0.36734938703501385,
+          "full_nll": 1.2521967848526874,
+          "exact_answer_accuracy": 0.21875,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "8": {
+          "answer_nll": 0.3837989457830905,
+          "full_nll": 1.3298304498493119,
+          "exact_answer_accuracy": 0.109375,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "9": {
+          "answer_nll": 0.3982925419865901,
+          "full_nll": 1.4114880565537407,
+          "exact_answer_accuracy": 0.140625,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "10": {
+          "answer_nll": 0.4103108542385395,
+          "full_nll": 1.4538714335303573,
+          "exact_answer_accuracy": 0.125,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "11": {
+          "answer_nll": 0.4039109518086629,
+          "full_nll": 1.523159373736758,
+          "exact_answer_accuracy": 0.109375,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "12": {
+          "answer_nll": 0.42473529760868345,
+          "full_nll": 1.596064476479291,
+          "exact_answer_accuracy": 0.140625,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "13": {
+          "answer_nll": 0.4385118348462628,
+          "full_nll": 1.6344887410927689,
+          "exact_answer_accuracy": 0.0625,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "14": {
+          "answer_nll": 0.4348538066153712,
+          "full_nll": 1.6809747575038019,
+          "exact_answer_accuracy": 0.078125,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "15": {
+          "answer_nll": 0.43133610029032965,
+          "full_nll": 1.7100929148405373,
+          "exact_answer_accuracy": 0.0625,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "16": {
+          "answer_nll": 0.459316949678414,
+          "full_nll": 1.7722700968011487,
+          "exact_answer_accuracy": 0.046875,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "17": {
+          "answer_nll": 0.45806537393396646,
+          "full_nll": 1.8190729558521854,
+          "exact_answer_accuracy": 0.015625,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "18": {
+          "answer_nll": 0.4430485850279077,
+          "full_nll": 1.8511069743856416,
+          "exact_answer_accuracy": 0.078125,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "19": {
+          "answer_nll": 0.4378918143660501,
+          "full_nll": 1.869615095426378,
+          "exact_answer_accuracy": 0.125,
+          "examples": 512,
+          "generation_examples": 64
+        },
+        "20": {
+          "answer_nll": 0.4370811956782522,
+          "full_nll": 1.913850655895266,
+          "exact_answer_accuracy": 0.109375,
+          "examples": 512,
+          "generation_examples": 64
+        }
+      },
+      "monitoring": [
+        {
+          "step": 0,
+          "test_answer_nll": 3.497627717629075
+        },
+        {
+          "step": 2097,
+          "test_answer_nll": 0.5778361536542174
+        },
+        {
+          "step": 4194,
+          "test_answer_nll": 0.5440388265027601
+        },
+        {
+          "step": 6291,
+          "test_answer_nll": 0.5031452229718785
+        },
+        {
+          "step": 8388,
+          "test_answer_nll": 0.49698114065139
+        },
+        {
+          "step": 10485,
+          "test_answer_nll": 0.4907107224926546
+        },
+        {
+          "step": 12582,
+          "test_answer_nll": 0.4868816933540931
+        },
+        {
+          "step": 14679,
+          "test_answer_nll": 0.4756433496825924
+        },
+        {
+          "step": 16776,
+          "test_answer_nll": 0.4744645235244446
+        },
+        {
+          "step": 18873,
+          "test_answer_nll": 0.4701595087108109
+        },
+        {
+          "step": 20970,
+          "test_answer_nll": 0.46575307992144105
+        },
+        {
+          "step": 23067,
+          "test_answer_nll": 0.4610639354163626
+        },
+        {
+          "step": 25164,
+          "test_answer_nll": 0.45806733938382554
+        },
+        {
+          "step": 27261,
+          "test_answer_nll": 0.45973521800667866
+        },
+        {
+          "step": 29358,
+          "test_answer_nll": 0.4559968305216249
+        },
+        {
+          "step": 31455,
+          "test_answer_nll": 0.45081907445525604
+        },
+        {
+          "step": 33552,
+          "test_answer_nll": 0.44489598549787
+        },
+        {
+          "step": 35649,
+          "test_answer_nll": 0.4413717761090455
+        },
+        {
+          "step": 37746,
+          "test_answer_nll": 0.44126355366330616
+        },
+        {
+          "step": 39843,
+          "test_answer_nll": 0.43462380942894896
+        },
+        {
+          "step": 41940,
+          "test_answer_nll": 0.43094587303290594
+        },
+        {
+          "step": 44037,
+          "test_answer_nll": 0.4309730994698149
+        },
+        {
+          "step": 46134,
+          "test_answer_nll": 0.43255204803220487
+        },
+        {
+          "step": 48231,
+          "test_answer_nll": 0.4274770388228924
+        },
+        {
+          "step": 50328,
+          "test_answer_nll": 0.42281581628389375
+        },
+        {
+          "step": 52425,
+          "test_answer_nll": 0.42144671670081096
+        },
+        {
+          "step": 54522,
+          "test_answer_nll": 0.41604570300488014
+        },
+        {
+          "step": 56619,
+          "test_answer_nll": 0.4139652645585536
+        },
+        {
+          "step": 58716,
+          "test_answer_nll": 0.4112636124323225
+        },
+        {
+          "step": 60813,
+          "test_answer_nll": 0.4103561051489326
+        },
+        {
+          "step": 62910,
+          "test_answer_nll": 0.40617136554118627
+        },
+        {
+          "step": 65007,
+          "test_answer_nll": 0.40269114362236136
+        },
+        {
+          "step": 67104,
+          "test_answer_nll": 0.40160244586184846
+        },
+        {
+          "step": 69201,
+          "test_answer_nll": 0.40229945237375436
+        },
+        {
+          "step": 71298,
+          "test_answer_nll": 0.39786412703454327
+        },
+        {
+          "step": 73395,
+          "test_answer_nll": 0.39800888337375395
+        },
+        {
+          "step": 75492,
+          "test_answer_nll": 0.3932507567744096
+        },
+        {
+          "step": 77589,
+          "test_answer_nll": 0.38985100500417297
+        },
+        {
+          "step": 79686,
+          "test_answer_nll": 0.38937194360075944
+        },
+        {
+          "step": 81783,
+          "test_answer_nll": 0.3885407695702479
+        },
+        {
+          "step": 83880,
+          "test_answer_nll": 0.3883356052313999
+        },
+        {
+          "step": 85977,
+          "test_answer_nll": 0.38598169825227974
+        },
+        {
+          "step": 88074,
+          "test_answer_nll": 0.3951088041832061
+        },
+        {
+          "step": 90171,
+          "test_answer_nll": 0.3820153932804875
+        },
+        {
+          "step": 92268,
+          "test_answer_nll": 0.38746957625194817
+        },
+        {
+          "step": 94365,
+          "test_answer_nll": 0.3836414550426635
+        },
+        {
+          "step": 96462,
+          "test_answer_nll": 0.3777303580739635
+        },
+        {
+          "step": 98559,
+          "test_answer_nll": 0.38152131940697576
+        },
+        {
+          "step": 100656,
+          "test_answer_nll": 0.3798923454649499
+        },
+        {
+          "step": 102753,
+          "test_answer_nll": 0.36975127575048006
+        },
+        {
+          "step": 104850,
+          "test_answer_nll": 0.3777931153704137
+        },
+        {
+          "step": 106947,
+          "test_answer_nll": 0.37276898359100696
+        },
+        {
+          "step": 109044,
+          "test_answer_nll": 0.3787328109623798
+        },
+        {
+          "step": 111141,
+          "test_answer_nll": 0.3670351853141747
+        },
+        {
+          "step": 113238,
+          "test_answer_nll": 0.3710131997350195
+        },
+        {
+          "step": 115335,
+          "test_answer_nll": 0.37022417880152636
+        },
+        {
+          "step": 117432,
+          "test_answer_nll": 0.37459544794932986
+        },
+        {
+          "step": 119529,
+          "test_answer_nll": 0.3717162067733284
+        },
+        {
+          "step": 121626,
+          "test_answer_nll": 0.36430232063992735
+        },
+        {
+          "step": 123723,
+          "test_answer_nll": 0.36778958041702337
+        },
+        {
+          "step": 125796,
+          "test_answer_nll": 0.3646109059194438
+        }
+      ]
+    }
+  },
+  "interpretation": "No clear final curriculum advantage in this single-seed comparison: answer NLLs are nearly equal, and shuffled has slightly higher greedy exact-answer accuracy."
+}

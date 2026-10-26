@@ -3,7 +3,12 @@
 Proposal, 2026-10-25. The user requested a remote experiment using a large
 network like the finite-field run. The preparation and execution code is now
 implemented; see [REMOTE_RUN.md](REMOTE_RUN.md). The main budget remains subject
-to GPU calibration. No cloud resources have been launched by this work.
+to GPU calibration. This proposal was prepared without allocating cloud resources.
+The subsequently authorized [short GPU diagnostic](GPU_DIAGNOSTIC.md) records
+the H100 measurements and its separate ten-minute budget.
+The later [completed comparison](GPU_STAGED_120M.md) supersedes the budget and
+condition choices below: twenty equal-time ceiling stages, two conditions
+(curriculum and shuffled), and a 120-minute optimizer-time target per condition.
 
 ## Model and hardware
 
@@ -126,8 +131,17 @@ Convert those times into fixed counts using the calibration:
 For update index i starting at zero, the curriculum is:
 
 ```text
-gamma(i) = 1 + 19 * min(i / (R - 1), 1)
+gamma_ceiling(i) = 1 + 19 * min(i / (R - 1), 1)
+sample_gamma ~ UniformInteger(1, floor(gamma_ceiling(i)))
 ```
+
+Updated on 2026-10-25: each expression draws its own sample gamma under the
+current ceiling, then uses the unchanged AST generator. Ceiling 20 therefore
+retains all integer gamma levels 1..20, with equal probability and mean 10.5.
+Fractional ceilings round down. The matched shuffled condition preserves the
+exact sample draws and expressions; hard-only and per-gamma evaluation stay fixed.
+Recalibrate future update budgets using mixture pilot banks; earlier fixed-gamma
+GPU measurements are historical and are not measurements of this new mixture.
 
 Wall-clock time also includes evaluation, checkpointing, and loading. The
 curriculum and exact shuffled plan should have similar total compute because
@@ -149,7 +163,7 @@ One paired model seed, initially seed 0. Run sequentially on one GPU:
 
 | Order | Condition | Training exposure |
 | --- | --- | --- |
-| 1 | Curriculum | Linear gamma 1→20, then gamma 20 |
+| 1 | Curriculum | Linear ceiling 1→20, then ceiling 20; each sample draws a uniform integer gamma under it |
 | 2 | Shuffled | A permutation of exactly the curriculum's cached batches |
 | 3 | Hard-only | Fresh gamma-20 examples for every update |
 

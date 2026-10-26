@@ -258,10 +258,10 @@ class TrainingTests(unittest.TestCase):
         self.assertEqual([learning_rate(c, i) for i in range(10)], [c.learning_rate/2]+[c.learning_rate]*9)
 
     def test_resume_matches_uninterrupted_with_dropout_and_full_objective(self):
-        def fixture(self, gamma, seed, count):
-            # Labels are exact, and batch identities produce different complete expressions.
-            return [example(stream_seed(seed, i) % 3) for i in range(count)]
-        with tempfile.TemporaryDirectory() as directory, patch.object(Dataset, "examples", fixture):
+        def fixture(self, gamma, seed):
+            # Labels are exact; sample identities produce different complete expressions.
+            return replace(example(seed % 3), gamma=gamma)
+        with tempfile.TemporaryDirectory() as directory, patch.object(Dataset, "sample", fixture):
             config = replace(Config(), steps=4, batch_size=3, warmup_steps=1, n_layer=1, n_embd=16,
                              dropout=0.1, eval_gammas=(1, 20), eval_examples=1, final_examples=1,
                              generation_examples=1, eval_interval=2, log_interval=1, threads=1,
@@ -271,6 +271,8 @@ class TrainingTests(unittest.TestCase):
             resumed = run(config, Path(directory)/"resumed", resume=True)
             a = torch.load(full, weights_only=False)
             b = torch.load(resumed, weights_only=False)
+            progress = json.loads((resumed.parent/"checkpoint_progress.json").read_text())
+            self.assertEqual(progress, {k:b[k] for k in ("step", "records", "history_records", "completed")})
             for key in a["model"]:
                 self.assertTrue(torch.equal(a["model"][key], b["model"][key]), key)
             self.assertTrue(torch.equal(a["torch_rng"], b["torch_rng"]))

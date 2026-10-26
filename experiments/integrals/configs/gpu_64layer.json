@@ -20,5 +20,6 @@
   "eval_batch_size": 128,
   "threads": 8,
   "device": "cuda",
-  "precision": "bfloat16"
+  "precision": "bfloat16",
+  "training_gamma_sampling": "uniform_integer"
 }
