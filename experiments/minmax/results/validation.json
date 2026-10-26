@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-17",
+  "minmax_tests_passed": 11,
+  "finite_field_regression_tests_passed": 26,
+  "exhaustive_binary_combinations_per_operator": 1681,
+  "exhaustive_ternary_combinations_per_operator": 68921,
+  "sanity": {
+    "examples": 16,
+    "steps": 500,
+    "parameters": 109888,
+    "initial_loss": 3.9158122539520264,
+    "final_loss": 0.0010006909724324942,
+    "accuracy": 1.0
+  },
+  "wandb": {
+    "mode": "offline",
+    "sdk_version": "0.30.0",
+    "updates": 6,
+    "status": "complete",
+    "uploaded": false
+  },
+  "cli_checks": [
+    "sample generation",
+    "checkpoint re-evaluation"
+  ],
+  "cpu_resume": "Model tensors and RNG identical to uninterrupted run, including dropout and mocked W&B initialization"
+}

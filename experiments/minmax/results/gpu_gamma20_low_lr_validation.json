@@ -1,0 +1,20 @@
+{
+  "config_changes": {
+    "learning_rate": {
+      "old": 0.0006,
+      "new": 0.0003
+    }
+  },
+  "execution_order": [
+    "shuffled",
+    "curriculum",
+    "hard"
+  ],
+  "all_batch_plans_match_previous": true,
+  "post_warmup_lr": 0.0003,
+  "final_lr": 0.0003,
+  "wrapper_default_and_shuffled_first_arguments_verified": true,
+  "source_archive_sha256": "6f28e0a17bcb330604f0eff28f9e0f0071fe10b456018d01eadcb31ea0ae855d",
+  "source_file_count": 40,
+  "checked_at_utc": "2026-10-17T19:18:22.547779+00:00"
+}

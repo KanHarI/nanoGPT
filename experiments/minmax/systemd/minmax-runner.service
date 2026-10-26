@@ -1,0 +1,16 @@
+[Unit]
+Description=Resume the matched minmax GPU sweep
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=kanhar
+WorkingDirectory=/home/kanhar/nanoGPT
+Environment=AUTO_SHUTDOWN=1
+EnvironmentFile=-/home/kanhar/nanoGPT/minmax-run.env
+ExecStart=/bin/bash experiments/minmax/gpu_run.sh
+ExecStopPost=+/bin/sh -c '/usr/sbin/shutdown -c || true; /usr/bin/systemctl --no-block start minmax-watch.service'
+TimeoutStopSec=60
+StandardOutput=append:/home/kanhar/nanoGPT/minmax-training.log
+StandardError=append:/home/kanhar/nanoGPT/minmax-training.log

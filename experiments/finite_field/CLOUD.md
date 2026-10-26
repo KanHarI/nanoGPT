@@ -1,17 +1,22 @@
 # Google Cloud project
 
 Created on 2026-10-16 for the finite-field curriculum experiment.
+On 2026-10-18, both experiment VMs and all their disks were deleted, billing
+was disabled, and project deletion was verified as `DELETE_REQUESTED`.
+The project was subsequently restored at the user's request; its state was
+verified as `ACTIVE` on 2026-10-26. See the [cleanup and restoration record](../CLOUD_CLEANUP.md).
+Resource paths and setup commands below are historical.
 
 | Setting | Value |
 | --- | --- |
 | Project name | Finite Field Curriculum |
 | Project ID | `finite-field-curriculum-kanhar` |
 | Project number | `820421553694` |
-| Billing account | KanHarPersonal |
-| Compute Engine API | Enabled |
+| Billing | Disabled and unlinked on 2026-10-18 |
+| Project state | Restored; `ACTIVE` verified on 2026-10-26 |
 
 [Open the project in Google Cloud Console](https://console.cloud.google.com/home/dashboard?project=finite-field-curriculum-kanhar).
-The project is the active project in the local `gcloud` configuration.
+The following commands describe the historical project configuration.
 
 ```sh
 gcloud config set project finite-field-curriculum-kanhar
@@ -23,9 +28,9 @@ gcloud billing projects describe finite-field-curriculum-kanhar
 
 Provisioned on 2026-10-16 after approval of one global GPU and one regional Spot
 H100 quota. The completed job is documented in [GPU_RUN.md](GPU_RUN.md), with
-final measurements in [GPU_RESULTS.md](GPU_RESULTS.md). The VM stopped on
-2026-10-17 at 01:40 UTC; its persistent disk retains the checkpoints. SSH and SCP
-require the VM to be running.
+final measurements in [GPU_RESULTS.md](GPU_RESULTS.md). The VM and its
+persistent disk were deleted on 2026-10-18, including the checkpoints stored
+there. The machine details below describe the original allocation.
 
 | Setting | Value |
 | --- | --- |

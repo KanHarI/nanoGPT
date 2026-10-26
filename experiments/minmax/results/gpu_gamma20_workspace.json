@@ -1,0 +1,9 @@
+{
+  "url": "https://wandb.ai/kanhar/minmax-curriculum?nw=z0g0gef38xf",
+  "entity": "kanhar",
+  "project": "minmax-curriculum",
+  "group": "gpu-24layer-gamma20-matched-updates",
+  "plots": 20,
+  "automatic_panels": false,
+  "verified_readback": true
+}

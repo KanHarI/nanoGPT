@@ -1,0 +1,29 @@
+[
+  {
+    "id": "4c4da036",
+    "url": "https://wandb.ai/kanhar/minmax-curriculum/runs/4c4da036",
+    "state": "finished",
+    "condition": "shuffled",
+    "step": 26668,
+    "gamma20_test_loss": 0.17262180259390902,
+    "gamma20_accuracy": 0.95947265625
+  },
+  {
+    "id": "35413474",
+    "url": "https://wandb.ai/kanhar/minmax-curriculum/runs/35413474",
+    "state": "finished",
+    "condition": "curriculum",
+    "step": 26668,
+    "gamma20_test_loss": 0.13123199753904657,
+    "gamma20_accuracy": 0.964111328125
+  },
+  {
+    "id": "09d2af55",
+    "url": "https://wandb.ai/kanhar/minmax-curriculum/runs/09d2af55",
+    "state": "finished",
+    "condition": "hard",
+    "step": 26668,
+    "gamma20_test_loss": 0.12297052045341417,
+    "gamma20_accuracy": 0.96826171875
+  }
+]

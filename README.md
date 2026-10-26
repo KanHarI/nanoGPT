@@ -6,6 +6,11 @@
 [Finite-field curriculum experiment](experiments/finite_field/README.md): procedural
 character-level arithmetic, answer-only loss, and documented CPU/GPU comparisons.
 
+[Signed min/max curriculum experiment](experiments/minmax/README.md): mixed-arity
+RPN trees, negation, 41 single-token integers, and smaller configurable models.
+The [follow-up experiment designs](experiments/proposals/README.md) also include
+symbolic differentiation, which remains documentation only.
+
 [Numerical-integral curriculum experiment](experiments/integrals/README.md):
 domain-aware RPN ASTs, compact floating-point answers, full-sequence NLL,
 per-gamma evaluation, and a prepared-data remote training pipeline.

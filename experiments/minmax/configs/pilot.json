@@ -1,0 +1,13 @@
+{
+  "steps": 300,
+  "batch_size": 32,
+  "n_layer": 2,
+  "n_head": 4,
+  "n_embd": 64,
+  "warmup_steps": 10,
+  "eval_interval": 150,
+  "eval_examples": 32,
+  "final_examples": 128,
+  "baseline_examples": 256,
+  "threads": 2
+}

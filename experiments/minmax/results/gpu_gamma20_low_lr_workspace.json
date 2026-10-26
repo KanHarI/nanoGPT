@@ -1,0 +1,11 @@
+{
+  "url": "https://wandb.ai/kanhar/minmax-curriculum?nw=1j8ea9b3j2q",
+  "entity": "kanhar",
+  "project": "minmax-curriculum",
+  "group": "gpu-24layer-gamma20-lr3e-4",
+  "plots": 20,
+  "automatic_panels": false,
+  "name": "Minmax gamma 1 to 20 - LR 0.0003 - shuffled first",
+  "verified_readback": true,
+  "loss_metrics": 40
+}

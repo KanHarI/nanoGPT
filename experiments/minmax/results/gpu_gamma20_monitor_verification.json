@@ -1,0 +1,98 @@
+{
+  "verified_utc": "2026-10-17T13:10:36.035661+00:00",
+  "units": {
+    "minmax-runner.service": "active",
+    "minmax-watch.timer": "active"
+  },
+  "train": {
+    "kind": "train",
+    "step": 1520,
+    "batch_id": 1519,
+    "batch_seed": 14965150296894788749,
+    "gamma": 2.887944004709884,
+    "loss": 2.4138031005859375,
+    "accuracy": 0.2578125,
+    "learning_rate": 0.0006,
+    "grad_norm": 3.0587449073791504,
+    "train_seconds": 90.19858070100025,
+    "supervised_answers": 389120,
+    "characters": 3215056,
+    "packed_rows": 11,
+    "input_tokens": 2816,
+    "mean_operators": 2.90625,
+    "mean_depth": 2.453125,
+    "mean_stack_depth": 3.33203125,
+    "mean_negations": 0.5703125,
+    "roots": {
+      "~": 42,
+      "leaf": 16,
+      "n": 53,
+      "m": 46,
+      "u": 44,
+      "t": 55
+    }
+  },
+  "last_eval_step": 1138,
+  "last_gamma20_test": 4.031809357227758,
+  "checkpoint_step": 1138,
+  "checkpoint_bytes": 227775391,
+  "parameters": 18964736,
+  "source_sha256": {
+    "model.py": "7c01703240dbec5d554527dc666e35b3df8391d0b117fddc07afcf325a21d11c",
+    "experiments/finite_field/data.py": "e5641421929694dcbcb568d6d74949d0bc6f227d5a6228d599beda0b5431799a",
+    "experiments/finite_field/runtime.py": "23387243cfad6ee89b2f18d7ee18aad7968e911a73fbbd801c24340e6bf96325",
+    "experiments/minmax/__init__.py": "b8386f2f84d8cb334c35549e46a6fb6ae48a287c602252cd2732199aaf267d4d",
+    "experiments/minmax/benchmark.py": "2cf0a4e56742d660039047b4c58a9ac0aca0a6bbc2a10f218331be5177132d41",
+    "experiments/minmax/config.py": "33b4bdb138ebd093a129a0c10a265788d58bcc76c453029b13902c19c5068cae",
+    "experiments/minmax/data.py": "a02ebcfc0e088767c07fad2160ba10f26b9964523db45d0b6e6ec42c9619d671",
+    "experiments/minmax/evaluate.py": "2ae091aae9db5d6a602a721b85bc21555c2e632240a9d72483fd651e60c43904",
+    "experiments/minmax/sanity.py": "5bfd19e32a002f49fefae9dd1e678172aea17dc3e6111a559b19cd9dd797cf92",
+    "experiments/minmax/sweep.py": "3243a66d7991a395e1e8ff1fb50918cfdd2f68a7b0a82332c344cafbc133328e",
+    "experiments/minmax/tests/test_benchmark.py": "9f92e1efcdcd825cf7efb83e2e01e6021dfd24ce729a0f86cdd53d601cb6b997",
+    "experiments/minmax/tests/test_minmax.py": "dff550a446b7b91d8a23af7c40cbae142cc45df065e83dc0ef668fd83afd570c",
+    "experiments/minmax/tests/test_watchdog.py": "ac583744b89ff7cd8dbb67fe3b49b45f06d9a94737b8f74685da1f353e011dee",
+    "experiments/minmax/tracking.py": "8d3bdb31182f070b42fac2a993bb238e1c5e89b77bcea11623da6e191c585e5f",
+    "experiments/minmax/train.py": "6302c30a1247f6e3f8e682a21c1bf44997977ef760477a1ae3c34a8c1576e3d7",
+    "experiments/minmax/watchdog.py": "b42424084dac532dcf761bf9c25b63fd93263af7d6f474744e440010993982ae",
+    "experiments/minmax/workspace.py": "89477d746a1c3d23a16ed01972f4613a80e067f08a6bec61f0724c74ba8b395a"
+  },
+  "wandb": {
+    "id": "09e0db5a",
+    "project": "minmax-curriculum",
+    "entity": "kanhar",
+    "group": "gpu-24layer-gamma20-matched-updates",
+    "url": "https://wandb.ai/kanhar/minmax-curriculum/runs/09e0db5a"
+  },
+  "watchdog": {
+    "timestamp": "2026-10-17T13:08:24.853407+00:00",
+    "action": "monitor",
+    "reason": "Training is active and progress is recent",
+    "retries": 0,
+    "units": {
+      "minmax-runner.service": "active"
+    },
+    "first_check_unix": 1792242504.85321,
+    "runs": [
+      {
+        "condition": "curriculum",
+        "complete": false,
+        "step": 0,
+        "gamma": null
+      },
+      {
+        "condition": "hard",
+        "complete": false,
+        "step": 0,
+        "gamma": null
+      },
+      {
+        "condition": "shuffled",
+        "complete": false,
+        "step": 0,
+        "gamma": null
+      }
+    ],
+    "all_complete": false,
+    "comparison_complete": false
+  }
+}

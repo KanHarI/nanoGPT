@@ -1,0 +1,35 @@
+{
+  "reason": "Google Cloud Spot eviction",
+  "cloud_event": "compute.instances.preempted",
+  "evicted_utc": "2026-10-17T13:51:29.797554Z",
+  "vm": {
+    "lastStartTimestamp": "2026-10-17T08:59:58.885-07:00",
+    "lastStopTimestamp": "2026-10-17T06:51:44.536-07:00",
+    "name": "minmax-l4",
+    "scheduling": {
+      "automaticRestart": false,
+      "instanceTerminationAction": "STOP",
+      "maxRunDuration": {
+        "nanos": 0,
+        "seconds": "43200"
+      },
+      "onHostMaintenance": "TERMINATE",
+      "preemptible": true,
+      "provisioningModel": "SPOT"
+    },
+    "status": "RUNNING"
+  },
+  "run_id": "09e0db5a",
+  "resumed_checkpoint_step": 19346,
+  "verified_progress": {
+    "step": 19665,
+    "metrics_updated_utc": "2026-10-17T16:02:33.160038+00:00",
+    "gamma": 20,
+    "last_eval_step": 19346,
+    "test_loss": 0.1867242927669608,
+    "test_accuracy": 0.947265625
+  },
+  "update_budget": 26668,
+  "monitor_retries": 1,
+  "note": "The in-VM monitor cannot restart a stopped VM. Restarted the retained VM and resumed the existing model, optimizer, schedule, and W&B run."
+}

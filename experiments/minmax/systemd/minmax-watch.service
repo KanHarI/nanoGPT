@@ -1,0 +1,13 @@
+[Unit]
+Description=Check minmax training progress and completion
+
+[Service]
+Type=oneshot
+User=kanhar
+WorkingDirectory=/home/kanhar/nanoGPT
+Environment=MINMAX_OUT_DIR=out/minmax-gpu-24layer-gamma12-20m20m
+EnvironmentFile=-/home/kanhar/nanoGPT/minmax-run.env
+ExecStart=/home/kanhar/nanoGPT/.venv/bin/python -u -m experiments.minmax.watchdog --out-dir ${MINMAX_OUT_DIR} --apply
+TimeoutStartSec=180
+StandardOutput=append:/home/kanhar/nanoGPT/minmax-watchdog.log
+StandardError=append:/home/kanhar/nanoGPT/minmax-watchdog.log

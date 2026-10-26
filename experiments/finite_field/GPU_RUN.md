@@ -1,5 +1,9 @@
 # H100 experiment: gamma 1–12
 
+The VM and its checkpoint disk were deleted on 2026-10-18, and the Google Cloud
+project was shut down, then subsequently restored. See [cloud cleanup](../CLOUD_CLEANUP.md). The operational
+instructions and VM paths below are historical; saved reports and W&B remain.
+
 Recipe frozen on 2026-10-16 after benchmarking the actual training VM.
 Branch: `experiment/finite-field-curriculum`. Source hashes are saved with each
 run; `source_snapshot.json` records the originating checkout because deployment
